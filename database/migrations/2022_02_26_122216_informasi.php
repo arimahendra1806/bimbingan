@@ -15,9 +15,9 @@ class Informasi extends Migration
     {
         Schema::create('informasi', function (Blueprint $table) {
             $table->id();
-            $table->bigIncrements('identitas_id');
+            $table->integer('users_id');
             $table->integer('tahun_ajaran_id');
-            $table->bigIncrements('kepada');
+            $table->integer('kepada');
             $table->string('judul')->nullable();
             $table->string('subyek')->nullable();
             $table->string('pesan')->nullable();

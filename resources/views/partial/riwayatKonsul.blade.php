@@ -5,7 +5,7 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-md-6">
-                        <h4 class="card-title">Riwayat Konsultasi Proposal - Judul</h4>
+                        <h4 class="card-title">Riwayat Konsultasi</h4>
                     </div>
                     <div class="col-md-6 d-flex justify-content-end">
                         <a class="d-block text-primary" type="button" data-bs-toggle="collapse"
@@ -15,8 +15,7 @@
                     </div>
                 </div>
                 <p class="card-title-desc">
-                    Berikut adalah detail <b>riwayat konsultasi anda</b> khususnya untuk <b>konsultasi proposal -
-                        judul</b>.
+                    Berikut adalah detail <b>riwayat konsultasi anda</b>.
                 </p>
             </div>
             <div class="collapse show" id="collapseRiwayat">
@@ -27,7 +26,6 @@
                                 <th>No</th>
                                 <th>Kode Bimbingan</th>
                                 <th>Jenis Konsultasi</th>
-                                <th>Bab Konsultasi</th>
                                 <th>Waktu Konsultasi</th>
                             </tr>
                         </thead>
@@ -47,7 +45,7 @@
         var tableRiwayat = $('#RiwayatTabels').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "/riwayat/" + jenis + "/" + bab,
+            ajax: "/riwayat/" + jenis,
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'
@@ -57,16 +55,12 @@
                     name: 'bimbingan_kode'
                 },
                 {
-                    data: 'konsultasi_jenis',
-                    name: 'konsultasi_jenis'
+                    data: 'bimbingan_jenis',
+                    name: 'bimbingan_jenis'
                 },
                 {
-                    data: 'konsultasi_bab',
-                    name: 'konsultasi_bab'
-                },
-                {
-                    data: 'waktu_konsultasi',
-                    name: 'waktu_konsultasi'
+                    data: 'waktu_bimbingan',
+                    name: 'waktu_bimbingan'
                 },
             ],
             columnDefs: [{

@@ -15,11 +15,10 @@ class MateriDospem extends Migration
     {
         Schema::create('materi_dospem', function (Blueprint $table) {
             $table->id();
-            $table->integer('nidn');
+            $table->integer('dosen_id');
             $table->integer('tahun_ajaran_id');
             $table->string('file_materi')->nullable();
             $table->string('jenis_materi')->nullable();
-            $table->string('bab_materi')->nullable();
             $table->string('keterangan')->nullable();
             $table->timestamps();
         });

@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\TahunAjaran;
 use App\Models\MahasiswaModel;
 use App\Models\User;
-use DataTables;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\MahasiswaImport;
+use DataTables, Validator;
 
 class MahasiswaController extends Controller
 {
@@ -20,9 +20,10 @@ class MahasiswaController extends Controller
      */
     public function index(Request $request)
     {
-        /* Get data Tahun_id */
+        /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::all()->sortByDesc('tahun_ajaran');
 
+        /* Ambil data tabel mahasiswa */
         if ($request->ajax()){
             $data = MahasiswaModel::latest()->get()->load('tahun');
             return DataTables::of($data)
@@ -36,6 +37,8 @@ class MahasiswaController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
+
+        /* Return menuju view */
         return view('koordinator.kelola-mahasiswa.index', compact('tahun_id'));
     }
 
@@ -57,34 +60,60 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nim_add' => 'required|numeric',
-            'tahun_ajaran_id_add' => 'required',
-            'nama_mhs_add' => 'required',
-            'alamat_add' => 'required',
-            'email_add' => 'required',
-            'no_telepon_add' => 'required|string|min:10|max:13|regex:/^[1-9]{1}/',
-        ]);
+        /* Peraturan validasi  */
+        $rules = [
+            'nim_add' => ['required','numeric','unique:mahasiswa,nim'],
+            'tahun_ajaran_id_add' => ['required'],
+            'nama_mhs_add' => ['required'],
+            'alamat_add' => ['required'],
+            'email_add' => ['required','email'],
+            'no_telepon_add' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/']
+        ];
 
-        $data = new MahasiswaModel;
-        $data->nim = $request->nim_add;
-        $data->tahun_ajaran_id = $request->tahun_ajaran_id_add;
-        $data->nama_mahasiswa = $request->nama_mhs_add;
-        $data->alamat = $request->alamat_add;
-        $data->email = $request->email_add;
-        $data->no_telepon = $request->no_telepon_add;
-        $data->save();
+        /* Pesan validasi */
+        $messages = [];
 
-        $pengguna = new User;
-        $pengguna->identitas_id = $request->nim_add;
-        $pengguna->tahun_ajaran_id = $request->tahun_ajaran_id_add;
-        $pengguna->name = $request->nama_mhs_add;
-        $pengguna->role = "mahasiswa";
-        $pengguna->email = $request->nim_add."@bimbingan.id";
-        $pengguna->password = Hash::make($request->nim_add);
-        $pengguna->save();
+        /* Nama kolom validasi */
+        $attributes = [
+            'nim_add' => 'NIM',
+            'tahun_ajaran_id_add' => 'ID Tahun Ajaran',
+            'nama_mhs_add' => 'Nama Mahasiswa',
+            'alamat_add' => 'Alamat',
+            'email_add' => 'Email',
+            'no_telepon_add' => 'Nomor Telepon'
+        ];
 
-        return response()->json(["success" => true]);
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Insert ke tabel User */
+            $pengguna = new User;
+            $pengguna->username = $request->nim_add;
+            $pengguna->tahun_ajaran_id = $request->tahun_ajaran_id_add;
+            $pengguna->name = $request->nama_mhs_add;
+            $pengguna->role = "mahasiswa";
+            $pengguna->password = Hash::make($request->nim_add);
+            $pengguna->save();
+
+            /* Insert ke tabel mahasiswa */
+            $data = new MahasiswaModel;
+            $data->users_id = $pengguna->id;
+            $data->nim = $request->nim_add;
+            $data->tahun_ajaran_id = $request->tahun_ajaran_id_add;
+            $data->nama_mahasiswa = $request->nama_mhs_add;
+            $data->alamat = $request->alamat_add;
+            $data->email = $request->email_add;
+            $data->no_telepon = $request->no_telepon_add;
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
+        }
     }
 
     /**
@@ -119,34 +148,73 @@ class MahasiswaController extends Controller
      */
     public function update(Request $request, $kelola_mahasiswa)
     {
-        $request->validate([
-            'nim_edit' => 'required|numeric',
-            'tahun_ajaran_id_edit' => 'required',
-            'nama_mhs_edit' => 'required',
-            'alamat_edit' => 'required',
-            'email_edit' => 'required',
-            'no_telepon_edit' => 'required|string|min:10|max:13|regex:/^[1-9]{1}/',
-        ]);
-
+        /* Ambil data mahasiswa sesuai parameter */
         $data = MahasiswaModel::where('id', $kelola_mahasiswa)->first();
 
-        $pengguna_id = User::where('identitas_id', $data->nim)->first();
-        $pengguna = User::where('id', $pengguna_id->id)->first();
-        $pengguna->identitas_id = $request->nim_edit;
-        $pengguna->name = $request->nama_mhs_edit;
-        $pengguna->email = $request->nim_edit."@bimbingan.id";
-        $pengguna->password = Hash::make($request->nim_edit);
-        $pengguna->save();
+        /* Kondisi data nidn tidak sama, maka validasi berikut */
+        if($data->nim == $request->kelola_mahasiswa) {
+            /* Peraturan validasi  */
+            $rules = [
+                'tahun_ajaran_id_edit' => ['required'],
+                'nama_mhs_edit' => ['required'],
+                'alamat_edit' => ['required'],
+                'email_edit' => ['required','email'],
+                'no_telepon_edit' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/']
+            ];
+        } else {
+            /* Peraturan validasi  */
+            $rules = [
+                'nim_edit' => ['required','numeric','unique:mahasiswa,nim'],
+                'tahun_ajaran_id_edit' => ['required'],
+                'nama_mhs_edit' => ['required'],
+                'alamat_edit' => ['required'],
+                'email_edit' => ['required','email'],
+                'no_telepon_edit' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/']
+            ];
+        }
 
-        $data->nim = $request->nim_edit;
-        $data->tahun_ajaran_id = $request->tahun_ajaran_id_edit;
-        $data->nama_mahasiswa = $request->nama_mhs_edit;
-        $data->alamat = $request->alamat_edit;
-        $data->email = $request->email_edit;
-        $data->no_telepon = $request->no_telepon_edit;
-        $data->save();
+        /* Pesan validasi */
+        $messages = [];
 
-        return response()->json(["success" => true]);
+        /* Nama kolom validasi */
+        $attributes = [
+            'nim_edit' => 'NIM',
+            'tahun_ajaran_id_edit' => 'ID Tahun Ajaran',
+            'nama_mhs_edit' => 'Nama Mahasiswa',
+            'alamat_edit' => 'Alamat',
+            'email_edit' => 'Email',
+            'no_telepon_edit' => 'Nomor Telepon'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Update tabel user */
+            if ($data->user)
+            {
+                $data->user->username = $request->nim_edit;
+                $data->user->name = $request->nama_mhs_edit;
+                $data->user->password = Hash::make($request->nim_edit);
+                $data->user->save();
+            }
+
+            /* Update tabel mahasiswa */
+            $data->nim = $request->nim_edit;
+            $data->tahun_ajaran_id = $request->tahun_ajaran_id_edit;
+            $data->nama_mahasiswa = $request->nama_mhs_edit;
+            $data->alamat = $request->alamat_edit;
+            $data->email = $request->email_edit;
+            $data->no_telepon = $request->no_telepon_edit;
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
+        }
     }
 
     /**
@@ -157,24 +225,48 @@ class MahasiswaController extends Controller
      */
     public function destroy($kelola_mahasiswa)
     {
+        /* Ambil data mahasiswa sesuai parameter */
         $data = MahasiswaModel::find($kelola_mahasiswa);
-        User::where('identitas_id', $data->nim)->delete();
+
+        /* Hapus data user */
+        User::where('username', $data->nim)->delete();
+
+        /* Hapus data mahasiswa */
         $data->delete();
-        return response()->json();
+
+        /* Return json berhasil */
+        return response()->json(['msg' => "Berhasil Menghapus Data!"]);
     }
 
     public function import(Request $request)
     {
-        $request->validate([
-            'file_import' => 'required|mimes:csv,xlsx,xls'
-        ]);
+        /* Peraturan validasi  */
+        $rules = [
+            'file_import' => ['required','file','max:2048','mimes:csv,xlsx,xls']
+        ];
 
-        if ($request->hasFile('file_import')){
+        /* Pesan validasi */
+        $messages = [];
+
+        /* Nama kolom validasi */
+        $attributes = [
+            'file_import' => 'File Data Import'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Impor data mahasiswa*/
             $file = $request->file('file_import');
-            $filename = time()."_".$file->getClientOriginalName();
-            $import = $file->move(public_path('dokumen/import/mahasiswa'), $filename);
-            Excel::import(new MahasiswaImport, $import);
+            Excel::import(new MahasiswaImport, $file);
+
+            /* Return json berhasil */
+            return response()->json(['msg' => "Berhasil Mengimpor Data!"]);
         }
-        return response()->json();
     }
 }

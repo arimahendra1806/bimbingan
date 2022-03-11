@@ -134,7 +134,8 @@
                                     <div class="row mb-2 mt-3">
                                         <div class="col-md-6" id="infoJumlah"></div>
                                         <div class="col-md-6 d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-primary">Tambahkan Data</button>
+                                            <input type="submit" class="btn btn-primary" name="myButton"
+                                                value="Tambahkan Data"></input>
                                         </div>
                                     </div>
                                 </form>
@@ -357,6 +358,9 @@
             $("#FormAdd").submit(function(e) {
                 var form = this;
 
+                form.myButton.disabled = true;
+                form.myButton.value = "Sedang memproses...";
+
                 var rows_selected = tableJudul.column(0).checkboxes.selected();
 
                 // Iterate over all selected checkboxes
@@ -388,6 +392,8 @@
                         });
                         $('#nidn_add').val('').trigger('change');
                         $('#FormAdd').trigger('reset');
+                        form.myButton.disabled = false;
+                        form.myButton.value = "Tambahkan Data";
                         tableJudul.ajax.reload();
                         tableDosPem.ajax.reload();
                         Swal.fire({
@@ -402,6 +408,9 @@
                             icon: 'error',
                             title: 'Oops, Muncul Kesalahan !!',
                             text: 'Terdapat kesalahan, pastikan semua data terisi !!'
+                        }).then(function() {
+                            form.myButton.disabled = false;
+                            form.myButton.value = "Tambahkan Data";
                         });
                     }
                 });

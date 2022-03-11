@@ -29,7 +29,16 @@ class DosenImport implements WithStartRow, ToCollection
 
         foreach ($rows as $row)
         {
+            $data = User::create([
+                'username' => $row[1],
+                'tahun_ajaran_id' => $tahun->id,
+                'name' => $row[2],
+                'role' => "dosen",
+                'password' => Hash::make($row[1]),
+            ]);
+
             DosenModel::create([
+                'users_id' => $data->id,
                 'nidn' => $row[1],
                 'nama_dosen' => $row[2],
                 'email' => $row[3],
@@ -37,14 +46,6 @@ class DosenImport implements WithStartRow, ToCollection
                 'alamat' => $row[5],
             ]);
 
-            User::create([
-                'identitas_id' => $row[1],
-                'tahun_ajaran_id' => $tahun->id,
-                'name' => $row[2],
-                'role' => "dosen",
-                'email' => $row[1]."@bimbingan.id",
-                'password' => Hash::make($row[1]),
-            ]);
         }
     }
 }

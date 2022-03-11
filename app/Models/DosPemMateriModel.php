@@ -9,5 +9,5 @@ class DosPemMateriModel extends Model
 {
     use HasFactory;
     protected $table = "materi_dospem";
-    protected $fillable = ["id","nidn","tahun_ajaran_id","file_materi","bab_materi","keterangan"];
+    protected $fillable = ["id","nidn","tahun_ajaran_id","file_materi","keterangan"];
 }

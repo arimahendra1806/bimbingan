@@ -147,12 +147,9 @@ class LinkZoomController extends Controller
             'file_import' => 'required|mimes:csv,xlsx,xls'
         ]);
 
-        if ($request->hasFile('file_import')){
-            $file = $request->file('file_import');
-            $filename = time()."_".$file->getClientOriginalName();
-            $import = $file->move(public_path('dokumen/import/link-zoom'), $filename);
-            Excel::import(new LinkZoomImport, $import);
-        }
+        $file = $request->file('file_import');
+        Excel::import(new LinkZoomImport, $file);
+
         return response()->json();
     }
 }

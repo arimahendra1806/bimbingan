@@ -15,7 +15,8 @@ class Komentar extends Migration
     {
         Schema::create('komentar', function (Blueprint $table) {
             $table->id();
-            $table->string('komentar_kode', 30);
+            $table->string('bimbingan_kode', 30);
+            $table->string('bimbingan_jenis', 30);
             $table->string('nama', 100);
             $table->string('komentar')->nullable();
             $table->datetime('waktu_komentar')->default(DB::raw('CURRENT_TIMESTAMP'));

@@ -17,6 +17,7 @@ use App\Http\Controllers\PengajuanJudulController;
 use App\Http\Controllers\DosPemController;
 use App\Http\Controllers\DataPembimbingController;
 use App\Http\Controllers\JudulMahasiswaController;
+use App\Http\Controllers\KonsulJudulController;
 use App\Http\Controllers\KonsulProposalController;
 use App\Http\Controllers\PartialController;
 /* End Controller */
@@ -35,6 +36,8 @@ use App\Http\Controllers\PartialController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/test', [DosPemController::class, 'test']);
 
 Auth::routes();
 
@@ -138,13 +141,18 @@ Route::group(['middleware' => 'auth'], function(){
         /* Data Pembimbing */
         Route::get('/data-pembimbing', [DataPembimbingController::class, 'indexMhs'])->name('data-pembimbing.indexMhs');
 
-        /* Konsul Proposal Judul */
-        Route::get('/proposal-judul', [KonsulProposalController::class, 'indexJudul'])->name('proposal-judul.indexJudul');
-        Route::post('/proposal-judul/store', [KonsulProposalController::class, 'storeJudul'])->name('proposal-judul.storeJudul');
-        Route::post('/komen/store', [KonsulProposalController::class, 'storeKomen'])->name('konsul.storeKomen');
+        /* Konsul Judul */
+        Route::get('/konsultasi-judul', [KonsulJudulController::class, 'index'])->name('bimbingan-judul.index');
+        Route::post('/konsultasi-judul/store', [KonsulJudulController::class, 'store'])->name('bimbingan-judul.store');
+        Route::post('/komen/judul/store', [KonsulJudulController::class, 'storeKomen'])->name('bimbingan-judul.storeKomen');
+
+        /* Konsul Proposal */
+        Route::get('/konsultasi-proposal', [KonsulProposalController::class, 'index'])->name('bimbingan-proposal.index');
+        Route::post('/konsultasi-proposal/store', [KonsulProposalController::class, 'store'])->name('bimbingan-proposal.store');
+        Route::post('/komen/proposal/store', [KonsulProposalController::class, 'storeKomen'])->name('bimbingan-proposal.storeKomen');
 
         /* Mhs Partial */
-        Route::get('/materi/{proposal}/{bab}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
-        Route::get('/riwayat/{proposal}/{bab}', [PartialController::class, 'RiwayatKonsul'])->name('partial.RiwayatKonsul');
+        Route::get('/materi/{proposal}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
+        Route::get('/riwayat/{proposal}', [PartialController::class, 'RiwayatKonsul'])->name('partial.RiwayatKonsul');
     });
 });

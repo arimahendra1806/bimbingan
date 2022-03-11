@@ -17,11 +17,11 @@ class PengajuanJadwalZoom extends Migration
             $table->id();
             $table->string('pembimbing_kode', 50);
             $table->integer('tahun_ajaran_id');
-            $table->bigIncrements('nim_mahasiswa_1')->nullable();
-            $table->bigIncrements('nim_mahasiswa_2')->nullable();
-            $table->bigIncrements('nim_mahasiswa_3')->nullable();
-            $table->bigIncrements('nim_mahasiswa_4')->nullable();
-            $table->bigIncrements('nim_mahasiswa_5')->nullable();
+            $table->integer('mahasiswa_id_1')->nullable();
+            $table->integer('mahasiswa_id_2')->nullable();
+            $table->integer('mahasiswa_id_3')->nullable();
+            $table->integer('mahasiswa_id_4')->nullable();
+            $table->integer('mahasiswa_id_5')->nullable();
             $table->string('jam', 20);
             $table->date('tanggal');
             $table->string('status', 20);

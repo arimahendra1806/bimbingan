@@ -14,9 +14,9 @@ class AuthController extends Controller
     public function postlogin(Request $request){
         $tahun = TahunAjaran::where('status', 'Aktif')->value('id');
 
-    	if (Auth::attempt($request->only('email', 'password'))){
-            $role = Auth::user()->where('email', $request->email)->value('role');
-            $tahun_id = Auth::user()->where('email', $request->email)->value('tahun_ajaran_id');
+    	if (Auth::attempt($request->only('username', 'password'))){
+            $role = Auth::user()->where('username', $request->username)->value('role');
+            $tahun_id = Auth::user()->where('username', $request->username)->value('tahun_ajaran_id');
 
     		if($role == 'koordinator'){
                 return redirect()->route('dashboard.home');

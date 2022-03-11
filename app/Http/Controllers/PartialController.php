@@ -13,7 +13,7 @@ use Auth;
 
 class PartialController extends Controller
 {
-    public function MateriKonsul(Request $request, $jenis, $bab)
+    public function MateriKonsul(Request $request, $jenis)
     {
         /* Get data User Identitas */
         $identitas = Auth::user()->identitas_id;
@@ -28,7 +28,6 @@ class PartialController extends Controller
             $data = DosPemMateriModel::where('nidn', $pembimbing_id->nidn)
                 ->where('tahun_ajaran_id', $tahun_id->id)
                 ->where('jenis_materi', $jenis)
-                ->where('bab_materi', $bab)
                 ->get();
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -41,7 +40,7 @@ class PartialController extends Controller
         return response()->json();
     }
 
-    public function RiwayatKonsul(Request $request, $jenis, $bab)
+    public function RiwayatKonsul(Request $request, $jenis)
     {
         /* Get data User Identitas */
         $identitas = Auth::user()->identitas_id;
@@ -59,8 +58,7 @@ class PartialController extends Controller
 
         if ($request->ajax()){
             $data = RiwayatBimbinganModel::where('bimbingan_kode', $kb)
-                ->where('konsultasi_jenis', $jenis)
-                ->where('konsultasi_bab', $bab)
+                ->where('bimbingan_jenis', $jenis)
                 ->get();
             return DataTables::of($data)->addIndexColumn()->toJson();
         }

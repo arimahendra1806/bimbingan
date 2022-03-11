@@ -9,5 +9,5 @@ class KomentarModel extends Model
 {
     use HasFactory;
     protected $table = "komentar";
-    protected $fillable = ["id","komentar_kode","nama","komentar","waktu_komentar"];
+    protected $fillable = ["id","bimbingan_kode","bimbingan_jenis","nama","komentar","waktu_komentar"];
 }

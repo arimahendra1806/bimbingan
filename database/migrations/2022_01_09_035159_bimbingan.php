@@ -16,14 +16,13 @@ class Bimbingan extends Migration
         Schema::create('bimbingan', function (Blueprint $table) {
             $table->id();
             $table->string('kode_bimbingan', 50);
-            $table->string('kode_komentar', 30);
             $table->string('pembimbing_kode', 50);
             $table->integer('tahun_ajaran_id');
             $table->string('file_upload')->nullable();
             $table->string('link_video')->nullable();
-            $table->string('jenis_konsultasi')->nullable();
-            $table->string('bab_konsultasi')->nullable();
-            $table->string('status')->nullable();
+            $table->string('jenis_bimbingan')->nullable();
+            $table->string('status_konsultasi', 150)->nullable();
+            $table->string('status_pesan', 150)->nullable();
             $table->timestamps();
         });
     }

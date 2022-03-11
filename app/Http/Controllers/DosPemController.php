@@ -8,6 +8,8 @@ use App\Models\DosPemModel;
 use App\Models\PengajuanJudulModel;
 use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
+use App\Models\BimbinganModel;
+use App\Models\ProgresBimbinganModel;
 use DataTables;
 
 class DosPemController extends Controller
@@ -70,6 +72,9 @@ class DosPemController extends Controller
         $nidn = $request->nidn_add;
         $nim = $request->nim_add;
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
+        $jenis = ["Judul","Proposal","Laporan","Program"];
+
         for($count = 0; $count < count($nim); $count++)
         {
             $data = new DosPemModel;
@@ -80,6 +85,23 @@ class DosPemController extends Controller
             $data->save();
 
             PengajuanJudulModel::where('nim', $nim[$count])->update(['status' => "Mendapat Pembimbing"]);
+
+            for($i = 0; $i < count($jenis); $i++)
+            {
+                $data2 = new BimbinganModel;
+                $data2->kode_bimbingan = "KB".$pembimbing.substr($nim[$count], -4);
+                $data2->pembimbing_kode= "KP".$pembimbing.substr($nim[$count], -4);
+                $data2->tahun_ajaran_id = $tahun_id->id;
+                $data2->jenis_bimbingan = $jenis[$i];
+                $data2->status_konsultasi = "Belum Konsultasi";
+                $data2->status_pesan = "0";
+                $data2->save();
+            }
+
+            $data3 = new ProgresBimbinganModel;
+            $data3->bimbingan_kode = "KB".$pembimbing.substr($nim[$count], -4);
+            $data3->tahun_ajaran_id = $tahun_id->id;
+            $data3->save();
         }
 
         return response()->json(["success" => true]);
@@ -122,8 +144,27 @@ class DosPemController extends Controller
             'nim_edit'  => 'required|numeric',
         ]);
 
-        $data = DosPemModel::where('id', $dosen_pembimbing)->first();
-        $data->kode_pembimbing = "KP".substr($request->nidn_edit, -4).substr($request->nim_edit, -4);
+        $kp = "KP".substr($request->nidn_edit, -4).substr($request->nim_edit, -4);
+        $kb = "KB".substr($request->nidn_edit, -4).substr($request->nim_edit, -4);
+
+        $data = DosPemModel::with('bimbingan.progres')->where('id', $dosen_pembimbing)->first();
+
+        if($data->bimbingan->progres)
+        {
+            $data->bimbingan->progres->bimbingan_kode = $kb;
+            $data->bimbingan->progres->save();
+        }
+
+        if($data->bimbingan)
+        {
+            $arr_id = $data->bimbingan->pluck('id')->toArray();
+            for($i = 0; $i < count($arr_id); $i++)
+            {
+                BimbinganModel::where('id', $arr_id[$i])->update(['kode_bimbingan' => $kb, 'pembimbing_kode' => $kp]);
+            }
+        }
+
+        $data->kode_pembimbing = $kp;
         $data->nidn = $request->nidn_edit;
         $data->nim = $request->nim_edit;
         $data->save();
@@ -141,6 +182,17 @@ class DosPemController extends Controller
     {
         $dospem = DosPemModel::find($dosen_pembimbing);
         PengajuanJudulModel::where('nim', $dospem->nim)->update(['status' => "Diproses"]);
+
+        $kd_bimbingan = BimbinganModel::where('pembimbing_kode', $dospem->kode_pembimbing)->first();
+        $id = ProgresBimbinganModel::where('bimbingan_kode', $kd_bimbingan->kode_bimbingan)->first();
+        ProgresBimbinganModel::find($id->id)->delete();
+
+        $arr_id = BimbinganModel::where('pembimbing_kode', $dospem->kode_pembimbing)->pluck('id')->toArray();
+        for($i = 0; $i < count($arr_id); $i++)
+        {
+            BimbinganModel::find($arr_id[$i])->delete();
+        }
+
         $dospem->delete();
         return response()->json();
     }
@@ -163,5 +215,11 @@ class DosPemController extends Controller
 
         $countNidn = DosPemModel::where('nidn', $nidn)->where('tahun_ajaran_id', $tahun_id->id)->count('id');
         return response()->json(['data' => $countNidn]);
+    }
+
+    public function test()
+    {
+        $data = "lu telat";
+        dd($data);
     }
 }

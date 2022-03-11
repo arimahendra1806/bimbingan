@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use App\Models\DosPemModel;
 use App\Models\TahunAjaran;
 use App\Models\DosPemMateriModel;
 use App\Models\BimbinganModel;
+use App\Models\ProgresBimbinganModel;
 use App\Models\RiwayatBimbinganModel;
 use App\Models\KomentarModel;
 use DataTables;
@@ -16,7 +16,7 @@ use File;
 
 class KonsulProposalController extends Controller
 {
-    public function indexJudul(Request $request)
+    public function index(Request $request)
     {
         /* Get data User Identitas */
         $identitas = Auth::user()->identitas_id;
@@ -29,8 +29,7 @@ class KonsulProposalController extends Controller
 
         /* Get data Bimbingan */
         $bimbingan_id = BimbinganModel::where('pembimbing_kode', $pembimbing_id->kode_pembimbing)
-            ->where('jenis_konsultasi', 'Proposal')
-            ->where('bab_konsultasi', 'Judul')
+            ->where('jenis_bimbingan', 'Proposal')
             ->first();
 
         /* Get Kondisi Jika Data Kosong */
@@ -38,65 +37,70 @@ class KonsulProposalController extends Controller
             $file_upload = "0";
             $status = "Belum Konsultasi";
             $komentar = "0";
+            $kode = "0";
         } else {
             $file_upload = $bimbingan_id->file_upload;
-            $status = $bimbingan_id->status;
+            $status = $bimbingan_id->status_konsultasi;
             $komentar = $bimbingan_id->kode_komentar;
+            $kode = $bimbingan_id->kode_bimbingan;
         }
 
         /* Get Komentar */
         if ($request->ajax()){
-            $data = KomentarModel::latest()->where('komentar_kode', $komentar)->get();
+            $data = KomentarModel::latest()->where('bimbingan_kode', $kode)->where('bimbingan_jenis', 'Proposal')->get();
             return DataTables::of($data)->toJson();
         }
 
-        return view('mahasiswa.konsultasi.proposal.judul.index', compact('tahun_id','pembimbing_id','file_upload','status'));
+        return view('mahasiswa.konsultasi.proposal.index', compact('tahun_id','pembimbing_id','file_upload','status'));
     }
 
-    public function storeJudul(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'file_upload' => 'required|file|max:2048|mimes:pdf',
         ]);
 
-        if($request->status_konsultasi == "Diterima"){
-            $data = "Konsultasi judul proposal sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
+        $status_judul = BimbinganModel::where('pembimbing_kode', $pembimbing_id->kode_pembimbing)
+            ->where('jenis_bimbingan', 'Judul')
+            ->first();
+        if($status_judul->status_konsultasi != "Disetujui"){
+            $data = "Konsultasi judul belum selesai, silahkan lanjut untuk konsultasi sebelumnya terlebih dahulu!";
+            return response()->json(['resp' => 'error', 'data' => $data]);
+        }
+
+        if($request->status_konsultasi == "Disetujui"){
+            $data = "Konsultasi proposal sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
             return response()->json(['resp' => 'error', 'data' => $data]);
         } else {
             /* Get data Tahun */
             $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-            /* Get random kode */
-            $randomString = Str::random(20);
-
             $file = $request->file('file_upload');
             $filename = time()."_".$file->getClientOriginalName();
-            $file->move(public_path('dokumen/konsultasi/proposal/judul'), $filename);
-            File::delete('dokumen/konsultasi/proposal/judul/'.$request->fileShow);
+            $file->move(public_path('dokumen/konsultasi/proposal'), $filename);
+            File::delete('dokumen/konsultasi/proposal/'.$request->fileShow);
 
             // store
-            $data = BimbinganModel::updateOrCreate(
+            $data2 = BimbinganModel::updateOrCreate(
                 [
                     'pembimbing_kode' => $request->pembimbing_kode,
-                    'jenis_konsultasi' => "Proposal",
-                    'bab_konsultasi' => "Judul",
+                    'jenis_bimbingan' => "Proposal",
                 ],
                 [
                     'kode_bimbingan' => "KB".substr($request->pembimbing_kode, 2),
-                    'kode_komentar' => $randomString,
                     'tahun_ajaran_id' => $tahun_id->id,
                     'file_upload' => $filename,
-                    'status' => "Belum Diterima"
+                    'status_konsultasi' => "Belum Disetujui",
+                    'status_pesan' => "0"
                 ]
             );
 
-            $data2 = new RiwayatBimbinganModel;
-            $data2->bimbingan_kode = "KB".substr($request->pembimbing_kode, 2);
-            $data2->konsultasi_jenis = "Proposal";
-            $data2->konsultasi_bab = "Judul";
-            $data2->save();
+            $data3 = new RiwayatBimbinganModel;
+            $data3->bimbingan_kode = "KB".substr($request->pembimbing_kode, 2);
+            $data3->bimbingan_jenis = "Proposal";
+            $data3->save();
 
-            return response()->json(['resp' => 'success', 'data' => $data]);
+            return response()->json(['resp' => 'success', 'data' => $data2]);
         }
     }
 
@@ -110,8 +114,7 @@ class KonsulProposalController extends Controller
 
         /* Get data Bimbingan */
         $bimbingan_id = BimbinganModel::where('pembimbing_kode', $pembimbing_id->kode_pembimbing)
-            ->where('jenis_konsultasi', 'Proposal')
-            ->where('bab_konsultasi', 'Judul')
+            ->where('jenis_bimbingan', 'Proposal')
             ->first();
 
         if(empty($bimbingan_id)){
@@ -124,7 +127,8 @@ class KonsulProposalController extends Controller
         ]);
 
         $data = new KomentarModel;
-        $data->komentar_kode = $bimbingan_id->kode_komentar;
+        $data->bimbingan_kode = $bimbingan_id->kode_bimbingan;
+        $data->bimbingan_jenis = $bimbingan_id->jenis_bimbingan;
         $data->nama = $identitas->name;
         $data->komentar = $request->komentar;
         $data->save();

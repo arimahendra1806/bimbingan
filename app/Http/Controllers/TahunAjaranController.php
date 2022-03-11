@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TahunAjaran;
-use DataTables;
+use DataTables, Validator;
 
 class TahunAjaranController extends Controller
 {
     public function index(Request $request)
     {
+        /* Ambil data tabel tahun ajaran */
         if ($request->ajax()){
             $data = TahunAjaran::latest()->get();
             return DataTables::of($data)
@@ -23,48 +24,109 @@ class TahunAjaranController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
+
+        /* Return menuju view */
         return view('koordinator.kelola-tahun-ajaran.index');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'tahun_ajaran_add' => 'required',
-            'tahun_status_add' => 'required',
-        ]);
+        /* Peraturan validasi  */
+        $rules = [
+            'tahun_ajaran_add' => ['required','unique:tahun_ajaran,tahun_ajaran'],
+            'tahun_status_add' => ['required']
+        ];
 
-        $data = new TahunAjaran;
-        $data->tahun_ajaran = $request->tahun_ajaran_add;
-        $data->status = $request->tahun_status_add;
-        $data->save();
+        /* Pesan validasi */
+        $messages = [];
 
-        return response()->json(["success" => true]);
+        /* Nama kolom validasi */
+        $attributes = [
+            'tahun_ajaran_add' => 'Tahun Ajaran',
+            'tahun_status_add' => 'Status Tahun Ajaran'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Insert tahun ajaran */
+            $data = new TahunAjaran;
+            $data->tahun_ajaran = $request->tahun_ajaran_add;
+            $data->status = $request->tahun_status_add;
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
+        }
     }
 
     public function show($tahun_ajaran)
     {
+        /* Ambil data tahun ajaran sesuai parameter */
         $data = TahunAjaran::find($tahun_ajaran);
+
+        /* Return json data tahun ajaran */
         return response()->json($data);
     }
 
     public function update(Request $request, $tahun_ajaran)
     {
-        $request->validate([
-            'tahun_ajaran_edit' => 'required',
-            'tahun_status_edit' => 'required',
-        ]);
+        /* Ambil data dosen sesuai parameter */
+        $init = TahunAjaran::where('id', $tahun_ajaran)->first();
 
-        $data = TahunAjaran::where('id', $tahun_ajaran)->first();
-        $data->tahun_ajaran = $request->tahun_ajaran_edit;
-        $data->status = $request->tahun_status_edit;
-        $data->save();
+        /* Kondisi data nidn tidak sama, maka validasi berikut */
+        if($init->tahun_ajaran == $request->tahun_ajaran_edit) {
+            /* Peraturan validasi  */
+            $rules = [
+                'tahun_status_edit' => ['required']
+            ];
+        } else {
+            /* Peraturan validasi  */
+            $rules = [
+                'tahun_ajaran_edit' => ['required','unique:tahun_ajaran,tahun_ajaran'],
+                'tahun_status_edit' => ['required']
+            ];
+        }
 
-        return response()->json(["success" => true]);
+        /* Pesan validasi */
+        $messages = [];
+
+        /* Nama kolom validasi */
+        $attributes = [
+            'tahun_ajaran_edit' => 'Tahun Ajaran',
+            'tahun_status_edit' => 'Status Tahun Ajaran'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Update tahun ajaran */
+            $data = TahunAjaran::where('id', $tahun_ajaran)->first();
+            $data->tahun_ajaran = $request->tahun_ajaran_edit;
+            $data->status = $request->tahun_status_edit;
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
+        }
     }
 
     public function destroy($tahun_ajaran)
     {
+        /* Hapus data tahun ajaran sesuai parameter */
         $data = TahunAjaran::find($tahun_ajaran)->delete();
-        return response()->json();
+
+        /* Return json berhasil */
+        return response()->json(['msg' => "Berhasil Menghapus Data!"]);
     }
 }

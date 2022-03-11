@@ -26,7 +26,7 @@ class UserController extends Controller
         $dosen_id = DosenModel::all()->sortBy('nama_dosen');
 
         /* Get data Mahasiswa_id */
-        $mhs_id = MahasiswaModel::all()->sortByDesc('nama_mahasiswa');
+        $mhs_id = MahasiswaModel::all();
 
         if ($request->ajax()){
             $data = User::latest()->get()->load('tahun');

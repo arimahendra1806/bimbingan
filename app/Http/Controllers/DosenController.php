@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use App\Models\DosenModel;
-use App\Models\User;
-use App\Models\TahunAjaran;
-use DataTables;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\DosenModel;
+use App\Models\TahunAjaran;
+use App\Models\User;
 use App\Imports\DosenImport;
+use DataTables, Validator;
 
 class DosenController extends Controller
 {
@@ -20,6 +20,7 @@ class DosenController extends Controller
      */
     public function index(Request $request)
     {
+        /* Ambil data tabel dosen */
         if ($request->ajax()){
             $data = DosenModel::latest()->get();
             return DataTables::of($data)
@@ -33,6 +34,8 @@ class DosenController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
+
+        /* Return menuju view */
         return view('koordinator.kelola-dosen.index');
     }
 
@@ -54,34 +57,60 @@ class DosenController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nidn_add' => 'required|numeric',
-            'nama_dosen_add' => 'required',
-            'alamat_add' => 'required',
-            'email_add' => 'required',
-            'no_telepon_add' => 'required|string|min:10|max:13|regex:/^[1-9]{1}/',
-        ]);
+        /* Peraturan validasi  */
+        $rules = [
+            'nidn_add' => ['required','numeric','unique:dosen,nidn'],
+            'nama_dosen_add' => ['required'],
+            'alamat_add' => ['required'],
+            'email_add' => ['required','email'],
+            'no_telepon_add' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/']
+        ];
 
-        $data = new DosenModel;
-        $data->nidn = $request->nidn_add;
-        $data->nama_dosen = $request->nama_dosen_add;
-        $data->alamat = $request->alamat_add;
-        $data->email = $request->email_add;
-        $data->no_telepon = $request->no_telepon_add;
-        $data->save();
+        /* Pesan validasi */
+        $messages = [];
 
-        $tahun = TahunAjaran::where('status', 'Aktif')->first();
+        /* Nama kolom validasi */
+        $attributes = [
+            'nidn_add' => 'NIDN',
+            'nama_dosen_add' => 'Nama Dosen',
+            'alamat_add' => 'Alamat',
+            'email_add' => 'Email',
+            'no_telepon_add' => 'Nomor Telepon'
+        ];
 
-        $pengguna = new User;
-        $pengguna->identitas_id = $request->nidn_add;
-        $pengguna->tahun_ajaran_id = $tahun->id;
-        $pengguna->name = $request->nama_dosen_add;
-        $pengguna->role = "dosen";
-        $pengguna->email = $request->nidn_add."@bimbingan.id";
-        $pengguna->password = Hash::make($request->nidn_add);
-        $pengguna->save();
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
 
-        return response()->json(["success" => true]);
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Ambil data tahun_ajaran */
+            $tahun = TahunAjaran::where('status', 'Aktif')->first();
+
+            /* Insert ke tabel User */
+            $pengguna = new User;
+            $pengguna->username = $request->nidn_add;
+            $pengguna->tahun_ajaran_id = $tahun->id;
+            $pengguna->name = $request->nama_dosen_add;
+            $pengguna->role = "dosen";
+            $pengguna->password = Hash::make($request->nidn_add);
+            $pengguna->save();
+
+            /* Insert ke tabel Dosen */
+            $data = new DosenModel;
+            $data->users_id = $pengguna->id;
+            $data->nidn = $request->nidn_add;
+            $data->nama_dosen = $request->nama_dosen_add;
+            $data->alamat = $request->alamat_add;
+            $data->email = $request->email_add;
+            $data->no_telepon = $request->no_telepon_add;
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
+        }
     }
 
     /**
@@ -92,7 +121,10 @@ class DosenController extends Controller
      */
     public function show($kelola_dosen)
     {
+        /* Ambil data Dosen sesuai parameter */
         $data = DosenModel::find($kelola_dosen);
+
+        /* Return json data Dosen */
         return response()->json($data);
     }
 
@@ -116,32 +148,69 @@ class DosenController extends Controller
      */
     public function update(Request $request, $kelola_dosen)
     {
-        $request->validate([
-            'nidn_edit' => 'required|numeric',
-            'nama_dosen_edit' => 'required',
-            'alamat_edit' => 'required',
-            'email_edit' => 'required',
-            'no_telepon_edit' => 'required|string|min:10|max:13|regex:/^[1-9]{1}/',
-        ]);
-
+        /* Ambil data dosen sesuai parameter */
         $data = DosenModel::where('id', $kelola_dosen)->first();
 
-        $pengguna_id = User::where('identitas_id', $data->nidn)->first();
-        $pengguna = User::where('id', $pengguna_id->id)->first();
-        $pengguna->identitas_id = $request->nidn_edit;
-        $pengguna->name = $request->nama_dosen_edit;
-        $pengguna->email = $request->nidn_edit."@bimbingan.id";
-        $pengguna->password = Hash::make($request->nidn_edit);
-        $pengguna->save();
+        /* Kondisi data nidn tidak sama, maka validasi berikut */
+        if($data->nidn == $request->nidn_edit) {
+            /* Peraturan validasi  */
+            $rules = [
+                'nama_dosen_edit' => ['required'],
+                'alamat_edit' => ['required'],
+                'email_edit' => ['required','email'],
+                'no_telepon_edit' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/']
+            ];
+        } else {
+            /* Peraturan validasi  */
+            $rules = [
+                'nidn_edit' => ['required','numeric','unique:dosen,nidn'],
+                'nama_dosen_edit' => ['required'],
+                'alamat_edit' => ['required'],
+                'email_edit' => ['required','email'],
+                'no_telepon_edit' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/']
+            ];
+        }
 
-        $data->nidn = $request->nidn_edit;
-        $data->nama_dosen = $request->nama_dosen_edit;
-        $data->alamat = $request->alamat_edit;
-        $data->email = $request->email_edit;
-        $data->no_telepon = $request->no_telepon_edit;
-        $data->save();
+        /* Pesan validasi */
+        $messages = [];
 
-        return response()->json(["success" => true]);
+        /* Nama kolom validasi */
+        $attributes = [
+            'nidn_edit' => 'NIDN',
+            'nama_dosen_edit' => 'Nama Dosen',
+            'alamat_edit' => 'Alamat',
+            'email_edit' => 'Email',
+            'no_telepon_edit' => 'Nomor Telepon'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Update tabel user */
+            if ($data->user)
+            {
+                $data->user->username = $request->nidn_edit;
+                $data->user->name = $request->nama_dosen_edit;
+                $data->user->password = Hash::make($request->nidn_edit);
+                $data->user->save();
+            }
+
+            /* Update tabel dosen */
+            $data->nidn = $request->nidn_edit;
+            $data->nama_dosen = $request->nama_dosen_edit;
+            $data->alamat = $request->alamat_edit;
+            $data->email = $request->email_edit;
+            $data->no_telepon = $request->no_telepon_edit;
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
+        }
     }
 
     /**
@@ -152,24 +221,48 @@ class DosenController extends Controller
      */
     public function destroy($kelola_dosen)
     {
+        /* Ambil data dosen sesuai parameter */
         $data = DosenModel::find($kelola_dosen);
-        User::where('identitas_id', $data->nidn)->delete();
+
+        /* Hapus data user */
+        User::where('username', $data->nidn)->delete();
+
+        /* Hapus data dosen */
         $data->delete();
-        return response()->json();
+
+        /* Return json berhasil */
+        return response()->json(['msg' => "Berhasil Menghapus Data!"]);
     }
 
     public function import(Request $request)
     {
-        $request->validate([
-            'file_import' => 'required|mimes:csv,xlsx,xls'
-        ]);
+        /* Peraturan validasi  */
+        $rules = [
+            'file_import' => ['required','file','max:2048','mimes:csv,xlsx,xls']
+        ];
 
-        if ($request->hasFile('file_import')){
+        /* Pesan validasi */
+        $messages = [];
+
+        /* Nama kolom validasi */
+        $attributes = [
+            'file_import' => 'File Data Import'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Impor data dosen*/
             $file = $request->file('file_import');
-            $filename = time()."_".$file->getClientOriginalName();
-            $import = $file->move(public_path('dokumen/import/dosen'), $filename);
-            Excel::import(new DosenImport, $import);
+            Excel::import(new DosenImport, $file);
+
+            /* Return json berhasil */
+            return response()->json(['msg' => "Berhasil Mengimpor Data!"]);
         }
-        return response()->json();
     }
 }

@@ -15,7 +15,7 @@ class Notifikasi extends Migration
     {
         Schema::create('notifikasi', function (Blueprint $table) {
             $table->id();
-            $table->integer('identitas_id');
+            $table->integer('users_id');
             $table->integer('tahun_ajaran_id');
             $table->string('judul', 150)->nullable();
             $table->string('subyek', 150)->nullable();

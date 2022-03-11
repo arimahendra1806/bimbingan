@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TahunAjaran;
 use App\Models\MateriTahunanModel;
-use DataTables;
-use Validator, File;
+use DataTables, Validator, File;
 
 class MateriTahunanController extends Controller
 {
@@ -17,9 +16,10 @@ class MateriTahunanController extends Controller
      */
     public function index(Request $request)
     {
-        /* Get data Tahun_id */
+        /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::all()->sortByDesc('tahun_ajaran');
 
+        /* Ambil data tabel materi tahunan */
         if ($request->ajax()){
             $data = MateriTahunanModel::latest()->get()->load('tahun');
             return DataTables::of($data)
@@ -33,6 +33,8 @@ class MateriTahunanController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
+
+        /* Return menuju view */
         return view('koordinator.kelola-materi-tahun-ajaran.index', compact('tahun_id'));
     }
 
@@ -54,25 +56,49 @@ class MateriTahunanController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'tahun_ajaran_id_add' => 'required',
-            'file_materi_add' => 'required|file|max:2048|mimes:pdf',
-            'keterangan_add' => 'required',
-        ]);
+        /* Peraturan validasi  */
+        $rules = [
+            'tahun_ajaran_id_add' => ['required'],
+            'file_materi_add' => ['required','file','max:2048','mimes:pdf'],
+            'keterangan_add' => ['required']
+        ];
 
-        $data = new MateriTahunanModel;
-        $data->tahun_ajaran_id = $request->tahun_ajaran_id_add;
-        if ($request->hasFile('file_materi_add')){
-            $file = $request->file('file_materi_add');
-            $filename = time()."_".$file->getClientOriginalName();
-            $file->move(public_path('dokumen/materi-tahunan'), $filename);
+        /* Pesan validasi */
+        $messages = [];
 
-            $data->file_materi = $filename;
+        /* Nama kolom validasi */
+        $attributes = [
+            'tahun_ajaran_id_add' => 'ID Tahun Ajaran',
+            'file_materi_add' => 'File Materi',
+            'keterangan_add' => 'Keterangan'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Insert materi tahunan */
+            $data = new MateriTahunanModel;
+            $data->tahun_ajaran_id = $request->tahun_ajaran_id_add;
+
+            /* Jika request terdapat file */
+            if ($request->hasFile('file_materi_add')){
+                $file = $request->file('file_materi_add');
+                $filename = time()."_".$file->getClientOriginalName();
+                $file->move(public_path('dokumen/materi-tahunan'), $filename);
+
+                $data->file_materi = $filename;
+            }
+            $data->keterangan = $request->keterangan_add;
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
         }
-        $data->keterangan = $request->keterangan_add;
-        $data->save();
-
-        return response()->json(["success" => true]);
     }
 
     /**
@@ -83,7 +109,10 @@ class MateriTahunanController extends Controller
      */
     public function show($materi_tahunan)
     {
+        /* Ambil data materi tahunan sesuai parameter */
         $data = MateriTahunanModel::find($materi_tahunan)->load('tahun');
+
+        /* Return json data materi tahunan */
         return response()->json($data);
     }
 
@@ -107,36 +136,65 @@ class MateriTahunanController extends Controller
      */
     public function update(Request $request, $materi_tahunan)
     {
+        /* Ambil data request file materi */
         $init = $request->file_materi_edit;
+
+        /* Kondisi init jika kosong, maka validasi berikut */
         if ($init == "") {
-            $request->validate([
-                'tahun_ajaran_id_edit' => 'required',
-                'keterangan_edit' => 'required',
-            ]);
+            /* Peraturan validasi  */
+            $rules = [
+                'tahun_ajaran_id_edit' => ['required'],
+                'keterangan_edit' => ['required']
+            ];
         } else {
-            $request->validate([
-                'tahun_ajaran_id_edit' => 'required',
-                'file_materi_edit' => 'required|file|max:2048|mimes:pdf',
-                'keterangan_edit' => 'required',
-            ]);
+            /* Peraturan validasi  */
+            $rules = [
+                'tahun_ajaran_id_edit' => ['required'],
+                'file_materi_edit' => ['required','file','max:2048','mimes:pdf'],
+                'keterangan_edit' => ['required']
+            ];
         }
 
-        $data = MateriTahunanModel::where('id', $materi_tahunan)->first();
-        $data->tahun_ajaran_id = $request->tahun_ajaran_id_edit;
-        if ($request->hasFile('file_materi_edit')){
-            $file = $request->file('file_materi_edit');
-            $filename = time()."_".$file->getClientOriginalName();
-            $file->move(public_path('dokumen/materi-tahunan'), $filename);
+        /* Pesan validasi */
+        $messages = [];
 
-            $path = public_path() . '/dokumen/materi-tahunan/' . $data->file_materi;
-            File::delete($path);
+        /* Nama kolom validasi */
+        $attributes = [
+            'tahun_ajaran_id_edit' => 'ID Tahun Ajaran',
+            'file_materi_edit' => 'File Materi',
+            'keterangan_edit' => 'Keterangan'
+        ];
 
-            $data->file_materi = $filename;
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Update materi tahunan */
+            $data = MateriTahunanModel::where('id', $materi_tahunan)->first();
+            $data->tahun_ajaran_id = $request->tahun_ajaran_id_edit;
+
+            /* Jika request terdapat file */
+            if ($request->hasFile('file_materi_edit')){
+                $file = $request->file('file_materi_edit');
+                $filename = time()."_".$file->getClientOriginalName();
+                $file->move(public_path('dokumen/materi-tahunan'), $filename);
+
+                /* Hapus data file sebelumnya */
+                $path = public_path() . '/dokumen/materi-tahunan/' . $data->file_materi;
+                File::delete($path);
+
+                $data->file_materi = $filename;
+            }
+            $data->keterangan = $request->keterangan_edit;
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
         }
-        $data->keterangan = $request->keterangan_edit;
-        $data->save();
-
-        return response()->json(["success" => true]);
     }
 
     /**
@@ -147,12 +205,17 @@ class MateriTahunanController extends Controller
      */
     public function destroy($materi_tahunan)
     {
+        /* Ambil data materi tahunan sesuai parameter */
         $data = MateriTahunanModel::find($materi_tahunan);
 
+        /* Hapus data file public */
         $path = public_path() . '/dokumen/materi-tahunan/' . $data->file_materi;
         File::delete($path);
 
+        /* Hapus data materi tahunan */
         $data->delete();
-        return response()->json();
+
+        /* Return json berhasil */
+        return response()->json(['msg' => "Berhasil Menghapus Data!"]);
     }
 }

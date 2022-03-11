@@ -14,47 +14,48 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-6">
-                                <label for="nidn_add" class="col-form-label">NIDN: <b class="error">*Pastikan NIDN
-                                        Terisi</b></label>
+                                <label for="nidn_add" class="col-form-label">NIDN:</label>
                                 <input type="text" class="form-control" id="nidn_add" name="nidn_add"
                                     placeholder="e.g: 17XXXXXXX">
+                                <span class="text-danger error-text nidn_add_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="nama_dosen_add" class="col-form-label">Nama Dosen: <b
-                                        class="error">*Pastikan Nama Dosen Terisi</b></label>
+                                <label for="nama_dosen_add" class="col-form-label">Nama Dosen:</label>
                                 <input type="text" class="form-control" id="nama_dosen_add" name="nama_dosen_add"
                                     placeholder="e.g: Budi">
+                                <span class="text-danger error-text nama_dosen_add_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-6">
-                                <label for="email_add" class="col-form-label">Email: <b class="error">*Pastikan
-                                        Email Terisi | Email Aktif</b></label>
+                                <label for="email_add" class="col-form-label">Email:</label>
                                 <input type="text" class="form-control" id="email_add" name="email_add"
                                     placeholder="e.g: Budi@gmail.com">
+                                <span class="text-danger error-text email_add_error"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="no_telepon_add" class="col-form-label">Nomor Telepon: <b
-                                        class="error">*Pastikan Terisi | Tanpa 0 | Terhubung Whatsapp</b></label>
+                                        class="error">*Pastikan Tanpa 0 | Terhubung Whatsapp</b></label>
                                 <div class="input-group">
                                     <div class="input-group-text">+62</div>
                                     <input type="text" class="form-control" id="no_telepon_add" name="no_telepon_add"
                                         placeholder="e.g: 81XXXXXXXX">
                                 </div>
+                                <span class="text-danger error-text no_telepon_add_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-12">
-                                <label for="alamat_add" class="col-form-label">Alamat: <b class="error">*Pastikan
-                                        Alamat Terisi</b></label><br>
+                                <label for="alamat_add" class="col-form-label">Alamat:</label><br>
                                 <textarea class="form-control" name="alamat_add" id="alamat_add" style="width: 100%"
                                     rows="2"></textarea>
+                                <span class="text-danger error-text alamat_add_error"></span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <input type="submit" class="btn btn-primary" name="addSave" value="Simpan">
                     </div>
                 </form>
             </div>
@@ -78,16 +79,19 @@
                             <div class="col-md-6">
                                 <label for="nidn_edit" class="col-form-label">NIDN:</label>
                                 <input type="text" class="form-control" id="nidn_edit" name="nidn_edit">
+                                <span class="text-danger error-text nidn_edit_error"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="nama_dosen_edit" class="col-form-label">Nama Dosen:</label>
                                 <input type="text" class="form-control" id="nama_dosen_edit" name="nama_dosen_edit">
+                                <span class="text-danger error-text nama_dosen_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-6">
                                 <label for="email_edit" class="col-form-label">Email:</label>
                                 <input type="text" class="form-control" id="email_edit" name="email_edit">
+                                <span class="text-danger error-text email_edit_error"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="no_telepon_edit" class="col-form-label">Nomor Telepon:</label>
@@ -96,6 +100,7 @@
                                     <input type="text" class="form-control" id="no_telepon_edit" name="no_telepon_edit"
                                         placeholder="e.g: 81XXXXXXXX">
                                 </div>
+                                <span class="text-danger error-text no_telepon_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -103,12 +108,13 @@
                                 <label for="alamat_edit" class="col-form-label">Alamat:</label><br>
                                 <textarea class="form-control" name="alamat_edit" id="alamat_edit" style="width: 100%"
                                     rows="2"></textarea>
+                                <span class="text-danger error-text alamat_edit_error"></span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <input type="submit" class="btn btn-primary" name="editSave" value="Simpan">
                     </div>
                 </form>
             </div>
@@ -168,16 +174,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Import Data Dosen</h5>
+                    <h5 class="modal-title">Impor Data Dosen</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" id="ImportForm" enctype="multipart/form-data" files="true">
                     @csrf
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="file_import" class="col-form-label">File Import: <b
+                        <div class="mb-1">
+                            <label for="file_import" class="col-form-label">File Impor: <b
                                     class="error">*Pastikan Format CSV/XLSX/XLS</b></label>
                             <input type="file" class="form-control mb-1" id="file_import" name="file_import">
+                            <span class="text-danger error-text file_import_error mb-2"></span>
+                        </div>
+                        <div class="mb-3">
                             <a href="{{ asset('assets/img') }}/import_dosen_large.png" class="glightbox">
                                 <img src="{{ asset('assets/img') }}/import_dosen_small.png" alt="image" width="100%" />
                             </a>
@@ -191,7 +200,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Import Sekarang</button>
+                        <input type="submit" class="btn btn-primary" name="imporSave" value="Impor Sekarang">
                     </div>
                 </form>
             </div>
@@ -232,7 +241,7 @@
                                 <i class="fas fa-plus-circle"></i>
                             </a>&nbsp;
                             <a href="javascript:void(0)" class="btn btn-primary btn-md waves-effect waves-light mb-1"
-                                data-toggle="tooltip" title="Import Data" id="btnImport">
+                                data-toggle="tooltip" title="Impor Data" id="btnImport">
                                 <i class="fas fa-file-import"></i>
                             </a>
                         </div>
@@ -323,6 +332,9 @@
                 order: [
                     [1, 'asc']
                 ],
+                oLanguage: {
+                    sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+                }
             });
 
             /* Button Tooltip */
@@ -333,11 +345,13 @@
             /* Button Add */
             $("#btnAdd").click(function() {
                 $('#DosenFormAdd').trigger('reset');
+                $(document).find('span.error-text').text('');
                 $('#DosenModalAdd').modal('show');
             });
 
             /* Button Edit */
             $('body').on('click', '#btnEdit', function() {
+                $(document).find('span.error-text').text('');
                 var this_id = $(this).data('id');
                 $.get('kelola-dosen/' + this_id, function(data) {
                     $('#DosenModalEdit').modal('show');
@@ -379,10 +393,10 @@
                             data: {
                                 "id": this_id,
                             },
-                            success: function(response) {
+                            success: function(data) {
                                 table.ajax.reload();
                                 Swal.fire({
-                                    title: "Berhasil Menghapus Data!",
+                                    title: data.msg,
                                     icon: "success",
                                     showConfirmButton: false,
                                     timer: 1500
@@ -396,6 +410,7 @@
             /* Button Import */
             $("#btnImport").click(function() {
                 $('#ImportForm').trigger('reset');
+                $(document).find('span.error-text').text('');
                 $('#ImportModal').modal('show');
                 $('.progress-bar').text('0%');
                 $('.progress-bar').css('width', '0%');
@@ -403,6 +418,10 @@
 
             /* Ajax Store */
             $("#DosenFormAdd").submit(function(e) {
+                var form = this;
+                form.addSave.disabled = true;
+                form.addSave.value = "Sedang memproses...";
+
                 e.preventDefault();
 
                 var formData = new FormData(this);
@@ -414,21 +433,35 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        table.ajax.reload();
-                        $("#DosenModalAdd").modal('hide');
-                        Swal.fire({
-                            title: "Berhasil Menambahkan Data!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Simpan";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Simpan";
+                            table.ajax.reload();
+                            $("#DosenModalAdd").modal('hide');
+                            Swal.fire({
+                                title: "Berhasil Menambahkan Data!",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.addSave.disabled = false;
+                        form.addSave.value = "Simpan";
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan, pastikan semua data terisi !!'
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });
@@ -436,9 +469,13 @@
 
             /* Ajax Update */
             $("#DosenFormEdit").submit(function(e) {
-                e.preventDefault();
-                var this_id = document.getElementById("dosen_id_edit").value;
+                var form = this;
+                form.editSave.disabled = true;
+                form.editSave.value = "Sedang memproses...";
 
+                e.preventDefault();
+
+                var this_id = document.getElementById("dosen_id_edit").value;
                 var formData = new FormData(this);
 
                 $.ajax({
@@ -448,21 +485,35 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        table.ajax.reload();
-                        $("#DosenModalEdit").modal('hide');
-                        Swal.fire({
-                            title: "Berhasil Memperbarui Data!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            table.ajax.reload();
+                            $("#DosenModalEdit").modal('hide');
+                            Swal.fire({
+                                title: "Berhasil Memperbarui Data!",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.editSave.disabled = false;
+                        form.editSave.value = "Simpan";
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan, pastikan semua data terisi !!'
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });
@@ -470,6 +521,10 @@
 
             /* Ajax Import */
             $("#ImportForm").submit(function(e) {
+                var form = this;
+                form.imporSave.disabled = true;
+                form.imporSave.value = "Sedang memproses...";
+
                 e.preventDefault();
 
                 var formData = new FormData(this);
@@ -492,24 +547,40 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        $('.progress-bar').text('Uploaded');
-                        $('.progress-bar').css('width', '100%');
-                        table.ajax.reload();
-                        Swal.fire({
-                            title: "Import Data Dosen Berhasil!",
-                            icon: "success",
-                        }).then(function() {
-                            $("#ImportModal").modal('hide');
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.imporSave.disabled = false;
+                            form.imporSave.value = "Impor Sekarang";
+                            $('.progress-bar').text('0%');
+                            $('.progress-bar').css('width', '0%');
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else {
+                            form.imporSave.disabled = false;
+                            form.imporSave.value = "Impor Sekarang";
+                            $('.progress-bar').text('Uploaded');
+                            $('.progress-bar').css('width', '100%');
+                            table.ajax.reload();
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                            }).then(function() {
+                                $("#ImportModal").modal('hide');
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.imporSave.disabled = false;
+                        form.imporSave.value = "Impor Sekarang";
                         $('.progress-bar').text('0%');
                         $('.progress-bar').css('width', '0%');
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan pengisian data, pastikan semua data terisi !!'
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });

@@ -15,7 +15,7 @@ class LinkZoom extends Migration
     {
         Schema::create('link_zoom', function (Blueprint $table) {
             $table->id();
-            $table->integer('nidn');
+            $table->integer('dosen_id');
             $table->integer('tahun_ajaran_id');
             $table->string('id_meeting')->nullable();
             $table->string('passcode')->nullable();

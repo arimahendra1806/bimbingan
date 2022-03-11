@@ -8,6 +8,7 @@ use App\Models\TahunAjaran;
 use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
 use App\Models\PengajuanJudulModel;
+use App\Models\BimbinganModel;
 
 class DosPemModel extends Model
 {
@@ -33,5 +34,10 @@ class DosPemModel extends Model
     public function judul()
     {
         return $this->belongsTo(PengajuanJudulModel::class,'nim','nim');
+    }
+
+    public function bimbingan()
+    {
+        return $this->belongsTo(BimbinganModel::class,'kode_pembimbing','pembimbing_kode');
     }
 }

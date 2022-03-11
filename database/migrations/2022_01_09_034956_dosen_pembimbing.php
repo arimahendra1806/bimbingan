@@ -15,11 +15,12 @@ class DosenPembimbing extends Migration
     {
         Schema::create('dosen_pembimbing', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_pembimbing', 50);
-            $table->integer('nidn');
-            $table->integer('nim');
+            $table->string('kode_pembimbing', 50)->unique();
+            $table->integer('dosen_id');
+            $table->integer('mahasiswa_id');
             $table->integer('tahun_ajaran_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

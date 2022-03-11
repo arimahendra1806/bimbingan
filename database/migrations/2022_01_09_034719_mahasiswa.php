@@ -15,13 +15,15 @@ class Mahasiswa extends Migration
     {
         Schema::create('mahasiswa', function (Blueprint $table) {
             $table->id();
-            $table->integer('nim');
+            $table->integer('users_id')->unique();
+            $table->integer('nim')->unique();
             $table->integer('tahun_ajaran_id');
             $table->string('nama_mahasiswa', 150)->nullable();
             $table->string('alamat')->nullable();
-            $table->string('email', 100)->nullable();
-            $table->string('no_telepon', 15)->nullable();
+            $table->string('email', 100)->nullable()->unique();
+            $table->string('no_telepon', 20)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

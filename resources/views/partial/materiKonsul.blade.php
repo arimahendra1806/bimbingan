@@ -5,7 +5,7 @@
             <div class="card-header">
                 <div class="row">
                     <div class="col-md-6">
-                        <h4 class="card-title">Materi Konsultasi Proposal - Judul</h4>
+                        <h4 class="card-title">Materi Konsultasi</h4>
                     </div>
                     <div class="col-md-6 d-flex justify-content-end">
                         <a class="d-block text-primary" type="button" data-bs-toggle="collapse"
@@ -45,7 +45,7 @@
         var tableMateri = $('#MateriTabels').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "/materi/" + jenis + "/" + bab,
+            ajax: "/materi/" + jenis,
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'

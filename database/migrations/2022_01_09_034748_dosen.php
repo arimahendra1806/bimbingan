@@ -15,12 +15,14 @@ class Dosen extends Migration
     {
         Schema::create('dosen', function (Blueprint $table) {
             $table->id();
-            $table->integer('nidn');
+            $table->integer('users_id')->unique();
+            $table->integer('nidn')->unique();
             $table->string('nama_dosen', 150)->nullable();
             $table->string('alamat')->nullable();
-            $table->string('email', 100)->nullable();
+            $table->string('email', 100)->nullable()->unique();
             $table->string('no_telepon', 20)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

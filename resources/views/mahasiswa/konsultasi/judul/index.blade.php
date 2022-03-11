@@ -6,11 +6,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Konsultasi Proposal - Judul </h4>
+                    <h4 class="mb-sm-0 font-size-18">Konsultasi Judul</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Konsultasi Proposal - Judul</li>
+                            <li class="breadcrumb-item active">Konsultasi Judul</li>
                         </ol>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Konsultasi Judul Proposal</h4>
+                        <h4 class="card-title">Konsultasi Judul</h4>
                         <p class="card-title-desc">
                             Lengkapi form berikut untuk melakukan <b>konsultasi</b>, silahkan upload file hasil pengerjaan
                             kalian.
@@ -78,7 +78,7 @@
                                 </div>
                             </form>
                             <hr>
-                            <h4 class="card-title text-secondary"><i class="far fa-comments"> Kolom Komentar</i></h4>
+                            <h4 class="card-title text-secondary"><i class="far fa-comments"> Kolom Diskusi</i></h4>
                             <div class="row">
                                 <div class="col-md-12">
                                     <label for="komen" class="col-form-label text-secondary">Ketikan Komentar :</label>
@@ -130,8 +130,7 @@
 
     <script>
         /* Inisiasi Partial Bab Proposal U/ Materi dan Riwayat */
-        var bab = "Judul";
-        var jenis = "Proposal"
+        var jenis = "Judul"
     </script>
 
     <script>
@@ -152,7 +151,7 @@
                 } else {
                     document.getElementById('fileShow').style.display = "block";
                     document.getElementById('fileView').style.display = "block";
-                    $('iframe').attr("src", "{{ asset('dokumen/konsultasi/proposal/judul') }}" + "/" + x);
+                    $('iframe').attr("src", "{{ asset('dokumen/konsultasi/judul') }}" + "/" + x);
                 }
             })
 
@@ -160,7 +159,7 @@
             var tableKomen = $('#KomenTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('proposal-judul.indexJudul') }}",
+                ajax: "{{ route('bimbingan-judul.index') }}",
                 columns: [{
                     name: 'komentar'
                 }, ],
@@ -207,7 +206,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('proposal-judul.storeJudul') }}",
+                    url: "{{ route('bimbingan-judul.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -216,17 +215,17 @@
                     success: function(data) {
                         if (data.resp == "success") {
                             $("#file_upload").val('');
-                            $('#status_konsultasi').val(data.data.status);
+                            $('#status_konsultasi').val(data.data.status_konsultasi);
                             $('#fileShow').val(data.data.file_upload);
                             $('iframe').attr("src",
-                                "{{ asset('dokumen/konsultasi/proposal/judul') }}" +
+                                "{{ asset('dokumen/konsultasi/judul') }}" +
                                 "/" +
                                 data.data.file_upload);
                             document.getElementById('fileShow').style.display = "block";
                             document.getElementById('fileView').style.display = "block";
                             tableRiwayat.ajax.reload();
                             Swal.fire({
-                                title: "Berhasil Mengajukan Konsultasi Propsal Judul!",
+                                title: "Berhasil Mengajukan Konsultasi Judul!",
                                 icon: "success",
                                 showConfirmButton: false,
                                 timer: 1500
@@ -256,7 +255,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('konsul.storeKomen') }}",
+                    url: "{{ route('bimbingan-judul.storeKomen') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
