@@ -20,9 +20,10 @@ class PengajuanJudul extends Migration
             $table->string('judul')->nullable();
             $table->string('studi_kasus')->nullable();
             $table->string('pengerjaan')->nullable();
-            $table->integer('id_anggota')->nullable();
+            $table->integer('id_anggota')->dafault(0);
             $table->string('status')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

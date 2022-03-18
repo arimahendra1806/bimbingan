@@ -43,10 +43,11 @@
                             <form id="Store" enctype="multipart/form-data" files="true">
                                 <div class="row mb-1">
                                     <div class="col-md-4">
-                                        <label for="pembimbing_kode" class="col-form-label">Pembimbing Kode: <b
+                                        <label for="pembimbing_kode" class="col-form-label">Kode Bimbingan: <b
                                                 class="info">*Otomatis Terisi</b></label>
                                         <input type="text" class="form-control" id="pembimbing_kode"
-                                            name="pembimbing_kode" value="{{ $pembimbing_id->kode_pembimbing }}" readonly>
+                                            name="pembimbing_kode"
+                                            value="{{ $user->mahasiswa->dospem->bimbingan->kode_bimbingan }}" readonly>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="tahun_ajaran_id" class="col-form-label">Tahun Ajaran: <b
@@ -58,7 +59,8 @@
                                         <label for="status_konsultasi" class="col-form-label">Status: <b
                                                 class="info">*Otomatis Terisi</b></label>
                                         <input type="text" class="form-control" id="status_konsultasi"
-                                            name="status_konsultasi" value="{{ $status }}" readonly>
+                                            name="status_konsultasi"
+                                            value="{{ $user->mahasiswa->dospem->bimbingan->status_konsultasi }}" readonly>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -66,14 +68,17 @@
                                         <label for="file_upload" class="col-form-label">File Upload: <b
                                                 class="error">*Pastikan format PDF | Max 2MB</b></label>
                                         <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
-                                            value="{{ $file_upload }}" style="display: none" readonly>
+                                            value="{{ $user->mahasiswa->dospem->bimbingan->file_upload }}"
+                                            style="display: none" readonly>
                                         <input type="file" class="form-control" id="file_upload" name="file_upload">
+                                        <span class="text-danger error-text file_upload_error"></span>
                                         <iframe style="width:100%; height:400px;" frameborder="0" id="fileView"></iframe>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
                                     <div class="col-md-12 d-flex justify-content-end">
-                                        <button type="submit" class="btn btn-primary">Konsultasi Sekarang</button>
+                                        <input type="submit" class="btn btn-primary" name="addSave"
+                                            value="Konsultasi Sekarang">
                                     </div>
                                 </div>
                             </form>
@@ -86,7 +91,9 @@
                                         <div class="hstack gap-3">
                                             <input class="form-control me-auto" type="text"
                                                 placeholder="Ketik pesan anda disini.." id="komentar" name="komentar">
-                                            <button type="submit" class="btn btn-outline-primary">Kirim</button>
+                                            <span class="text-danger error-text komentar_error"></span>
+                                            <input type="submit" class="btn btn-outline-primary" name="komenSave"
+                                                value="Kirim">
                                             <div class="vr"></div>
                                             <button type="reset" class="btn btn-outline-danger">Reset</button>
                                             <a type="button" class="btn btn-outline-success" data-toggle="tooltip"
@@ -145,7 +152,7 @@
             /* Kondisi Jika Belum Konsultasi */
             $(function() {
                 var x = document.getElementById('fileShow').value;
-                if (x == 0) {
+                if (!x) {
                     document.getElementById('fileShow').style.display = "none";
                     document.getElementById('fileView').style.display = "none";
                 } else {
@@ -201,6 +208,10 @@
 
             /* Ajax Store Konsul */
             $("#Store").submit(function(e) {
+                var form = this;
+                form.addSave.disabled = true;
+                form.addSave.value = "Sedang memproses...";
+
                 e.preventDefault();
 
                 var formData = new FormData(this);
@@ -212,8 +223,25 @@
                     cache: false,
                     contentType: false,
                     processData: false,
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
                     success: function(data) {
-                        if (data.resp == "success") {
+                        if (data.status == 0) {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Konsultasi Sekarang";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else if (data.status == 1) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops, Muncul Kesalahan !!',
+                                text: data.data
+                            });
+                        } else {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Konsultasi Sekarang";
                             $("#file_upload").val('');
                             $('#status_konsultasi').val(data.data.status_konsultasi);
                             $('#fileShow').val(data.data.file_upload);
@@ -225,24 +253,19 @@
                             document.getElementById('fileView').style.display = "block";
                             tableRiwayat.ajax.reload();
                             Swal.fire({
-                                title: "Berhasil Mengajukan Konsultasi Judul!",
+                                title: data.msg,
                                 icon: "success",
                                 showConfirmButton: false,
                                 timer: 1500
                             });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops, Muncul Kesalahan !!',
-                                text: data.data
-                            });
                         }
                     },
                     error: function(response) {
+                        form.addSave.disabled = false;
+                        form.addSave.value = "Konsultasi Sekarang";
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan, pastikan semua data terisi !!'
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });
@@ -250,6 +273,10 @@
 
             /* Ajax Store Komen */
             $("#KomenStore").submit(function(e) {
+                var form = this;
+                form.komenSave.disabled = true;
+                form.komenSave.value = "Mengirim...";
+
                 e.preventDefault();
 
                 var formData = new FormData(this);
@@ -261,20 +288,36 @@
                     cache: false,
                     contentType: false,
                     processData: false,
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
                     success: function(data) {
-                        if (data.resp == "success") {
+                        if (data.status == 0) {
+                            form.komenSave.disabled = false;
+                            form.komenSave.value = "Kirim";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else if (data.status == 1) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops, Muncul Kesalahan !!',
+                                text: data.data
+                            });
+                        } else {
+                            form.komenSave.disabled = false;
+                            form.komenSave.value = "Kirim";
                             $('#komentar').val('');
                             tableKomen.ajax.reload();
                             alertify.set('notifier', 'position', 'top-right');
-                            alertify.success('Success!! Komentar berhasil ditambahkan ..');
-                        } else {
-                            alertify.set('notifier', 'position', 'top-right');
-                            alertify.error(data.data);
+                            alertify.success(data.msg);
                         }
                     },
                     error: function(response) {
+                        form.komenSave.disabled = false;
+                        form.komenSave.value = "Kirim";
                         alertify.set('notifier', 'position', 'top-right');
-                        alertify.error('Error!! Isikan komentar terlebih dahulu ..');
+                        alertify.error('Oops, Muncul Kesalahan !!');
                     }
                 });
             });

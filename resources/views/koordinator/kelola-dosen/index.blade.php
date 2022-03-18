@@ -381,10 +381,11 @@
             $('body').on('click', '#btnDelete', function() {
                 var this_id = $(this).data("id");
                 Swal.fire({
-                    title: 'Apakah anda ingin menghapus data ini?',
+                    title: 'Data yang berkaitan akan terhapus secara keseluruhan! <br> Apakah anda ingin menghapus data ini?',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Batal',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({

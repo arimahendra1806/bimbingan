@@ -19,6 +19,7 @@ class KetentuanTa extends Migration
             $table->string('file_materi');
             $table->string('keterangan')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

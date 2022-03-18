@@ -23,6 +23,7 @@ class Informasi extends Migration
             $table->string('pesan')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

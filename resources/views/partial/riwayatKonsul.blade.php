@@ -78,6 +78,9 @@
             bLengthChange: true,
             bFilter: false,
             bInfo: true,
+            oLanguage: {
+                sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+            }
         });
     </script>
 @endsection

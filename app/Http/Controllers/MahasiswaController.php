@@ -9,6 +9,8 @@ use App\Models\TahunAjaran;
 use App\Models\MahasiswaModel;
 use App\Models\User;
 use App\Imports\MahasiswaImport;
+use App\Models\InformasiModel;
+use App\Models\NotifikasiModel;
 use DataTables, Validator;
 
 class MahasiswaController extends Controller
@@ -124,7 +126,10 @@ class MahasiswaController extends Controller
      */
     public function show($kelola_mahasiswa)
     {
+        /* Ambil data Mahasiswa sesuai parameter */
         $data = MahasiswaModel::find($kelola_mahasiswa)->load('tahun');
+
+        /* Return json data Mahasiswa */
         return response()->json($data);
     }
 
@@ -151,8 +156,8 @@ class MahasiswaController extends Controller
         /* Ambil data mahasiswa sesuai parameter */
         $data = MahasiswaModel::where('id', $kelola_mahasiswa)->first();
 
-        /* Kondisi data nidn tidak sama, maka validasi berikut */
-        if($data->nim == $request->kelola_mahasiswa) {
+        /* Kondisi data nim tidak sama, maka validasi berikut */
+        if($data->nim == $request->nim_edit) {
             /* Peraturan validasi  */
             $rules = [
                 'tahun_ajaran_id_edit' => ['required'],
@@ -228,11 +233,8 @@ class MahasiswaController extends Controller
         /* Ambil data mahasiswa sesuai parameter */
         $data = MahasiswaModel::find($kelola_mahasiswa);
 
-        /* Hapus data user */
-        User::where('username', $data->nim)->delete();
-
         /* Hapus data mahasiswa */
-        $data->delete();
+        $data->forceDelete();
 
         /* Return json berhasil */
         return response()->json(['msg' => "Berhasil Menghapus Data!"]);

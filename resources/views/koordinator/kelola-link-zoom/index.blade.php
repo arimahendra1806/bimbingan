@@ -14,19 +14,18 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-6">
-                                <label for="nidn_add" class="col-form-label">NIDN: <b class="error">*Pastikan NIDN
-                                        Terisi</b></label>
-                                <select class="js-example-responsive form-control" style="width: 100%" id="nidn_add"
-                                    name="nidn_add">
+                                <label for="dosen_add" class="col-form-label">Nama Dosen:</label>
+                                <select class="js-example-responsive form-control" style="width: 100%" id="dosen_add"
+                                    name="dosen_add">
                                     <option value=""></option>
                                     @foreach ($dosen_id as $dosen)
-                                        <option value="{{ $dosen->nidn }}">{{ $dosen->nama_dosen }}</option>
+                                        <option value="{{ $dosen->id }}">{{ $dosen->nama_dosen }}</option>
                                     @endforeach
                                 </select>
+                                <span class="text-danger error-text dosen_add_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="tahun_ajaran_id_add" class="col-form-label">Tahun Ajaran Id: <b
-                                        class="error">*Pastikan Pilih Tahun Ajaran</b></label>
+                                <label for="tahun_ajaran_id_add" class="col-form-label">ID Tahun Ajaran:</label>
                                 <select class="js-example-responsive form-control" style="width: 100%"
                                     id="tahun_ajaran_id_add" name="tahun_ajaran_id_add">
                                     <option value=""></option>
@@ -34,34 +33,35 @@
                                         <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
                                     @endforeach
                                 </select>
+                                <span class="text-danger error-text tahun_ajaran_id_add_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-6">
-                                <label for="id_meeting_add" class="col-form-label">ID Meeting: <b
-                                        class="error">*Pastikan ID Meeting Terisi</b></label>
+                                <label for="id_meeting_add" class="col-form-label">ID Meeting:</label>
                                 <input type="text" class="form-control" id="id_meeting_add" name="id_meeting_add"
                                     placeholder="e.g: 1922 1922 1922">
+                                <span class="text-danger error-text id_meeting_add_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="passcode_add" class="col-form-label">Passcode: <b
-                                        class="error">*Pastikan Passcode Terisi</b></label>
+                                <label for="passcode_add" class="col-form-label">Passcode:</label>
                                 <input type="text" class="form-control" id="passcode_add" name="passcode_add"
                                     placeholder="e.g: 4b6casJS">
+                                <span class="text-danger error-text passcode_add_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-12">
-                                <label for="link_add" class="col-form-label">Link Zoom: <b class="error">*Pastikan
-                                        Link Zoom Terisi</b></label><br>
+                                <label for="link_add" class="col-form-label">Link Zoom:</label><br>
                                 <textarea class="form-control" name="link_add" id="link_add" style="width: 100%"
                                     rows="3"></textarea>
+                                <span class="text-danger error-text link_add_error"></span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <input type="submit" class="btn btn-primary" name="addSave" value="Simpan">
                     </div>
                 </form>
             </div>
@@ -83,17 +83,18 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-6">
-                                <label for="nidn_edit" class="col-form-label">NIDN: </label>
-                                <select class="js-example-responsive form-control" style="width: 100%" id="nidn_edit"
-                                    name="nidn_edit">
+                                <label for="dosen_edit" class="col-form-label">Nama Dosen: </label>
+                                <select class="js-example-responsive form-control" style="width: 100%" id="dosen_edit"
+                                    name="dosen_edit">
                                     <option value=""></option>
                                     @foreach ($dosen_id as $dosen)
-                                        <option value="{{ $dosen->nidn }}">{{ $dosen->nama_dosen }}</option>
+                                        <option value="{{ $dosen->id }}">{{ $dosen->nama_dosen }}</option>
                                     @endforeach
                                 </select>
+                                <span class="text-danger error-text dosen_edit_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="tahun_ajaran_id_edit" class="col-form-label">Tahun Ajaran Id: </label>
+                                <label for="tahun_ajaran_id_edit" class="col-form-label">ID Tahun Ajaran</label>
                                 <select class="js-example-responsive form-control" style="width: 100%"
                                     id="tahun_ajaran_id_edit" name="tahun_ajaran_id_edit">
                                     <option value=""></option>
@@ -101,16 +102,19 @@
                                         <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
                                     @endforeach
                                 </select>
+                                <span class="text-danger error-text tahun_ajaran_id_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-6">
                                 <label for="id_meeting_edit" class="col-form-label">ID Meeting: </label>
                                 <input type="text" class="form-control" id="id_meeting_edit" name="id_meeting_edit">
+                                <span class="text-danger error-text id_meeting_edit_error"></span>
                             </div>
                             <div class="col-md-6">
                                 <label for="passcode_edit" class="col-form-label">Passcode: </label>
                                 <input type="text" class="form-control" id="passcode_edit" name="passcode_edit">
+                                <span class="text-danger error-text passcode_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -118,12 +122,13 @@
                                 <label for="link_edit" class="col-form-label">Link Zoom: </label><br>
                                 <textarea class="form-control" name="link_edit" id="link_edit" style="width: 100%"
                                     rows="3"></textarea>
+                                <span class="text-danger error-text link_edit_error"></span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <input type="submit" class="btn btn-primary" name="editSave" value="Simpan">
                     </div>
                 </form>
             </div>
@@ -142,11 +147,11 @@
                 <div class="modal-body">
                     <div class="row mb-1">
                         <div class="col-md-6">
-                            <label for="nidn_show" class="col-form-label">NIDN: </label>
-                            <input type="text" class="form-control no-outline" id="nidn_show" name="nidn_show" readonly>
+                            <label for="dosen_show" class="col-form-label">Nama Dosen: </label>
+                            <input type="text" class="form-control no-outline" id="dosen_show" name="dosen_show" readonly>
                         </div>
                         <div class="col-md-6">
-                            <label for="tahun_ajaran_id_show" class="col-form-label">Tahun Ajaran Id: </label>
+                            <label for="tahun_ajaran_id_show" class="col-form-label">ID Tahun Ajaran</label>
                             <input type="text" class="form-control no-outline" id="tahun_ajaran_id_show"
                                 name="tahun_ajaran_id_show" readonly>
                         </div>
@@ -191,9 +196,13 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="file_import" class="col-form-label">File Import: <b class="error">*Pastikan
+                            <label for="file_import" class="col-form-label">File Impor: <b
+                                    class="error">*Pastikan
                                     Format CSV/XLSX/XLS</b></label>
                             <input type="file" class="form-control mb-1" id="file_import" name="file_import">
+                            <span class="text-danger error-text file_import_error mb-1"></span>
+                        </div>
+                        <div class="mb-2">
                             <a href="{{ asset('assets/img') }}/import_link_large.png" class="glightbox">
                                 <img src="{{ asset('assets/img') }}/import_link_small.png" alt="image" width="100%" />
                             </a>
@@ -207,7 +216,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Import Sekarang</button>
+                        <input type="submit" class="btn btn-primary" name="imporSave" value="Impor Sekarang">
                     </div>
                 </form>
             </div>
@@ -257,7 +266,7 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>NIDN</th>
+                                    <th>Nama Dosen</th>
                                     <th>Tahun Ajaran</th>
                                     <th>ID Meeting</th>
                                     <th>Aksi</th>
@@ -304,8 +313,7 @@
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'nidn',
-                        name: 'nidn'
+                        name: 'dosen.nama_dosen'
                     },
                     {
                         data: 'tahun.tahun_ajaran',
@@ -328,11 +336,24 @@
                     {
                         width: '1%',
                         targets: [0, 4]
+                    },
+                    {
+                        targets: [1],
+                        data: function(data, type, dataToSet) {
+                            if (data.dosen) {
+                                return data.dosen.nama_dosen;
+                            } else {
+                                return "Dosen Tidak Diketahui"
+                            }
+                        }
                     }
                 ],
                 order: [
                     [1, 'asc']
                 ],
+                oLanguage: {
+                    sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+                }
             });
 
             /* Button Tooltip */
@@ -343,19 +364,21 @@
             /* Button Add */
             $("#btnAdd").click(function() {
                 $('#LinkFormAdd').trigger('reset');
+                $(document).find('span.error-text').text('');
                 $('#LinkModalAdd').modal('show');
                 $('#tahun_ajaran_id_add').val('').trigger('change');
-                $('#nidn_add').val('').trigger('change');
+                $('#dosen_add').val('').trigger('change');
             });
 
             /* Button Edit */
             $('body').on('click', '#btnEdit', function() {
+                $(document).find('span.error-text').text('');
                 var this_id = $(this).data('id');
                 $.get('link-zoom/' + this_id, function(data) {
                     $('#LinkModalEdit').modal('show');
                     $('#link_id_edit').val(data.id);
                     $('#tahun_ajaran_id_edit').val(data.tahun_ajaran_id).trigger('change');
-                    $('#nidn_edit').val(data.nidn).trigger('change');
+                    $('#dosen_edit').val(data.dosen_id).trigger('change');
                     $('#id_meeting_edit').val(data.id_meeting);
                     $('#passcode_edit').val(data.passcode);
                     $('#link_edit').val(data.link_zoom);
@@ -368,7 +391,11 @@
                 $.get('link-zoom/' + this_id, function(data) {
                     $('#LinkModalShow').modal('show');
                     $('#tahun_ajaran_id_show').val(data.tahun.tahun_ajaran);
-                    $('#nidn_show').val(data.nidn);
+                    if (data.dosen) {
+                        $('#dosen_show').val(data.dosen.nama_dosen);
+                    } else {
+                        $('#dosen_show').val("Dosen Tidak Diketahui");
+                    }
                     $('#id_meeting_show').val(data.id_meeting);
                     $('#passcode_show').val(data.passcode);
                     $('#link_show').val(data.link_zoom);
@@ -379,10 +406,11 @@
             $('body').on('click', '#btnDelete', function() {
                 var this_id = $(this).data("id");
                 Swal.fire({
-                    title: 'Apakah anda ingin menghapus data ini?',
+                    title: 'Data yang berkaitan akan terhapus secara keseluruhan! <br> Apakah anda ingin menghapus data ini?',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Batal',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -391,10 +419,10 @@
                             data: {
                                 "id": this_id,
                             },
-                            success: function(response) {
+                            success: function(data) {
                                 table.ajax.reload();
                                 Swal.fire({
-                                    title: "Berhasil Menghapus Data!",
+                                    title: data.msg,
                                     icon: "success",
                                     showConfirmButton: false,
                                     timer: 1500
@@ -408,6 +436,7 @@
             /* Button Import */
             $("#btnImport").click(function() {
                 $('#ImportForm').trigger('reset');
+                $(document).find('span.error-text').text('');
                 $('#ImportModal').modal('show');
                 $('.progress-bar').text('0%');
                 $('.progress-bar').css('width', '0%');
@@ -415,6 +444,10 @@
 
             /* Ajax Store */
             $("#LinkFormAdd").submit(function(e) {
+                var form = this;
+                form.addSave.disabled = true;
+                form.addSave.value = "Sedang memproses...";
+
                 e.preventDefault();
 
                 var formData = new FormData(this);
@@ -426,21 +459,35 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        table.ajax.reload();
-                        $("#LinkModalAdd").modal('hide');
-                        Swal.fire({
-                            title: "Berhasil Menambahkan Data!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Simpan";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Simpan";
+                            table.ajax.reload();
+                            $("#LinkModalAdd").modal('hide');
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.addSave.disabled = false;
+                        form.addSave.value = "Simpan";
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan, pastikan semua data terisi !!'
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });
@@ -448,9 +495,13 @@
 
             /* Ajax Update */
             $("#LinkFormEdit").submit(function(e) {
-                e.preventDefault();
-                var this_id = document.getElementById("link_id_edit").value;
+                var form = this;
+                form.editSave.disabled = true;
+                form.editSave.value = "Sedang memproses...";
 
+                e.preventDefault();
+
+                var this_id = document.getElementById("link_id_edit").value;
                 var formData = new FormData(this);
 
                 $.ajax({
@@ -460,21 +511,35 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        table.ajax.reload();
-                        $("#LinkModalEdit").modal('hide');
-                        Swal.fire({
-                            title: "Berhasil Memperbarui Data!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            table.ajax.reload();
+                            $("#LinkModalEdit").modal('hide');
+                            Swal.fire({
+                                title: "Berhasil Memperbarui Data!",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.editSave.disabled = false;
+                        form.editSave.value = "Simpan";
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan, pastikan semua data terisi !!'
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });
@@ -482,6 +547,10 @@
 
             /* Ajax Import */
             $("#ImportForm").submit(function(e) {
+                var form = this;
+                form.imporSave.disabled = true;
+                form.imporSave.value = "Sedang memproses...";
+
                 e.preventDefault();
 
                 var formData = new FormData(this);
@@ -504,24 +573,40 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        $('.progress-bar').text('Uploaded');
-                        $('.progress-bar').css('width', '100%');
-                        table.ajax.reload();
-                        Swal.fire({
-                            title: "Import Data Link Zoom Dosen Berhasil!",
-                            icon: "success",
-                        }).then(function() {
-                            $("#ImportModal").modal('hide');
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.imporSave.disabled = false;
+                            form.imporSave.value = "Impor Sekarang";
+                            $('.progress-bar').text('0%');
+                            $('.progress-bar').css('width', '0%');
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else {
+                            form.imporSave.disabled = false;
+                            form.imporSave.value = "Impor Sekarang";
+                            $('.progress-bar').text('Uploaded');
+                            $('.progress-bar').css('width', '100%');
+                            table.ajax.reload();
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                            }).then(function() {
+                                $("#ImportModal").modal('hide');
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.imporSave.disabled = false;
+                        form.imporSave.value = "Impor Sekarang";
                         $('.progress-bar').text('0%');
                         $('.progress-bar').css('width', '0%');
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan pengisian data, pastikan semua data terisi !!'
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });
@@ -540,7 +625,7 @@
             });
 
             /* Select2 NIDN Add */
-            $("#nidn_add").select2({
+            $("#dosen_add").select2({
                 dropdownParent: $('#LinkModalAdd'),
                 placeholder: "Cari berdasarkan nama ...",
                 allowClear: true
@@ -554,12 +639,11 @@
             });
 
             /* Select2 NIDN Edit */
-            $("#nidn_edit").select2({
+            $("#dosen_edit").select2({
                 dropdownParent: $('#LinkModalEdit'),
                 placeholder: "Cari berdasarkan nama ...",
                 allowClear: true
             });
-
         });
     </script>
     {{-- END DataTables --}}

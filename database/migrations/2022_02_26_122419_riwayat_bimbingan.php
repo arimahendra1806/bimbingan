@@ -19,6 +19,7 @@ class RiwayatBimbingan extends Migration
             $table->string('bimbingan_jenis');
             $table->datetime('waktu_bimbingan')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

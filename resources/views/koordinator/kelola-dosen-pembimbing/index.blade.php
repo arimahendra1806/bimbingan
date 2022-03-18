@@ -15,39 +15,34 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-12">
-                                <label for="nidn_edit" class="col-form-label">Kode Pembimbing: <b
-                                        class="info">*Otomatis Diperbarui</b></label>
-                                <input type="text" class="form-control" id="kode_edit" name="kode_edit" readonly>
-                            </div>
-                        </div>
-                        <div class="row mb-1">
-                            <div class="col-md-12">
-                                <label for="nidn_edit" class="col-form-label">NIDN: </label>
-                                <select class="js-example-responsive form-control" style="width: 100%" id="nidn_edit"
-                                    name="nidn_edit">
+                                <label for="dosen_edit" class="col-form-label">NIDN: </label>
+                                <select class="js-example-responsive form-control" style="width: 100%" id="dosen_edit"
+                                    name="dosen_edit">
                                     <option value=""></option>
                                     @foreach ($dosen_id as $dosen)
-                                        <option value="{{ $dosen->nidn }}">{{ $dosen->nama_dosen }}</option>
+                                        <option value="{{ $dosen->id }}">{{ $dosen->nama_dosen }}</option>
                                     @endforeach
                                 </select>
+                                <span class="text-danger error-text dosen_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-12">
-                                <label for="nim_edit" class="col-form-label">NIM: </label>
-                                <select class="js-example-responsive form-control" style="width: 100%" id="nim_edit"
-                                    name="nim_edit">
+                                <label for="mhs_edit" class="col-form-label">NIM: </label>
+                                <select class="js-example-responsive form-control" style="width: 100%" id="mhs_edit"
+                                    name="mhs_edit">
                                     <option value=""></option>
                                     @foreach ($mhs_id as $mhs)
-                                        <option value="{{ $mhs->nim }}">{{ $mhs->nama_mahasiswa }}</option>
+                                        <option value="{{ $mhs->id }}">{{ $mhs->nama_mahasiswa }}</option>
                                     @endforeach
                                 </select>
+                                <span class="text-danger error-text mhs_edit_error"></span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <input type="submit" class="btn btn-primary" name="editSave" value="Simpan">
                     </div>
                 </form>
             </div>
@@ -99,17 +94,17 @@
                                 <form id="FormAdd">
                                     <div class="row mb-3">
                                         <div class="col-md-6">
-                                            <label for="nidn_add" class="col-form-label">Calon Dosen Pembimbing: <b
-                                                    class="error">*Pastikan Pilih Pembimbing</b></label>
+                                            <label for="dosen_add" class="col-form-label">Calon Dosen Pembimbing:</label>
                                             <select class="js-example-responsive form-control" style="width: 100%"
-                                                id="nidn_add" name="nidn_add">
+                                                id="dosen_add" name="dosen_add">
                                                 <option value=""></option>
                                                 @foreach ($dosen_id as $dosen)
-                                                    <option value="{{ $dosen->nidn }}"
+                                                    <option value="{{ $dosen->id }}"
                                                         data-id="{{ $dosen->nama_dosen }}">
                                                         {{ $dosen->nama_dosen }}</option>
                                                 @endforeach
                                             </select>
+                                            <span class="text-danger error-text dosen_add_error"></span>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="tahun_ajaran_id_add" class="col-form-label">Tahun Ajaran: <b
@@ -118,23 +113,27 @@
                                                 name="tahun_ajaran_id_add" value="{{ $tahun_id->tahun_ajaran }}" readonly>
                                         </div>
                                     </div>
-                                    <table class="table table-bordered dt-responsive nowrap w-100" id="JudulTabels">
-                                        <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>NIM</th>
-                                                <th>Pengajuan Judul Tugas Akhir</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr></tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered dt-responsive nowrap w-100" id="JudulTabels">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>NIM</th>
+                                                    <th>Pengajuan Judul Tugas Akhir</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <span class="text-danger error-text mhs_add_error"></span>
                                     <div class="row mb-2 mt-3">
-                                        <div class="col-md-6" id="infoJumlah"></div>
-                                        <div class="col-md-6 d-flex justify-content-end">
-                                            <input type="submit" class="btn btn-primary" name="myButton"
+                                        <div class="col-md-2" id="infoTerpilih">0 baris terpilih.</div>
+                                        <div class="col-md-7" id="infoJumlah"></div>
+                                        <div class="col-md-3 d-flex justify-content-end">
+                                            <input type="submit" class="btn btn-primary" name="addSave"
                                                 value="Tambahkan Data"></input>
                                         </div>
                                     </div>
@@ -206,12 +205,12 @@
                 serverSide: false,
                 ajax: "{{ route('dosen-pembimbing.judul') }}",
                 columns: [{
-                        data: 'nim',
+                        data: 'mahasiswa_id',
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'nim',
-                        name: 'nim'
+                        data: 'mahasiswa.nim',
+                        name: 'mahasiswa.nim'
                     },
                     {
                         name: 'pengajuan'
@@ -258,6 +257,15 @@
                 order: [
                     [1, 'asc']
                 ],
+                oLanguage: {
+                    sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+                }
+            });
+
+            /* Checkbox terpilih */
+            $('#JudulTabels').on('change', 'input[type="checkbox"]', function() {
+                var count = tableJudul.column(0).checkboxes.selected().count();
+                $('#infoTerpilih').html(count + " " + "baris terpilih.");
             });
 
             /* Get data table DosPem */
@@ -278,12 +286,12 @@
                         name: 'kode_pembimbing'
                     },
                     {
-                        data: 'nidn',
-                        name: 'nidn'
+                        data: 'dosen.nidn',
+                        name: 'dosen.nidn'
                     },
                     {
-                        data: 'nim',
-                        name: 'nim'
+                        data: 'mahasiswa.nim',
+                        name: 'mahasiswa.nim'
                     },
                     {
                         data: 'action',
@@ -303,6 +311,9 @@
                 order: [
                     [2, 'asc']
                 ],
+                oLanguage: {
+                    sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+                }
             });
 
             /* Button Tooltip */
@@ -317,20 +328,20 @@
                     $('#ModalEdit').modal('show');
                     $('#pembimbing_id_edit').val(data.id);
                     $('#kode_edit').val(data.kode_pembimbing);
-                    $('#nidn_edit').val(data.nidn).trigger('change');
-                    $('#nim_edit').val(data.nim).trigger('change');
+                    $('#dosen_edit').val(data.dosen_id).trigger('change');
+                    $('#mhs_edit').val(data.mahasiswa_id).trigger('change');
                 });
             });
 
             /* Button Delete */
             $('body').on('click', '#btnDelete', function() {
                 var this_id = $(this).data("id");
-                console.log(this_id);
                 Swal.fire({
-                    title: 'Apakah anda ingin menghapus data ini?',
+                    title: 'Data yang berkaitan akan terhapus secara keseluruhan! <br> Apakah anda ingin menghapus data ini?',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Batal',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -339,11 +350,11 @@
                             data: {
                                 "id": this_id,
                             },
-                            success: function(response) {
+                            success: function(data) {
                                 tableJudul.ajax.reload();
                                 tableDosPem.ajax.reload();
                                 Swal.fire({
-                                    title: "Berhasil Menghapus Data!",
+                                    title: data.msg,
                                     icon: "success",
                                     showConfirmButton: false,
                                     timer: 1500
@@ -357,9 +368,8 @@
             /* Ajax Store */
             $("#FormAdd").submit(function(e) {
                 var form = this;
-
-                form.myButton.disabled = true;
-                form.myButton.value = "Sedang memproses...";
+                form.addSave.disabled = true;
+                form.addSave.value = "Sedang memproses...";
 
                 var rows_selected = tableJudul.column(0).checkboxes.selected();
 
@@ -369,8 +379,8 @@
                     $(form).append(
                         $('<input>')
                         .attr('type', 'hidden')
-                        .attr('name', 'nim_add[]')
-                        .attr('id', 'nim_add')
+                        .attr('name', 'mhs_add[]')
+                        .attr('id', 'mhs_add')
                         .val(rowId)
                     );
                 });
@@ -386,31 +396,47 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        $("[id*='nim_add']").each(function() {
-                            $(this).remove();
-                        });
-                        $('#nidn_add').val('').trigger('change');
-                        $('#FormAdd').trigger('reset');
-                        form.myButton.disabled = false;
-                        form.myButton.value = "Tambahkan Data";
-                        tableJudul.ajax.reload();
-                        tableDosPem.ajax.reload();
-                        Swal.fire({
-                            title: "Berhasil Menambahkan Data Pembimbing!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Tambahkan Data";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                            $("[id*='mhs_add']").each(function() {
+                                $(this).remove();
+                            });
+                        } else {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Tambahkan Data";
+                            $("[id*='mhs_add']").each(function() {
+                                $(this).remove();
+                            });
+                            $('#dosen_add').val('').trigger('change');
+                            $('#FormAdd').trigger('reset');
+                            $('#infoJumlah').html("");
+                            $('#infoTerpilih').html("0 baris terpilih.");
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Tambahkan Data";
+                            tableJudul.ajax.reload();
+                            tableDosPem.ajax.reload();
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.addSave.disabled = false;
+                        form.addSave.value = "Tambahkan Data";
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan, pastikan semua data terisi !!'
-                        }).then(function() {
-                            form.myButton.disabled = false;
-                            form.myButton.value = "Tambahkan Data";
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });
@@ -418,9 +444,13 @@
 
             /* Ajax Update */
             $("#FormEdit").submit(function(e) {
-                e.preventDefault();
-                var this_id = document.getElementById("pembimbing_id_edit").value;
+                var form = this;
+                form.editSave.disabled = true;
+                form.editSave.value = "Sedang memproses...";
 
+                e.preventDefault();
+
+                var this_id = document.getElementById("pembimbing_id_edit").value;
                 var formData = new FormData(this);
 
                 $.ajax({
@@ -430,51 +460,65 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        tableJudul.ajax.reload();
-                        tableDosPem.ajax.reload();
-                        $("#ModalEdit").modal('hide');
-                        Swal.fire({
-                            title: "Berhasil Memperbarui Data!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            tableJudul.ajax.reload();
+                            tableDosPem.ajax.reload();
+                            $("#ModalEdit").modal('hide');
+                            Swal.fire({
+                                title: "Berhasil Memperbarui Data!",
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.editSave.disabled = false;
+                        form.editSave.value = "Simpan";
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan, pastikan semua data terisi !!'
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });
             });
 
             /* Select2 NIDN Add */
-            $("#nidn_add").select2({
+            $("#dosen_add").select2({
                 placeholder: "Cari berdasarkan nama ...",
                 allowClear: true
             });
 
             /* Select2 NIDN Edit */
-            $("#nidn_edit").select2({
+            $("#dosen_edit").select2({
                 dropdownParent: $('#ModalEdit'),
                 placeholder: "Cari berdasarkan nama ...",
                 allowClear: true
             });
 
             /* Select2 NIM Edit */
-            $("#nim_edit").select2({
+            $("#mhs_edit").select2({
                 dropdownParent: $('#ModalEdit'),
                 placeholder: "Cari berdasarkan nama ...",
                 allowClear: true
             });
 
             /* Select2 Event NIDN Dipilih Show Jumlah */
-            $('#nidn_add').on('select2:select', function(e) {
-                var kode = $('#nidn_add option:selected').attr('value');
-                var nm = $('#nidn_add option:selected').attr('data-id');
+            $('#dosen_add').on('select2:select', function(e) {
+                var kode = $('#dosen_add option:selected').attr('value');
+                var nm = $('#dosen_add option:selected').attr('data-id');
                 $.get('data/jumlah/pembimbing/' + kode, function(data) {
                     $('#infoJumlah').html("Jumlah Mahasiswa yang dibimbing oleh Dosen " + nm +
                         " saat ini adalah " + data.data + " Mahasiswa.");
@@ -482,7 +526,7 @@
             });
 
             /* Select2 Event NIDN Tidak Dipilih Show Jumlah */
-            $('#nidn_add').on('select2:unselect', function(e) {
+            $('#dosen_add').on('select2:unselect', function(e) {
                 $('#infoJumlah').html("");
             });
         });

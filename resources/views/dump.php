@@ -184,3 +184,20 @@ $guru->restore(); -->
 
     return $twilio->messages->create("whatsapp:$recipient",["from" => "whatsapp:$wa_from", "body" => $body]);
 } -->
+
+<!-- if($data->bimbingan->progres)
+        {
+            $data->bimbingan->progres->bimbingan_kode = $kb;
+            $data->bimbingan->progres->save();
+        }
+
+        if($data->bimbingan)
+        {
+            $arr_id = $data->bimbingan->pluck('id')->toArray();
+            for($i = 0; $i < count($arr_id); $i++)
+            {
+                BimbinganModel::where('id', $arr_id[$i])->update(['kode_bimbingan' => $kb, 'pembimbing_kode' => $kp]);
+            }
+        }
+
+        $data->kode_pembimbing = $kp; -->

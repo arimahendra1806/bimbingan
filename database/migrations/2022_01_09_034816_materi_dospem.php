@@ -21,6 +21,7 @@ class MateriDospem extends Migration
             $table->string('jenis_materi')->nullable();
             $table->string('keterangan')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

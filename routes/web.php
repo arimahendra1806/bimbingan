@@ -37,8 +37,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/test', [DosPemController::class, 'test']);
-
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -110,7 +108,7 @@ Route::group(['middleware' => 'auth'], function(){
         Route::post('/dosen-pembimbing/{dosen_pembimbing}', [DosPemController::class, 'update'])->name('dosen-pembimbing.update');
         Route::post('/dosen-pembimbing/delete/{dosen_pembimbing}', [DosPemController::class, 'destroy'])->name('dosen-pembimbing.destroy');
         Route::get('/data/judul/pengajuan', [DosPemController::class, 'judul'])->name('dosen-pembimbing.judul');
-        Route::get('/data/jumlah/pembimbing/{nidn}', [DosPemController::class, 'jumlahNidn'])->name('dosen-pembimbing.jumlahNidn');
+        Route::get('/data/jumlah/pembimbing/{id}', [DosPemController::class, 'jumlahNidn'])->name('dosen-pembimbing.jumlahNidn');
 
         /* Data Judul Mahasiswa */
         Route::get('/judul-mahasiswa', [JudulMahasiswaController::class, 'indexKoor'])->name('judul-mahasiswa.indexKoor');

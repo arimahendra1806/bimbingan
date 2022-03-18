@@ -21,6 +21,7 @@ class Komentar extends Migration
             $table->string('komentar')->nullable();
             $table->datetime('waktu_komentar')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

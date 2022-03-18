@@ -15,42 +15,50 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-12">
-                                <label for="judul_edit" class="col-form-label">Judul Yang Diajukan: <b
-                                        class="error">*Pastikan Judul Terisi</b></label>
+                                <label for="judul_edit" class="col-form-label">Judul Yang Diajukan:</label>
                                 <textarea name="judul_edit" class="form-control" id="judul_edit" style="width: 100%"
                                     rows="3"></textarea>
+                                <span class="text-danger error-text judul_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-12">
-                                <label for="studi_kasus_edit" class="col-form-label">Studi Kasus: <b
-                                        class="error">*Pastikan Studi Kasus Terisi</b></label>
+                                <label for="studi_kasus_edit" class="col-form-label">Studi Kasus:</label>
                                 <textarea name="studi_kasus_edit" class="form-control" id="studi_kasus_edit"
                                     style="width: 100%" rows="3"></textarea>
+                                <span class="text-danger error-text studi_kasus_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="pengerjaan_edit" class="col-form-label">Pengerjaan: <b
-                                        class="error">*Pastikan Pilih Pengerjaan</b></label>
+                                <label for="pengerjaan_edit" class="col-form-label">Pengerjaan:</label>
                                 <select class="js-example-responsive form-control" style="width: 100%" id="pengerjaan_edit"
                                     name="pengerjaan_edit">
                                     <option value=""></option>
                                     <option value="Sendiri">Sendiri</option>
                                     <option value="Kelompok">Kelompok</option>
                                 </select>
+                                <span class="text-danger error-text pengerjaan_edit_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="nim_anggota_edit" class="col-form-label">NIM Anggota Kelompok: <b
-                                        class="info">*Kosongkan Jika "Pengerjaan Sendiri"</b></label>
-                                <input type="text" class="form-control" id="nim_anggota_edit" name="nim_anggota_edit"
-                                    readonly>
+                                <label for="id_anggota_edit" class="col-form-label">Anggota Kelompok: <b
+                                        class="info">*Pilih "Tidak Ada", jika pengerjaan sendiri</b></label>
+                                <select class="js-example-responsive form-control" style="width: 100%" id="id_anggota_edit"
+                                    name="id_anggota_edit" readonly>
+                                    <option value="Tidak Ada">Tidak Ada</option>
+                                    @foreach ($mahasiswa as $mhs)
+                                        <option value="{{ $mhs->id }}">
+                                            {{ $mhs->nama_mahasiswa }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger error-text id_anggota_edit_error"></span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <input type="submit" class="btn btn-primary" name="editSave" value="Simpan">
                     </div>
                 </form>
             </div>
@@ -105,10 +113,10 @@
                                     @csrf
                                     <div class="row mb-1">
                                         <div class="col-md-6">
-                                            <label for="nim_add" class="col-form-label">NIM: <b
+                                            <label for="mahasiswa_add" class="col-form-label">NIM: <b
                                                     class="info">*Otomatis Terisi</b></label>
-                                            <input type="text" class="form-control" id="nim_add" name="nim_add"
-                                                value="{{ $identitas }}" readonly>
+                                            <input type="text" class="form-control" id="mahasiswa_add"
+                                                name="mahasiswa_add" value="{{ $user->mahasiswa->nim }}" readonly>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="tahun_ajaran_id_add" class="col-form-label">Tahun Ajaran: <b
@@ -119,43 +127,53 @@
                                     </div>
                                     <div class="row mb-1">
                                         <div class="col-md-12">
-                                            <label for="judul_add" class="col-form-label">Judul Yang Diajukan: <b
-                                                    class="error">*Pastikan Judul Terisi</b></label>
+                                            <label for="judul_add" class="col-form-label">Judul Yang Diajukan:</label>
                                             <textarea name="judul_add" class="form-control" id="judul_add"
                                                 style="width: 100%" rows="3"
                                                 placeholder="Kata dalam judul maksimal 15 kata | Judul memuat detail sistem, tempat, dan fitur | Judul yang diajukan bisa berbasis android, website, IOT, maupun desktop &#10;e.g: Sistem Informasi Sekolah Dasar SMPN 1 Gurah Berbasis Website Dengan Framework Laravel"></textarea>
+                                            <span class="text-danger error-text judul_add_error"></span>
                                         </div>
                                     </div>
                                     <div class="row mb-1">
                                         <div class="col-md-12">
-                                            <label for="studi_kasus_add" class="col-form-label">Studi Kasus: <b
-                                                    class="error">*Pastikan Studi Kasus Terisi</b></label>
+                                            <label for="studi_kasus_add" class="col-form-label">Studi Kasus:</label>
                                             <textarea name="studi_kasus_add" class="form-control" id="studi_kasus_add"
                                                 style="width: 100%" rows="3"
                                                 placeholder="Isikan sesuai dengan tempat pelaksanaan tugas akhir yang diajukan | Mahasiswa harus melaksanakan riset terhadap tempat studi kasus, sebelum mengajukan judul &#10;e.g: SMPN 1 Gurah"></textarea>
+                                            <span class="text-danger error-text studi_kasus_add_error"></span>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <div class="col-md-6">
-                                            <label for="pengerjaan_add" class="col-form-label">Pengerjaan: <b
-                                                    class="error">*Pastikan Pilih Pengerjaan</b></label>
+                                            <label for="pengerjaan_add" class="col-form-label">Pengerjaan:</label>
                                             <select class="js-example-responsive form-control" style="width: 100%"
                                                 id="pengerjaan_add" name="pengerjaan_add">
                                                 <option value=""></option>
                                                 <option value="Sendiri">Sendiri</option>
                                                 <option value="Kelompok">Kelompok</option>
                                             </select>
+                                            <span class="text-danger error-text pengerjaan_add_error"></span>
                                         </div>
                                         <div class="col-md-6">
-                                            <label for="nim_anggota_add" class="col-form-label">NIM Anggota Kelompok: <b
-                                                    class="info">*Kosongkan Jika "Pengerjaan Sendiri"</b></label>
-                                            <input type="text" class="form-control" id="nim_anggota_add"
-                                                name="nim_anggota_add" readonly>
+                                            <label for="id_anggota_add" class="col-form-label">Anggota Kelompok: <b
+                                                    class="info">*Pilih "Tidak Ada", jika pengerjaan
+                                                    sendiri</b></label>
+                                            <select class="js-example-responsive form-control" style="width: 100%"
+                                                id="id_anggota_add" name="id_anggota_add" readonly>
+                                                <option value="Tidak Ada">Tidak Ada</option>
+                                                @foreach ($mahasiswa as $mhs)
+                                                    <option value="{{ $mhs->id }}">
+                                                        {{ $mhs->nama_mahasiswa }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            <span class="text-danger error-text id_anggota_add_error"></span>
                                         </div>
                                     </div>
                                     <div class="row mb-1">
                                         <div class="col-md-12 d-flex justify-content-end">
-                                            <button type="submit" class="btn btn-primary">Simpan</button>
+                                            <input type="submit" class="btn btn-primary" name="addSave"
+                                                value="Ajukan Sekarang">
                                         </div>
                                     </div>
                                 </form>
@@ -192,8 +210,8 @@
                                     <b>Status Judul Tugas Akhir Anda</b> akan diperbarui setelah mendapat persetujuan dari
                                     <b>Dosen Pembimbing</b>.
                                     Diharapkan Mahasiswa segera melaksanakan konsultasi terkait <b>Pengajuan Judul Tugas
-                                        Akhir</b> pada menu <u><a
-                                            href="{{ route('proposal-judul.indexJudul') }}">Konsultasi Judul</a></u>.
+                                        Akhir</b> pada menu <u><a href="{{ route('bimbingan-judul.index') }}">Konsultasi
+                                            Judul</a></u>.
                                 </p>
                             </div>
                         </div>
@@ -216,7 +234,6 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>NIM</th>
                                         <th>Tahun Ajaran</th>
                                         <th>Judul Yang Diajukan</th>
                                         <th>Studi Kasus</th>
@@ -279,10 +296,6 @@
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'nim',
-                        name: 'nim'
-                    },
-                    {
                         data: 'tahun.tahun_ajaran',
                         name: 'tahun.tahun_ajaran'
                     },
@@ -314,7 +327,7 @@
                     },
                     {
                         width: '1%',
-                        targets: [0, 7]
+                        targets: [0, 6]
                     }
                 ],
                 order: false,
@@ -338,18 +351,20 @@
                     $('#judul_edit').val(data.judul);
                     $('#studi_kasus_edit').val(data.studi_kasus);
                     $('#pengerjaan_edit').val(data.pengerjaan).trigger('change');
-                    $('#nim_anggota_edit').val(data.nim_anggota);
-                    if (data.pengerjaan == "Kelompok") {
-                        $('#nim_anggota_edit').prop('readonly', false);
+                    if (data.id_anggota == 0) {
+                        $('#id_anggota_edit').val("Tidak Ada").trigger('change');
                     } else {
-                        $('#nim_anggota_edit').val('');
-                        $('#nim_anggota_edit').prop('readonly', true);
+                        $('#id_anggota_edit').val(data.id_anggota).trigger('change');
                     }
                 });
             });
 
             /* Ajax Store */
             $("#FormAdd").submit(function(e) {
+                var form = this;
+                form.addSave.disabled = true;
+                form.addSave.value = "Sedang memproses...";
+
                 e.preventDefault();
 
                 var formData = new FormData(this);
@@ -361,24 +376,38 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        document.getElementById('pertama').classList.remove("hide");
-                        document.getElementById('kedua').classList.remove("hide");
-                        document.getElementById('pertama').style.display = "none";
-                        document.getElementById('kedua').style.display = "block";
-                        table.ajax.reload();
-                        Swal.fire({
-                            title: "Berhasil Mengajukan Judul Tugas Akhir!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Ajukan Sekarang";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Ajukan Sekarang";
+                            document.getElementById('pertama').classList.remove("hide");
+                            document.getElementById('kedua').classList.remove("hide");
+                            document.getElementById('pertama').style.display = "none";
+                            document.getElementById('kedua').style.display = "block";
+                            table.ajax.reload();
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.addSave.disabled = false;
+                        form.addSave.value = "Ajukan Sekarang";
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan, pastikan semua data terisi !!'
                         });
                     }
                 });
@@ -386,9 +415,13 @@
 
             /* Ajax Update */
             $("#FormEdit").submit(function(e) {
-                e.preventDefault();
-                var this_id = document.getElementById("id_edit").value;
+                var form = this;
+                form.editSave.disabled = true;
+                form.editSave.value = "Sedang memproses...";
 
+                e.preventDefault();
+
+                var this_id = document.getElementById("id_edit").value;
                 var formData = new FormData(this);
 
                 $.ajax({
@@ -398,21 +431,35 @@
                     cache: false,
                     contentType: false,
                     processData: false,
-                    success: function(response) {
-                        table.ajax.reload();
-                        $("#ModalEdit").modal('hide');
-                        Swal.fire({
-                            title: "Berhasil Memperbarui Judul Tugas Akhir!",
-                            icon: "success",
-                            showConfirmButton: false,
-                            timer: 1500
-                        });
+                    beforeSend: function() {
+                        $(document).find('span.error-text').text('');
+                    },
+                    success: function(data) {
+                        if (data.status == 0) {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            $.each(data.error, function(prefix, val) {
+                                $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            table.ajax.reload();
+                            $("#ModalEdit").modal('hide');
+                            Swal.fire({
+                                title: data.msg,
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        }
                     },
                     error: function(response) {
+                        form.editSave.disabled = false;
+                        form.editSave.value = "Simpan";
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!',
-                            text: 'Terdapat kesalahan, pastikan semua data terisi !!'
+                            title: 'Oops, Muncul Kesalahan !!'
                         });
                     }
                 });
@@ -424,6 +471,8 @@
                 minimumResultsForSearch: -1
             });
 
+            $("#id_anggota_add").select2({});
+
             /* Select2 Pengerjaan Edit */
             $("#pengerjaan_edit").select2({
                 dropdownParent: $('#ModalEdit'),
@@ -431,28 +480,25 @@
                 minimumResultsForSearch: -1
             });
 
+            $("#id_anggota_edit").select2({
+                dropdownParent: $('#ModalEdit')
+            });
+
             /* Select2 Event Pengerjaan Add */
             $('#pengerjaan_add').on('select2:select', function(e) {
                 var x = document.getElementById('pengerjaan_add').value;
-                if (x == "Kelompok") {
-                    $('#nim_anggota_add').prop('readonly', false);
-                } else {
-                    $('#nim_anggota_add').val('');
-                    $('#nim_anggota_add').prop('readonly', true);
+                if (x == "Sendiri") {
+                    $('#id_anggota_add').val('Tidak Ada').trigger('change');
                 }
             });
 
             /* Select2 Event Pengerjaan Edit */
             $('#pengerjaan_edit').on('select2:select', function(e) {
                 const y = document.getElementById('pengerjaan_edit').value;
-                if (y == "Kelompok") {
-                    $('#nim_anggota_edit').prop('readonly', false);
-                } else {
-                    $('#nim_anggota_edit').val('');
-                    $('#nim_anggota_edit').prop('readonly', true);
+                if (y == "Sendiri") {
+                    $('#id_anggota_edit').val('Tidak Ada').trigger('change');
                 }
             });
-
         });
     </script>
 @endsection

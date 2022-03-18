@@ -124,7 +124,10 @@ class TahunAjaranController extends Controller
     public function destroy($tahun_ajaran)
     {
         /* Hapus data tahun ajaran sesuai parameter */
-        $data = TahunAjaran::find($tahun_ajaran)->delete();
+        $data = TahunAjaran::find($tahun_ajaran)->
+
+        /* Hapus data tahun ajaran */
+        $data->forceDelete();
 
         /* Return json berhasil */
         return response()->json(['msg' => "Berhasil Menghapus Data!"]);

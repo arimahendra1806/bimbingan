@@ -140,7 +140,7 @@ class MateriTahunanController extends Controller
         $init = $request->file_materi_edit;
 
         /* Kondisi init jika kosong, maka validasi berikut */
-        if ($init == "") {
+        if (!$init) {
             /* Peraturan validasi  */
             $rules = [
                 'tahun_ajaran_id_edit' => ['required'],
@@ -213,7 +213,7 @@ class MateriTahunanController extends Controller
         File::delete($path);
 
         /* Hapus data materi tahunan */
-        $data->delete();
+        $data->forceDelete();
 
         /* Return json berhasil */
         return response()->json(['msg' => "Berhasil Menghapus Data!"]);

@@ -21,6 +21,7 @@ class Notifikasi extends Migration
             $table->string('subyek', 150)->nullable();
             $table->string('status', 50)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

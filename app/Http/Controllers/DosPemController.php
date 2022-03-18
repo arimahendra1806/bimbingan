@@ -10,7 +10,7 @@ use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
 use App\Models\BimbinganModel;
 use App\Models\ProgresBimbinganModel;
-use DataTables;
+use DataTables, Validator;
 
 class DosPemController extends Controller
 {
@@ -21,17 +21,18 @@ class DosPemController extends Controller
      */
     public function index(Request $request)
     {
-        /* Get data Tahun */
+        /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-        /* Get data Dosen_id */
+        /* Ambil data dosen */
         $dosen_id = DosenModel::all()->sortBy('nama_dosen');
 
-        /* Get data Mhs_id */
+        /* Ambil data mahasiswa */
         $mhs_id = MahasiswaModel::all()->sortBy('nama_mahasiswa');
 
+        /* Ambil data tabel dos_pem */
         if ($request->ajax()){
-            $data = DosPemModel::where('tahun_ajaran_id', $tahun_id->id)->get()->load('tahun');
+            $data = DosPemModel::where('tahun_ajaran_id', $tahun_id->id)->get()->load('tahun','mahasiswa','dosen');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($model){
@@ -42,6 +43,8 @@ class DosPemController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
+
+        /* Return menuju view */
         return view('koordinator.kelola-dosen-pembimbing.index', compact('tahun_id', 'dosen_id', 'mhs_id'));
     }
 
@@ -63,48 +66,82 @@ class DosPemController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nidn_add'  => 'required|numeric',
-            'nim_add.*'  => 'required|numeric',
-        ]);
+        /* Peraturan validasi, manual karena some reason */
+        /* inisiasi request */
+        $dsn = $request->dosen_add;
+        $mhs = $request->mhs_add;
 
-        $pembimbing = substr($request->nidn_add, -4);
-        $nidn = $request->nidn_add;
-        $nim = $request->nim_add;
-        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
-
-        $jenis = ["Judul","Proposal","Laporan","Program"];
-
-        for($count = 0; $count < count($nim); $count++)
-        {
-            $data = new DosPemModel;
-            $data->kode_pembimbing = "KP".$pembimbing.substr($nim[$count], -4);
-            $data->nidn = $nidn;
-            $data->nim = $nim[$count];
-            $data->tahun_ajaran_id = $tahun_id->id;
-            $data->save();
-
-            PengajuanJudulModel::where('nim', $nim[$count])->update(['status' => "Mendapat Pembimbing"]);
-
-            for($i = 0; $i < count($jenis); $i++)
+        /* kondisi jika request kosong */
+        if(!$dsn && !$mhs) {
+            return response()->json(['status' => 0, 'error' => ['dosen_add' => ['Nama Dosen wajib diisi'], 'mhs_add' => ['Checklist Mahasiswa wajib diisi']]]);
+        } elseif(!$dsn) {
+            return response()->json(['status' => 0, 'error' => ['dosen_add' => ['Nama Dosen wajib diisi']]]);
+        }
+        elseif(!$mhs) {
+            return response()->json(['status' => 0, 'error' => ['mhs_add' => ['Checklist Mahasiswa wajib diisi']]]);
+        } else {
+            /* kondisi jika request mhs sama  */
+            for($y = 0; $y < count($mhs); $y++)
             {
-                $data2 = new BimbinganModel;
-                $data2->kode_bimbingan = "KB".$pembimbing.substr($nim[$count], -4);
-                $data2->pembimbing_kode= "KP".$pembimbing.substr($nim[$count], -4);
-                $data2->tahun_ajaran_id = $tahun_id->id;
-                $data2->jenis_bimbingan = $jenis[$i];
-                $data2->status_konsultasi = "Belum Konsultasi";
-                $data2->status_pesan = "0";
-                $data2->save();
+                $x = DosPemModel::where('mahasiswa_id', $mhs[$y])->first();
+                if($x){
+                    return response()->json(['status' => 0, 'error' => ['mhs_add' => ['Checklist Mahasiswa sudah ada sebelumnya']]]);
+                    break;
+                }
             }
 
-            $data3 = new ProgresBimbinganModel;
-            $data3->bimbingan_kode = "KB".$pembimbing.substr($nim[$count], -4);
-            $data3->tahun_ajaran_id = $tahun_id->id;
-            $data3->save();
-        }
+            /* Ambil data tahun_ajaran yang aktif */
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-        return response()->json(["success" => true]);
+            /* Array jenis bimbingan */
+            $jenis = ["Judul","Proposal","Laporan","Program"];
+
+            /* Ambil nidn untuk kode */
+            $id_dsn = DosenModel::where('id', $dsn)->first();
+            $nidn = substr($id_dsn->nidn, -4);
+
+            /* Perulangan sebanyak checkbox requerst mhs */
+            for($count = 0; $count < count($mhs); $count++)
+            {
+                /* Ambil nim untuk kode */
+                $id_mhs = MahasiswaModel::where('id', $mhs[$count])->first();
+                $nim = substr($id_mhs->nim, -4);
+
+                /* Insert ke tabel dos_pem */
+                $data = new DosPemModel;
+                $data->kode_pembimbing = "KP".$nidn.$nim.rand(1000,9999);
+                $data->dosen_id = $dsn;
+                $data->mahasiswa_id = $mhs[$count];
+                $data->tahun_ajaran_id = $tahun_id->id;
+                $data->save();
+
+                /* Update tabel pengajuan_judul sesuai request mhs */
+                PengajuanJudulModel::where('mahasiswa_id', $mhs[$count])->update(['status' => "Mendapat Pembimbing"]);
+
+                /* Perulangan sebanyak jenis */
+                for($i = 0; $i < count($jenis); $i++)
+                {
+                    /* Insert ke tabel bimbingan sebanyak jenis */
+                    $data2 = new BimbinganModel;
+                    $data2->kode_bimbingan = "KB".substr($data->kode_pembimbing, 2);
+                    $data2->pembimbing_kode = $data->kode_pembimbing;
+                    $data2->tahun_ajaran_id = $tahun_id->id;
+                    $data2->jenis_bimbingan = $jenis[$i];
+                    $data2->status_konsultasi = "Belum Konsultasi";
+                    $data2->status_pesan = "0";
+                    $data2->save();
+                }
+
+                /* Insert ke tabel progres sesiai kode bimbingan */
+                $data3 = new ProgresBimbinganModel;
+                $data3->bimbingan_kode = $data2->kode_bimbingan;
+                $data3->tahun_ajaran_id = $tahun_id->id;
+                $data3->save();
+            }
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
+        }
     }
 
     /**
@@ -115,7 +152,10 @@ class DosPemController extends Controller
      */
     public function show($dosen_pembimbing)
     {
+        /* Ambil data dos_pem sesuai parameter */
         $data = DosPemModel::find($dosen_pembimbing)->load('tahun');
+
+        /* Return json data dos_pem */
         return response()->json($data);
     }
 
@@ -139,37 +179,48 @@ class DosPemController extends Controller
      */
     public function update(Request $request, $dosen_pembimbing)
     {
-        $request->validate([
-            'nidn_edit'  => 'required|numeric',
-            'nim_edit'  => 'required|numeric',
-        ]);
+        /* Ambil data users sesuai parameter */
+        $data = DosPemModel::where('id', $dosen_pembimbing)->first();
 
-        $kp = "KP".substr($request->nidn_edit, -4).substr($request->nim_edit, -4);
-        $kb = "KB".substr($request->nidn_edit, -4).substr($request->nim_edit, -4);
-
-        $data = DosPemModel::with('bimbingan.progres')->where('id', $dosen_pembimbing)->first();
-
-        if($data->bimbingan->progres)
-        {
-            $data->bimbingan->progres->bimbingan_kode = $kb;
-            $data->bimbingan->progres->save();
+        /* Kondisi data username tidak sama, maka validasi berikut */
+        if($data->mahasiswa_id == $request->mhs_edit) {
+            /* Peraturan validasi  */
+            $rules = [
+                'dosen_edit' => ['required'],
+            ];
+        } else {
+            /* Peraturan validasi  */
+            $rules = [
+                'dosen_edit' => ['required'],
+                'mhs_edit' => ['required',"unique:dosen_pembimbing,mahasiswa_id"],
+            ];
         }
 
-        if($data->bimbingan)
-        {
-            $arr_id = $data->bimbingan->pluck('id')->toArray();
-            for($i = 0; $i < count($arr_id); $i++)
-            {
-                BimbinganModel::where('id', $arr_id[$i])->update(['kode_bimbingan' => $kb, 'pembimbing_kode' => $kp]);
-            }
+        /* Pesan validasi */
+        $messages = [];
+
+        /* Nama kolom validasi */
+        $attributes = [
+            'dosen_edit' => 'Nama Dosen',
+            'mhs_edit' => 'Nama Mahasiswa'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Update tabel dos_pem */
+            $data->dosen_id = $request->dosen_edit;
+            $data->mahasiswa_id = $request->mhs_edit;
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
         }
-
-        $data->kode_pembimbing = $kp;
-        $data->nidn = $request->nidn_edit;
-        $data->nim = $request->nim_edit;
-        $data->save();
-
-        return response()->json(["success" => true]);
     }
 
     /**
@@ -180,46 +231,42 @@ class DosPemController extends Controller
      */
     public function destroy($dosen_pembimbing)
     {
+        /* Ambil data dos_pem sesuai parameter */
         $dospem = DosPemModel::find($dosen_pembimbing);
-        PengajuanJudulModel::where('nim', $dospem->nim)->update(['status' => "Diproses"]);
 
-        $kd_bimbingan = BimbinganModel::where('pembimbing_kode', $dospem->kode_pembimbing)->first();
-        $id = ProgresBimbinganModel::where('bimbingan_kode', $kd_bimbingan->kode_bimbingan)->first();
-        ProgresBimbinganModel::find($id->id)->delete();
+        /* Update data pengajuan sesuai data dos_pem */
+        PengajuanJudulModel::where('mahasiswa_id', $dospem->mahasiswa_id)->update(['status' => "Diproses"]);
 
-        $arr_id = BimbinganModel::where('pembimbing_kode', $dospem->kode_pembimbing)->pluck('id')->toArray();
-        for($i = 0; $i < count($arr_id); $i++)
-        {
-            BimbinganModel::find($arr_id[$i])->delete();
-        }
+        /* Hapus data dos_pem */
+        $dospem->forceDelete();
 
-        $dospem->delete();
-        return response()->json();
+        /* Return json berhasil */
+        return response()->json(['msg' => "Berhasil Menghapus Data!"]);
     }
 
     public function judul(Request $request){
-        /* Get data Tahun_id */
+        /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
+        /* Ambil data tabel judul */
         if ($request->ajax()){
-            $data = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->get();
+            $data = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->get()->load('mahasiswa');
             return DataTables::of($data)->toJson();
         }
+
+        /* return json */
         return response()->json();
     }
 
-    public function jumlahNidn($nidn)
+    public function jumlahNidn($id)
     {
-        /* Get data Tahun_id */
+        /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-        $countNidn = DosPemModel::where('nidn', $nidn)->where('tahun_ajaran_id', $tahun_id->id)->count('id');
-        return response()->json(['data' => $countNidn]);
-    }
+        /* Ambil data dos_pem sesuai parameter */
+        $countId = DosPemModel::where('mahasiswa_id', $id)->where('tahun_ajaran_id', $tahun_id->id)->count('id');
 
-    public function test()
-    {
-        $data = "lu telat";
-        dd($data);
+        /* Return json data dos_pem */
+        return response()->json(['data' => $countId]);
     }
 }

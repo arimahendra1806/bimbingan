@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\TahunAjaran;
 use App\Models\PengajuanJudulModel;
-use DataTables;
-use Auth;
+use App\Models\MahasiswaModel;
+use App\Models\User;
+use DataTables, Auth, Validator;
 
 class PengajuanJudulController extends Controller
 {
@@ -17,17 +18,22 @@ class PengajuanJudulController extends Controller
      */
     public function index(Request $request)
     {
-        /* Get data Tahun_id */
+        /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-        /* Get data User Identitas */
-        $identitas = Auth::user()->identitas_id;
+        /* Ambil data mahasiswa login */
+        $user = User::with('mahasiswa')->find(Auth::user()->id);
+        $mhs_id = $user->mahasiswa->id;
 
-        /* Get count pengajuan u/ kondisi */
-        $count = PengajuanJudulModel::where('nim', $identitas)->count('id');
+        /* Ambil data mahasiswa */
+        $mahasiswa = MahasiswaModel::all()->sortBy('nama_mahasiswa');
 
+        /* Ambil count pengajuan u/ kondisi */
+        $count = PengajuanJudulModel::where('mahasiswa_id', $mhs_id)->count('id');
+
+        /* Ambil data tabel pengajuan judul */
         if ($request->ajax()){
-            $data = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->where('nim', $identitas)->get()->load('tahun');
+            $data = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->where('mahasiswa_id', $mhs_id)->get()->load('tahun');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($model){
@@ -37,7 +43,9 @@ class PengajuanJudulController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
-        return view('mahasiswa.pengajuan-judul.index', compact('tahun_id', 'identitas', 'count'));
+
+        /* Return menuju view */
+        return view('mahasiswa.pengajuan-judul.index', compact('tahun_id', 'user', 'count','mahasiswa'));
     }
 
     /**
@@ -58,40 +66,69 @@ class PengajuanJudulController extends Controller
      */
     public function store(Request $request)
     {
-        if($request->pengerjaan_add == "Kelompok"){
-            $request->validate([
-                'judul_add' => 'required',
-                'studi_kasus_add' => 'required',
-                'pengerjaan_add' => 'required',
-                'nim_anggota_add' => 'required|numeric',
-            ]);
-        } else {
-            $request->validate([
-                'judul_add' => 'required',
-                'studi_kasus_add' => 'required',
-                'pengerjaan_add' => 'required',
-            ]);
-        }
-
-        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
-
-        $data = new PengajuanJudulModel;
-        $data->nim = $request->nim_add;
-        $data->tahun_ajaran_id = $tahun_id->id;
-        $data->judul = $request->judul_add;
-        $data->studi_kasus = $request->studi_kasus_add;
-        $data->pengerjaan = $request->pengerjaan_add;
+        /* Ambil data mahasiswa login */
+        $user = User::with('mahasiswa')->find(Auth::user()->id);
+        $mhs_id = $user->mahasiswa->id;
 
         if($request->pengerjaan_add == "Kelompok"){
-            $data->nim_anggota = $request->nim_anggota_add;
+            /* Peraturan validasi  */
+            $rules = [
+                'judul_add' => ['required'],
+                'studi_kasus_add' => ['required'],
+                'pengerjaan_add' => ['required'],
+                'id_anggota_add' => ['required','not_in:Tidak Ada','not_in:'.$mhs_id]
+            ];
         } else {
-            $data->nim_anggota = "";
+            /* Peraturan validasi  */
+            $rules = [
+                'judul_add' => ['required'],
+                'studi_kasus_add' => ['required'],
+                'pengerjaan_add' => ['required'],
+                'id_anggota_add' => ['required','in:Tidak Ada']
+            ];
         }
 
-        $data->status = "Diproses";
-        $data->save();
+        /* Pesan validasi */
+        $messages = [];
 
-        return response()->json(["success" => true]);
+        /* Nama kolom validasi */
+        $attributes = [
+            'judul_add' => 'Judul Yang Diajukan',
+            'studi_kasus_add' => 'Studi Kasus',
+            'pengerjaan_add' => 'Status Pengerjaan',
+            'id_anggota_add' => 'Anggota Kelompok'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Ambil data tahun_ajaran */
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
+            /* Insert ke tabel link_zoom */
+            $data = new PengajuanJudulModel;
+            $data->mahasiswa_id = $mhs_id;
+            $data->tahun_ajaran_id = $tahun_id->id;
+            $data->judul = $request->judul_add;
+            $data->studi_kasus = $request->studi_kasus_add;
+            $data->pengerjaan = $request->pengerjaan_add;
+
+            /* Jika request sama dengan tidak ada, maka berikut */
+            if($request->id_anggota_add != "Tidak Ada"){
+                $data->id_anggota = $request->id_anggota_add;
+            }
+
+            $data->status = "Diproses";
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
+        }
     }
 
     /**
@@ -102,7 +139,10 @@ class PengajuanJudulController extends Controller
      */
     public function show($pengajuan_judul)
     {
+        /* Ambil data pengajuan judul sesuai parameter */
         $data = PengajuanJudulModel::find($pengajuan_judul);
+
+        /* Return json data link_zoom */
         return response()->json($data);
     }
 
@@ -126,34 +166,66 @@ class PengajuanJudulController extends Controller
      */
     public function update(Request $request, $pengajuan_judul)
     {
-        if($request->pengerjaan_add == "Kelompok"){
-            $request->validate([
-                'judul_edit' => 'required',
-                'studi_kasus_edit' => 'required',
-                'pengerjaan_edit' => 'required',
-                'nim_anggota_edit' => 'required|numeric',
-            ]);
+        /* Ambil data mahasiswa login */
+        $user = User::with('mahasiswa')->find(Auth::user()->id);
+        $mhs_id = $user->mahasiswa->id;
+
+        /* Kondisi data pengerjaan sama, maka validasi berikut */
+        if($request->pengerjaan_edit == "Kelompok") {
+            /* Peraturan validasi  */
+            $rules = [
+                'judul_edit' => ['required'],
+                'studi_kasus_edit' => ['required'],
+                'pengerjaan_edit' => ['required'],
+                'id_anggota_edit' => ['required','not_in:Tidak Ada','not_in:'.$mhs_id]
+            ];
         } else {
-            $request->validate([
-                'judul_edit' => 'required',
-                'studi_kasus_edit' => 'required',
-                'pengerjaan_edit' => 'required',
-            ]);
+            /* Peraturan validasi  */
+            $rules = [
+                'judul_edit' => ['required'],
+                'studi_kasus_edit' => ['required'],
+                'pengerjaan_edit' => ['required'],
+                'id_anggota_edit' => ['required','in:Tidak Ada']
+            ];
         }
 
-        $data = PengajuanJudulModel::where('id', $pengajuan_judul)->first();
-        $data->judul = $request->judul_edit;
-        $data->studi_kasus = $request->studi_kasus_edit;
-        $data->pengerjaan = $request->pengerjaan_edit;
+        /* Pesan validasi */
+        $messages = [];
 
-        if($request->pengerjaan_edit == "Kelompok"){
-            $data->nim_anggota = $request->nim_anggota_edit;
+        /* Nama kolom validasi */
+        $attributes = [
+            'judul_edit' => 'Judul Yang Diajukan',
+            'studi_kasus_edit' => 'Studi Kasus',
+            'pengerjaan_edit' => 'Status Pengerjaan',
+            'id_anggota_edit' => 'Anggota Kelompok'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            $data->nim_anggota = "";
-        }
-        $data->save();
+            /* Update tabel pengajuan judul */
+            $data = PengajuanJudulModel::where('id', $pengajuan_judul)->first();
+            $data->judul = $request->judul_edit;
+            $data->studi_kasus = $request->studi_kasus_edit;
+            $data->pengerjaan = $request->pengerjaan_edit;
 
-        return response()->json(["success" => true]);
+            /* Jika request sama dengan tidak ada, maka berikut */
+            if($request->id_anggota_edit != "Tidak Ada"){
+                $data->id_anggota = $request->id_anggota_edit;
+            } else {
+                $data->id_anggota = 0;
+            }
+
+            $data->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
+        }
     }
 
     /**

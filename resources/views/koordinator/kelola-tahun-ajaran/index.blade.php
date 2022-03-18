@@ -256,10 +256,11 @@
             $('body').on('click', '#btnDelete', function() {
                 var this_id = $(this).data("id");
                 Swal.fire({
-                    title: 'Apakah anda ingin menghapus data ini?',
+                    title: 'Data yang berkaitan akan terhapus secara keseluruhan! <br> Apakah anda ingin menghapus data ini?',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes',
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Batal',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
@@ -388,14 +389,14 @@
             /* Select2 Tahun Ajaran Add */
             $("#tahun_status_add").select2({
                 dropdownParent: $('#TahunAjaranModalAdd'),
-                placeholder: "Pilih berdasarkan tahun ...",
+                placeholder: "Pilih berdasarkan status ...",
                 minimumResultsForSearch: -1
             });
 
             /* Select2 Tahun Ajaran Edit */
             $("#tahun_status_edit").select2({
                 dropdownParent: $('#TahunAjaranModalEdit'),
-                placeholder: "Pilih berdasarkan tahun ...",
+                placeholder: "Pilih berdasarkan status ...",
                 minimumResultsForSearch: -1
             });
         });

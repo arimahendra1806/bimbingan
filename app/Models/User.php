@@ -7,11 +7,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Models\DosenModel;
+use App\Models\InfomasiModel;
+use App\Models\MahasiswaModel;
+use App\Models\NotifikasiModel;
 use App\Models\TahunAjaran;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes, CascadeSoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -38,6 +44,40 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    protected $cascadeDeletes = ['informasi','informasiKepada','notifikasi'];
+    protected $dates = ['deleted_at'];
+
+    /* informasi */
+    public function informasi()
+    {
+        return $this->belongsTo(InformasiModel::class,'id','users_id');
+    }
+
+    /* informasi */
+    public function informasiKepada()
+    {
+        return $this->belongsTo(InformasiModel::class,'id','kepada');
+    }
+
+    /* notifikasi */
+    public function notifikasi()
+    {
+        return $this->belongsTo(NotifikasiModel::class,'id','users_id');
+    }
+
+    /* dosen */
+    public function dosen()
+    {
+        return $this->belongsTo(DosenModel::class,'id','users_id');
+    }
+
+    /* mahasiswa */
+    public function mahasiswa()
+    {
+        return $this->belongsTo(MahasiswaModel::class,'id','users_id');
+    }
+
+    /* inisiasi tahun */
     public function tahun()
     {
         return $this->belongsTo(TahunAjaran::class,'tahun_ajaran_id','id');

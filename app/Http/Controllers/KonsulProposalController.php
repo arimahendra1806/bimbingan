@@ -3,136 +3,141 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\DosPemModel;
 use App\Models\TahunAjaran;
-use App\Models\DosPemMateriModel;
-use App\Models\BimbinganModel;
-use App\Models\ProgresBimbinganModel;
 use App\Models\RiwayatBimbinganModel;
 use App\Models\KomentarModel;
-use DataTables;
-use Auth;
-use File;
+use App\Models\User;
+use DataTables, Auth, File, Validator;
 
 class KonsulProposalController extends Controller
 {
     public function index(Request $request)
     {
-        /* Get data User Identitas */
-        $identitas = Auth::user()->identitas_id;
-
-        /* Get data DosPem */
-        $pembimbing_id = DosPemModel::where('nim', $identitas)->first();
-
-        /* Get data Tahun */
+        /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-        /* Get data Bimbingan */
-        $bimbingan_id = BimbinganModel::where('pembimbing_kode', $pembimbing_id->kode_pembimbing)
-            ->where('jenis_bimbingan', 'Proposal')
-            ->first();
+        /* Ambil data mahasiswa login */
+        $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
+            $q->where('jenis_bimbingan', 'Proposal');
+        }])->find(Auth::user()->id);
 
-        /* Get Kondisi Jika Data Kosong */
-        if(empty($bimbingan_id)){
-            $file_upload = "0";
-            $status = "Belum Konsultasi";
-            $komentar = "0";
-            $kode = "0";
-        } else {
-            $file_upload = $bimbingan_id->file_upload;
-            $status = $bimbingan_id->status_konsultasi;
-            $komentar = $bimbingan_id->kode_komentar;
-            $kode = $bimbingan_id->kode_bimbingan;
-        }
-
-        /* Get Komentar */
+        /* Ambil data table Komentar */
         if ($request->ajax()){
-            $data = KomentarModel::latest()->where('bimbingan_kode', $kode)->where('bimbingan_jenis', 'Proposal')->get();
+            $data = KomentarModel::latest()->where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
+                ->where('bimbingan_jenis', 'Proposal')->get();
             return DataTables::of($data)->toJson();
         }
 
-        return view('mahasiswa.konsultasi.proposal.index', compact('tahun_id','pembimbing_id','file_upload','status'));
+        /* Return menuju view */
+        return view('mahasiswa.konsultasi.proposal.index', compact('tahun_id','user'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'file_upload' => 'required|file|max:2048|mimes:pdf',
-        ]);
+        /* Peraturan validasi  */
+        $rules = [
+            'file_upload' => ['required','file','max:2048','mimes:pdf']
+        ];
 
-        $status_judul = BimbinganModel::where('pembimbing_kode', $pembimbing_id->kode_pembimbing)
-            ->where('jenis_bimbingan', 'Judul')
-            ->first();
-        if($status_judul->status_konsultasi != "Disetujui"){
-            $data = "Konsultasi judul belum selesai, silahkan lanjut untuk konsultasi sebelumnya terlebih dahulu!";
-            return response()->json(['resp' => 'error', 'data' => $data]);
-        }
+        /* Pesan validasi */
+        $messages = [];
 
-        if($request->status_konsultasi == "Disetujui"){
-            $data = "Konsultasi proposal sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
-            return response()->json(['resp' => 'error', 'data' => $data]);
+        /* Nama kolom validasi */
+        $attributes = [
+            'file_upload' => 'File Konsultasi'
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            /* Get data Tahun */
-            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+            /* Ambil data mahasiswa login */
+            $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
+                $q->where('jenis_bimbingan', 'Proposal');
+            }])->find(Auth::user()->id);
+            $bimbingan = $user->mahasiswa->dospem->bimbingan;
 
-            $file = $request->file('file_upload');
-            $filename = time()."_".$file->getClientOriginalName();
-            $file->move(public_path('dokumen/konsultasi/proposal'), $filename);
-            File::delete('dokumen/konsultasi/proposal/'.$request->fileShow);
+            /* Kondisi jika status disetujui */
+            if($bimbingan->status_konsultasi == "Disetujui"){
+                $data = "Konsultasi proposal sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
+                return response()->json(['status' => 1, 'data' => $data]);
+            } else {
+                /* Ambil data data tahun_ajaran */
+                $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-            // store
-            $data2 = BimbinganModel::updateOrCreate(
-                [
-                    'pembimbing_kode' => $request->pembimbing_kode,
-                    'jenis_bimbingan' => "Proposal",
-                ],
-                [
-                    'kode_bimbingan' => "KB".substr($request->pembimbing_kode, 2),
-                    'tahun_ajaran_id' => $tahun_id->id,
-                    'file_upload' => $filename,
-                    'status_konsultasi' => "Belum Disetujui",
-                    'status_pesan' => "0"
-                ]
-            );
+                /* Simpan file bimbingan */
+                $file = $request->file('file_upload');
+                $filename = time()."_".$file->getClientOriginalName();
+                $file->move(public_path('dokumen/konsultasi/proposal'), $filename);
+                /* Hapus file bimbingan sebelumnya */
+                File::delete('dokumen/konsultasi/proposal/'.$request->fileShow);
 
-            $data3 = new RiwayatBimbinganModel;
-            $data3->bimbingan_kode = "KB".substr($request->pembimbing_kode, 2);
-            $data3->bimbingan_jenis = "Proposal";
-            $data3->save();
+                /* Update data table bimbingan */
+                $bimbingan->file_upload = $filename;
+                $bimbingan->status_konsultasi = "Belum Disetujui";
+                $bimbingan->status_pesan = "0";
+                $bimbingan->save();
 
-            return response()->json(['resp' => 'success', 'data' => $data2]);
+                /* Insert ke table riwayat */
+                $data2 = new RiwayatBimbinganModel;
+                $data2->bimbingan_kode = $bimbingan->kode_bimbingan;
+                $data2->bimbingan_jenis = $bimbingan->jenis_bimbingan;
+                $data2->save();
+
+                /* Return json berhasil */
+                return response()->json(['status' => 2, 'msg' => "Berhasil Melakukan Konsultasi!", 'data' => ['file_upload' => $bimbingan->file_upload, 'status_konsultasi' => $bimbingan->status_konsultasi]]);
+            }
         }
     }
 
     public function storeKomen(Request $request)
     {
-        /* Get data User Identitas */
-        $identitas = Auth::user();
+        /* Peraturan validasi  */
+        $rules = [
+            'komentar' => ['required']
+        ];
 
-        /* Get data DosPem */
-        $pembimbing_id = DosPemModel::where('nim', $identitas->identitas_id)->first();
+        /* Pesan validasi */
+        $messages = [];
 
-        /* Get data Bimbingan */
-        $bimbingan_id = BimbinganModel::where('pembimbing_kode', $pembimbing_id->kode_pembimbing)
-            ->where('jenis_bimbingan', 'Proposal')
-            ->first();
+        /* Nama kolom validasi */
+        $attributes = [
+            'komentar' => 'Pesan Komentar'
+        ];
 
-        if(empty($bimbingan_id)){
-            $data = "Error!! Lakukan konsultasi terlebih dahulu ..";
-            return response()->json(['resp' => 'error', 'data' => $data]);
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Ambil data mahasiswa login */
+            $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
+                $q->where('jenis_bimbingan', 'Proposal');
+            }])->find(Auth::user()->id);
+
+            /* Ambil data data tahun_ajaran */
+            if($user->mahasiswa->dospem->bimbingan->status_konsultasi == "Disetujui"){
+                $data = "Konsultasi proposal sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
+                return response()->json(['status' => 1, 'data' => $data]);
+            } else {
+                /* Insert ke tabel komentar */
+                $data = new KomentarModel;
+                $data->bimbingan_kode = $user->mahasiswa->dospem->bimbingan->kode_bimbingan;
+                $data->bimbingan_jenis = $user->mahasiswa->dospem->bimbingan->jenis_bimbingan;
+                $data->nama = $user->mahasiswa->nama_mahasiswa;
+                $data->komentar = $request->komentar;
+                $data->save();
+
+                /* Return json berhasil */
+                return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);
+            }
         }
-
-        $request->validate([
-            'komentar' => 'required',
-        ]);
-
-        $data = new KomentarModel;
-        $data->bimbingan_kode = $bimbingan_id->kode_bimbingan;
-        $data->bimbingan_jenis = $bimbingan_id->jenis_bimbingan;
-        $data->nama = $identitas->name;
-        $data->komentar = $request->komentar;
-        $data->save();
-
-        return response()->json(['resp' => 'success', 'data' => $data]);
     }
 }

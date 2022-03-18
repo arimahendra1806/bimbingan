@@ -15,7 +15,7 @@ class ProgresBimbingan extends Migration
     {
         Schema::create('progres_bimbingan', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_bimbingan', 50);
+            $table->string('bimbingan_kode', 50);
             $table->integer('tahun_ajaran_id');
             $table->float('judul')->default('0');
             $table->float('proposal_bab1')->default('0');
@@ -30,6 +30,7 @@ class ProgresBimbingan extends Migration
             $table->float('laporan_bab6')->default('0');
             $table->float('program')->default('0');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

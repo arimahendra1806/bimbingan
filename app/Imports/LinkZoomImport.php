@@ -27,13 +27,13 @@ class LinkZoomImport implements ToModel, WithStartRow
 
         $kode_dosen = DosenModel::where('nidn', $row[1])->first();
         if($kode_dosen){
-            $nidn = $kode_dosen->nidn;
+            $id = $kode_dosen->id;
         } else {
-            $nidn = "0";
+            $id = rand(10,99).rand(1000,9999);
         }
 
         return new LinkZoomModel([
-            'nidn' => $nidn,
+            'dosen_id' => $id,
             'tahun_ajaran_id' => $tahun->id,
             'id_meeting' => $row[2],
             'passcode' => $row[3],

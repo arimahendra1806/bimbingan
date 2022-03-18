@@ -16,7 +16,7 @@ class Mahasiswa extends Migration
         Schema::create('mahasiswa', function (Blueprint $table) {
             $table->id();
             $table->integer('users_id')->unique();
-            $table->integer('nim')->unique();
+            $table->string('nim', 20)->unique();
             $table->integer('tahun_ajaran_id');
             $table->string('nama_mahasiswa', 150)->nullable();
             $table->string('alamat')->nullable();

@@ -11,9 +11,10 @@ class KetentuanTaController extends Controller
 {
     public function indexMhs(Request $request)
     {
-        /* Get data Tahun_id */
+        /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
+        /* Ambil data tabel ketentuan_ta */
         if ($request->ajax()){
             $data = MateriTahunanModel::where('tahun_ajaran_id', $tahun_id->id)->get()->load('tahun');
             return DataTables::of($data)
@@ -25,11 +26,16 @@ class KetentuanTaController extends Controller
                 ->rawColumns(['action'])
                 ->toJson();
         }
+
+        /* Return menuju view */
         return view('mahasiswa.ketentuan-ta.index', compact('tahun_id'));
     }
 
     public function downloadMhs($ketentuan_ta){
+        /* Ambil data materi sesuai parameter */
         $data = MateriTahunanModel::find($ketentuan_ta);
+
+        /* Return json data materi */
         return response()->json($data);
     }
 }

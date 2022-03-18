@@ -21,6 +21,7 @@ class LinkZoom extends Migration
             $table->string('passcode')->nullable();
             $table->string('link_zoom')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

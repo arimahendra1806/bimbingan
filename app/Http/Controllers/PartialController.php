@@ -8,24 +8,22 @@ use App\Models\TahunAjaran;
 use App\Models\DosPemMateriModel;
 use App\Models\BimbinganModel;
 use App\Models\RiwayatBimbinganModel;
-use DataTables;
-use Auth;
+use App\Models\User;
+use DataTables, Auth;
 
 class PartialController extends Controller
 {
     public function MateriKonsul(Request $request, $jenis)
     {
-        /* Get data User Identitas */
-        $identitas = Auth::user()->identitas_id;
-
-        /* Get data DosPem */
-        $pembimbing_id = DosPemModel::where('nim', $identitas)->first();
-
-        /* Get data Tahun */
+        /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
+        /* Ambil data mahasiswa login */
+        $user = User::with('mahasiswa.dospem')->find(Auth::user()->id);
+
+        /* Ambil data tabel dos_pem materi */
         if ($request->ajax()){
-            $data = DosPemMateriModel::where('nidn', $pembimbing_id->nidn)
+            $data = DosPemMateriModel::where('dosen_id', $user->mahasiswa->dospem->dosen_id)
                 ->where('tahun_ajaran_id', $tahun_id->id)
                 ->where('jenis_materi', $jenis)
                 ->get();
@@ -37,31 +35,25 @@ class PartialController extends Controller
                 })
                 ->toJson();
         }
+
+        /* return json */
         return response()->json();
     }
 
     public function RiwayatKonsul(Request $request, $jenis)
     {
-        /* Get data User Identitas */
-        $identitas = Auth::user()->identitas_id;
+        /* Ambil data mahasiswa login */
+        $user = User::with('mahasiswa.dospem.bimbingan')->find(Auth::user()->id);
 
-        /* Get data DosPem */
-        $pembimbing_id = DosPemModel::where('nim', $identitas)->first();
-
-        /* Get data Bimbingan */
-        $bimbingan_id = BimbinganModel::where('pembimbing_kode', $pembimbing_id->kode_pembimbing)->first();
-        if(empty($bimbingan_id)){
-            $kb = "0";
-        } else {
-            $kb = $bimbingan_id->kode_bimbingan;
-        }
-
+        /* Ambil data tabel riwayat bimbingan */
         if ($request->ajax()){
-            $data = RiwayatBimbinganModel::where('bimbingan_kode', $kb)
+            $data = RiwayatBimbinganModel::where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
                 ->where('bimbingan_jenis', $jenis)
                 ->get();
             return DataTables::of($data)->addIndexColumn()->toJson();
         }
+
+        /* return json */
         return response()->json();
     }
 }

@@ -24,6 +24,7 @@ class Bimbingan extends Migration
             $table->string('status_konsultasi', 150)->nullable();
             $table->string('status_pesan', 150)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

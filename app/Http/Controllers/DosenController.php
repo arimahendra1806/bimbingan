@@ -8,6 +8,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\DosenModel;
 use App\Models\TahunAjaran;
 use App\Models\User;
+use App\Models\LinkZoomModel;
+use App\Models\InformasiModel;
+use App\Models\NotifikasiModel;
 use App\Imports\DosenImport;
 use DataTables, Validator;
 
@@ -224,11 +227,8 @@ class DosenController extends Controller
         /* Ambil data dosen sesuai parameter */
         $data = DosenModel::find($kelola_dosen);
 
-        /* Hapus data user */
-        User::where('username', $data->nidn)->delete();
-
         /* Hapus data dosen */
-        $data->delete();
+        $data->forceDelete();
 
         /* Return json berhasil */
         return response()->json(['msg' => "Berhasil Menghapus Data!"]);
