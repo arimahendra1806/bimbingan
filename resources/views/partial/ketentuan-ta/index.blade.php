@@ -23,9 +23,18 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Ketentuan Tugas Akhir</h4>
-                        <p class="card-title-desc">Mahasiswa perlu <b>membaca dan memahami</b> setiap ketentuan yang ada,
-                            hal ini bertujuan agar Mahasiswa <b>mampu memahami</b> mengenai pengerjaan <b>Tugas Akhir</b>.
-                        </p>
+                        @if (Auth::check() && Auth::user()->role == 'dosen')
+                            <p class="card-title-desc">Dosen perlu <b>membaca dan memahami</b> setiap ketentuan yang
+                                ada,
+                                hal ini dikarenakan <b>setiap tahun</b> terkadang memiliki ketentuan <b>berbeda</b>.
+                            </p>
+                        @elseif(Auth::check() && Auth::user()->role == 'mahasiswa')
+                            <p class="card-title-desc">Mahasiswa perlu <b>membaca dan memahami</b> setiap ketentuan yang
+                                ada,
+                                hal ini bertujuan agar Mahasiswa <b>mampu memahami</b> mengenai pengerjaan <b>Tugas
+                                    Akhir</b>.
+                            </p>
+                        @endif
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered dt-responsive nowrap w-100" id="Tabels">
@@ -63,7 +72,7 @@
             var table = $('#Tabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('ketentuan-ta.indexMhs') }}",
+                ajax: "{{ route('ketentuan-ta.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'

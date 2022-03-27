@@ -9,7 +9,7 @@ use DataTables;
 
 class KetentuanTaController extends Controller
 {
-    public function indexMhs(Request $request)
+    public function index(Request $request)
     {
         /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
@@ -28,14 +28,6 @@ class KetentuanTaController extends Controller
         }
 
         /* Return menuju view */
-        return view('mahasiswa.ketentuan-ta.index', compact('tahun_id'));
-    }
-
-    public function downloadMhs($ketentuan_ta){
-        /* Ambil data materi sesuai parameter */
-        $data = MateriTahunanModel::find($ketentuan_ta);
-
-        /* Return json data materi */
-        return response()->json($data);
+        return view('partial.ketentuan-ta.index', compact('tahun_id'));
     }
 }

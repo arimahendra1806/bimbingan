@@ -16,7 +16,7 @@ class PengajuanJudul extends Migration
         Schema::create('pengajuan_judul', function (Blueprint $table) {
             $table->id();
             $table->integer('mahasiswa_id');
-            $table->integer('tahun_ajaran_id');
+            $table->integer('tahun_ajaran_id')->unique();
             $table->string('judul')->nullable();
             $table->string('studi_kasus')->nullable();
             $table->string('pengerjaan')->nullable();

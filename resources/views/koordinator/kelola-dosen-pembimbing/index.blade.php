@@ -118,7 +118,7 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>NIM</th>
+                                                    <th>Nama Mahasiswa</th>
                                                     <th>Pengajuan Judul Tugas Akhir</th>
                                                     <th>Status</th>
                                                 </tr>
@@ -162,8 +162,8 @@
                                     <th>No</th>
                                     <th>Tahun Ajaran</th>
                                     <th>Kode Pembimbing</th>
-                                    <th>NIDN</th>
-                                    <th>NIM</th>
+                                    <th>Nama Dosen</th>
+                                    <th>Nama Mahasiswa</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -209,8 +209,8 @@
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'mahasiswa.nim',
-                        name: 'mahasiswa.nim'
+                        data: 'mahasiswa.nama_mahasiswa',
+                        name: 'mahasiswa.nama_mahasiswa'
                     },
                     {
                         name: 'pengajuan'
@@ -245,8 +245,8 @@
                             } else {
                                 return "<b>Judul : </b>" + data.judul + "<br>" +
                                     "<b>Studi Kasus : </b>" + data.studi_kasus + "<br>" +
-                                    "<b>Status Pengerjaan : </b>" + data.pengerjaan + " dengan " +
-                                    data.nim_anggota
+                                    "<b>Status Pengerjaan : </b>" + data.pengerjaan + " bersama " +
+                                    data.anggota.nama_mahasiswa
                             }
                         }
                     }
@@ -286,12 +286,12 @@
                         name: 'kode_pembimbing'
                     },
                     {
-                        data: 'dosen.nidn',
-                        name: 'dosen.nidn'
+                        data: 'dosen.nama_dosen',
+                        name: 'dosen.nama_dosen'
                     },
                     {
-                        data: 'mahasiswa.nim',
-                        name: 'mahasiswa.nim'
+                        data: 'mahasiswa.nama_mahasiswa',
+                        name: 'mahasiswa.nama_mahasiswa'
                     },
                     {
                         data: 'action',

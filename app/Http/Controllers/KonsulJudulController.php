@@ -7,6 +7,7 @@ use App\Models\TahunAjaran;
 use App\Models\RiwayatBimbinganModel;
 use App\Models\KomentarModel;
 use App\Models\User;
+use Carbon\Carbon;
 use DataTables, Auth, File, Validator;
 
 class KonsulJudulController extends Controller
@@ -21,6 +22,13 @@ class KonsulJudulController extends Controller
             $q->where('jenis_bimbingan', 'Judul');
         }])->find(Auth::user()->id);
 
+        $detail = [
+            'kode_bimbingan' => $user->mahasiswa->dospem->bimbingan->kode_bimbingan,
+            'status_konsultasi' => $user->mahasiswa->dospem->bimbingan->status_konsultasi,
+            'keterangan' => $user->mahasiswa->dospem->bimbingan->keterangan_konsultasi,
+            'file' => $user->mahasiswa->dospem->bimbingan->file_upload
+        ];
+
         /* Ambil data table Komentar */
         if ($request->ajax()){
             $data = KomentarModel::latest()->where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
@@ -29,7 +37,7 @@ class KonsulJudulController extends Controller
         }
 
         /* Return menuju view */
-        return view('mahasiswa.konsultasi.judul.index', compact('tahun_id','user'));
+        return view('mahasiswa.konsultasi.judul.index', compact('tahun_id','detail'));
     }
 
     public function store(Request $request)
@@ -79,6 +87,7 @@ class KonsulJudulController extends Controller
                 /* Update data table bimbingan */
                 $bimbingan->file_upload = $filename;
                 $bimbingan->status_konsultasi = "Belum Disetujui";
+                $bimbingan->tanggal_konsultasi = Carbon::now();
                 $bimbingan->status_pesan = "0";
                 $bimbingan->save();
 
@@ -124,7 +133,7 @@ class KonsulJudulController extends Controller
 
             /* Ambil data data tahun_ajaran */
             if($user->mahasiswa->dospem->bimbingan->status_konsultasi == "Disetujui"){
-                $data = "Konsultasi judul sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
+                $data = "Diskusi ditutup, silahkan lanjut untuk konsultasi berikutnya!";
                 return response()->json(['status' => 1, 'data' => $data]);
             } else {
                 /* Insert ke tabel komentar */

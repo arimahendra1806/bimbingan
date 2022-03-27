@@ -30,4 +30,11 @@ class PengajuanJudulModel extends Model
     {
         return $this->belongsTo(MahasiswaModel::class,'mahasiswa_id','id');
     }
+
+    /* inisiasi anggota */
+    public function anggota()
+    {
+        return $this->belongsTo(MahasiswaModel::class,'id_anggota','id');
+    }
+
 }

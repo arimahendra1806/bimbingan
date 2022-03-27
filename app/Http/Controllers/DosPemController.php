@@ -250,7 +250,7 @@ class DosPemController extends Controller
 
         /* Ambil data tabel judul */
         if ($request->ajax()){
-            $data = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->get()->load('mahasiswa');
+            $data = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->get()->load('mahasiswa','anggota');
             return DataTables::of($data)->toJson();
         }
 
@@ -264,7 +264,7 @@ class DosPemController extends Controller
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Ambil data dos_pem sesuai parameter */
-        $countId = DosPemModel::where('mahasiswa_id', $id)->where('tahun_ajaran_id', $tahun_id->id)->count('id');
+        $countId = DosPemModel::where('dosen_id', $id)->where('tahun_ajaran_id', $tahun_id->id)->count('id');
 
         /* Return json data dos_pem */
         return response()->json(['data' => $countId]);

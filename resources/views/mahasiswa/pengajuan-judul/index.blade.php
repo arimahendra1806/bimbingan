@@ -16,16 +16,14 @@
                         <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="judul_edit" class="col-form-label">Judul Yang Diajukan:</label>
-                                <textarea name="judul_edit" class="form-control" id="judul_edit" style="width: 100%"
-                                    rows="3"></textarea>
+                                <textarea name="judul_edit" class="form-control" id="judul_edit" style="width: 100%" rows="3"></textarea>
                                 <span class="text-danger error-text judul_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="studi_kasus_edit" class="col-form-label">Studi Kasus:</label>
-                                <textarea name="studi_kasus_edit" class="form-control" id="studi_kasus_edit"
-                                    style="width: 100%" rows="3"></textarea>
+                                <textarea name="studi_kasus_edit" class="form-control" id="studi_kasus_edit" style="width: 100%" rows="3"></textarea>
                                 <span class="text-danger error-text studi_kasus_edit_error"></span>
                             </div>
                         </div>
@@ -105,7 +103,7 @@
                                 <p>
                                     Sebelum mengajukan <b>Judul Tugas Akhir</b>, pastikan <b>Sudah Membaca Ketentuan Tugas
                                         Akhir</b>
-                                    yang terdapat pada menu <u><a href="{{ route('ketentuan-ta.indexMhs') }}">Ketentuan
+                                    yang terdapat pada menu <u><a href="{{ route('ketentuan-ta.index') }}">Ketentuan
                                             TA</a></u>.
                                 </p>
                                 <hr>
@@ -128,8 +126,7 @@
                                     <div class="row mb-1">
                                         <div class="col-md-12">
                                             <label for="judul_add" class="col-form-label">Judul Yang Diajukan:</label>
-                                            <textarea name="judul_add" class="form-control" id="judul_add"
-                                                style="width: 100%" rows="3"
+                                            <textarea name="judul_add" class="form-control" id="judul_add" style="width: 100%" rows="3"
                                                 placeholder="Kata dalam judul maksimal 15 kata | Judul memuat detail sistem, tempat, dan fitur | Judul yang diajukan bisa berbasis android, website, IOT, maupun desktop &#10;e.g: Sistem Informasi Sekolah Dasar SMPN 1 Gurah Berbasis Website Dengan Framework Laravel"></textarea>
                                             <span class="text-danger error-text judul_add_error"></span>
                                         </div>
@@ -137,8 +134,7 @@
                                     <div class="row mb-1">
                                         <div class="col-md-12">
                                             <label for="studi_kasus_add" class="col-form-label">Studi Kasus:</label>
-                                            <textarea name="studi_kasus_add" class="form-control" id="studi_kasus_add"
-                                                style="width: 100%" rows="3"
+                                            <textarea name="studi_kasus_add" class="form-control" id="studi_kasus_add" style="width: 100%" rows="3"
                                                 placeholder="Isikan sesuai dengan tempat pelaksanaan tugas akhir yang diajukan | Mahasiswa harus melaksanakan riset terhadap tempat studi kasus, sebelum mengajukan judul &#10;e.g: SMPN 1 Gurah"></textarea>
                                             <span class="text-danger error-text studi_kasus_add_error"></span>
                                         </div>

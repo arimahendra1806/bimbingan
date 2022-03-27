@@ -2,14 +2,14 @@
 
 @section('content')
     {{-- Modal Add --}}
-    <div class="modal fade" id="MateriTahunanModalAdd" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="MateriDosenModalAdd" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Materi Tahunan</h5>
+                    <h5 class="modal-title">Tambah Data Materi Pembimbing</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="MateriTahunanFormAdd" enctype="multipart/form-data" files="true">
+                <form id="MateriDosenFormAdd" enctype="multipart/form-data" files="true">
                     @csrf
                     <div class="modal-body">
                         <div class="mb-1">
@@ -30,6 +30,18 @@
                             <span class="text-danger error-text file_materi_add_error"></span>
                         </div>
                         <div class="mb-1">
+                            <label for="jenis_materi_add" class="col-form-label">Jenis Materi:</label><br>
+                            <select class="js-example-responsive form-control" style="width: 100%" id="jenis_materi_add"
+                                name="jenis_materi_add">
+                                <option value=""></option>
+                                <option value="Judul">Judul</option>
+                                <option value="Proposal">Proposal</option>
+                                <option value="Laporan">Laporan</option>
+                                <option value="Program">Program</option>
+                            </select>
+                            <span class="text-danger error-text jenis_materi_add_error"></span>
+                        </div>
+                        <div class="mb-1">
                             <label for="keterangan_add" class="col-form-label">Keterangan:</label><br>
                             <textarea class="form-control" name="keterangan_add" id="keterangan_add" style="width: 100%" rows="3"></textarea>
                             <span class="text-danger error-text keterangan_add_error"></span>
@@ -46,14 +58,14 @@
     {{-- END Modal Add --}}
 
     {{-- Modal Edit --}}
-    <div class="modal fade" id="MateriTahunanModalEdit" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="MateriDosenModalEdit" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Perbarui Data Materi Tahunan</h5>
+                    <h5 class="modal-title">Perbarui Data Materi Pembimbing</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" id="MateriTahunanFormEdit" enctype="multipart/form-data" files="true">
+                <form method="POST" id="MateriDosenFormEdit" enctype="multipart/form-data" files="true">
                     <input type="hidden" class="form-control" id="materi_id_edit" name="materi_id_edit">
                     @csrf
                     <div class="modal-body">
@@ -76,6 +88,18 @@
                             <span class="text-danger error-text file_materi_edit_error"></span>
                         </div>
                         <div class="mb-1">
+                            <label for="jenis_materi_edit" class="col-form-label">Jenis Materi:</label><br>
+                            <select class="js-example-responsive form-control" style="width: 100%" id="jenis_materi_edit"
+                                name="jenis_materi_edit">
+                                <option value=""></option>
+                                <option value="Judul">Judul</option>
+                                <option value="Proposal">Proposal</option>
+                                <option value="Laporan">Laporan</option>
+                                <option value="Program">Program</option>
+                            </select>
+                            <span class="text-danger error-text jenis_materi_edit_error"></span>
+                        </div>
+                        <div class="mb-1">
                             <label for="keterangan_edit" class="col-form-label">Keterangan:</label><br>
                             <textarea class="form-control" name="keterangan_edit" id="keterangan_edit" style="width: 100%" rows="3"></textarea>
                             <span class="text-danger error-text keterangan_edit_error"></span>
@@ -92,7 +116,7 @@
     {{-- END Modal Edit --}}
 
     {{-- Modal Show --}}
-    <div class="modal fade" id="MateriTahunanModalShow" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="MateriDosenModalShow" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -113,8 +137,13 @@
                         <iframe style="width:100%; height:400px;" frameborder="0"></iframe>
                     </div>
                     <div class="mb-1">
+                        <label for="jenis_materi_show" class="col-form-label">Jenis Materi:</label>
+                        <input type="text" class="form-control no-outline" id="jenis_materi_show" name="jenis_materi_show"
+                            readonly>
+                    </div>
+                    <div class="mb-1">
                         <label for="keterangan_show" class="col-form-label">Keterangan:</label><br>
-                        <textarea class="form-control" name="keterangan_show" id="keterangan_show" style="width: 100%" rows="3"
+                        <textarea class="form-control" name="keterangan_show no-outline" id="keterangan_show" style="width: 100%" rows="3"
                             readonly></textarea>
                     </div>
                 </div>
@@ -131,11 +160,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Kelola Materi Tahunan</h4>
+                    <h4 class="mb-sm-0 font-size-18">Kelola Materi Pembimbing</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Kelola Materi Tahunan</li>
+                            <li class="breadcrumb-item active">Kelola Materi Pembimbing</li>
                         </ol>
                     </div>
 
@@ -147,9 +176,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Materi Tahunan</h4>
-                        <p class="card-title-desc">Anda perlu mengelola <b>Materi Tahunan</b>,
-                            yang akan di <b>Dipublikaskan</b> kepada Mahasiswa dan Dosen setiap <b>Tahunnya</b>.
+                        <h4 class="card-title">Materi Pembimbing</h4>
+                        <p class="card-title-desc">Anda perlu mengelola <b>Materi Pembimbing</b>,
+                            yang akan di <b>ditampilkan</b> kepada Mahasiswa. Agar mereka mendapatkan <b>instruksi</b>
+                            sesuai dengan arahan Anda.
                         </p>
                     </div>
                     <div class="card-body">
@@ -159,12 +189,13 @@
                                 <i class="fas fa-plus-circle"></i>
                             </a>
                         </div>
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="MateriTahunanTabels">
+                        <table class="table table-bordered dt-responsive nowrap w-100" id="MateriDosenTabels">
                             <thead>
                                 <tr>
                                     <th>No</th>
                                     <th>Tahun Ajaran</th>
                                     <th>File Materi</th>
+                                    <th>Jenis Materi</th>
                                     <th>Keterangan</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -197,10 +228,10 @@
             });
 
             /* Get data table */
-            var table = $('#MateriTahunanTabels').DataTable({
+            var table = $('#MateriDosenTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('materi-tahunan.index') }}",
+                ajax: "{{ route('materi-dosen.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -214,6 +245,10 @@
                         name: 'file_materi'
                     },
                     {
+                        data: 'jenis_materi',
+                        name: 'jenis_materi'
+                    },
+                    {
                         data: 'keterangan',
                         name: 'keterangan'
                     },
@@ -225,11 +260,11 @@
                 columnDefs: [{
                         searchable: false,
                         orderable: false,
-                        targets: [0, 4]
+                        targets: [0, 5]
                     },
                     {
                         width: '1%',
-                        targets: [0, 4]
+                        targets: [0, 5]
                     }
                 ],
                 order: [
@@ -247,9 +282,9 @@
 
             /* Button Add */
             $("#btnAdd").click(function() {
-                $('#MateriTahunanFormAdd').trigger('reset');
+                $('#MateriDosenFormAdd').trigger('reset');
                 $(document).find('span.error-text').text('');
-                $('#MateriTahunanModalAdd').modal('show');
+                $('#MateriDosenModalAdd').modal('show');
                 $('#tahun_ajaran_id_add').val("").trigger('change');
             });
 
@@ -258,11 +293,12 @@
                 $(document).find('span.error-text').text('');
                 $('#file_materi_edit').val("");
                 var this_id = $(this).data('id');
-                $.get('materi-tahunan/' + this_id, function(data) {
-                    $('#MateriTahunanModalEdit').modal('show');
+                $.get('materi-dosen/' + this_id, function(data) {
+                    $('#MateriDosenModalEdit').modal('show');
                     $('#materi_id_edit').val(data.id);
                     $('#tahun_ajaran_id_edit').val(data.tahun_ajaran_id).trigger('change');
                     $('#fileShow').val(data.file_materi);
+                    $('#jenis_materi_edit').val(data.jenis_materi).trigger('change');
                     $('#keterangan_edit').val(data.keterangan);
                 });
             });
@@ -270,12 +306,14 @@
             /* Button Show */
             $('body').on('click', '#btnShow', function() {
                 var this_id = $(this).data('id');
-                $.get('materi-tahunan/' + this_id, function(data) {
-                    $('#MateriTahunanModalShow').modal('show');
+                $.get('materi-dosen/' + this_id, function(data) {
+                    $('#MateriDosenModalShow').modal('show');
                     $('#tahun_ajaran_id_show').val(data.tahun.tahun_ajaran);
                     $('#file_materi_show').val(data.file_materi);
+                    $('#jenis_materi_show').val(data.jenis_materi);
                     $('#keterangan_show').val(data.keterangan);
-                    $('iframe').attr("src", "{{ asset('dokumen/materi-tahunan') }}" + "/" + data
+                    $('iframe').attr("src", "{{ asset('dokumen/pembimbing-materi') }}" + "/" +
+                        data
                         .file_materi);
                 });
             });
@@ -292,7 +330,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "materi-tahunan/delete/" + this_id,
+                            url: "materi-dosen/delete/" + this_id,
                             type: 'post',
                             data: {
                                 "id": this_id,
@@ -312,7 +350,7 @@
             });
 
             /* Ajax Store */
-            $("#MateriTahunanFormAdd").submit(function(e) {
+            $("#MateriDosenFormAdd").submit(function(e) {
                 var form = this;
                 form.addSave.disabled = true;
                 form.addSave.value = "Sedang memproses...";
@@ -323,7 +361,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('materi-tahunan.store') }}",
+                    url: "{{ route('materi-dosen.store') }}",
                     data: formData,
                     cache: false,
                     contentType: false,
@@ -342,7 +380,7 @@
                             form.addSave.disabled = false;
                             form.addSave.value = "Simpan";
                             table.ajax.reload();
-                            $("#MateriTahunanModalAdd").modal('hide');
+                            $("#MateriDosenModalAdd").modal('hide');
                             Swal.fire({
                                 title: data.msg,
                                 icon: "success",
@@ -363,7 +401,7 @@
             });
 
             /* Ajax Update */
-            $("#MateriTahunanFormEdit").submit(function(e) {
+            $("#MateriDosenFormEdit").submit(function(e) {
                 var form = this;
                 form.editSave.disabled = true;
                 form.editSave.value = "Sedang memproses...";
@@ -375,7 +413,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "materi-tahunan/" + this_id,
+                    url: "materi-dosen/" + this_id,
                     data: formData,
                     cache: false,
                     contentType: false,
@@ -391,7 +429,7 @@
                             form.editSave.disabled = false;
                             form.editSave.value = "Simpan";
                             table.ajax.reload();
-                            $("#MateriTahunanModalEdit").modal('hide');
+                            $("#MateriDosenModalEdit").modal('hide');
                             Swal.fire({
                                 title: data.msg,
                                 icon: "success",
@@ -413,15 +451,29 @@
 
             /* Select2 Tahun Ajaran Add */
             $("#tahun_ajaran_id_add").select2({
-                dropdownParent: $('#MateriTahunanModalAdd'),
+                dropdownParent: $('#MateriDosenModalAdd'),
                 placeholder: "Cari berdasarkan tahun ...",
+                allowClear: true
+            });
+
+            /* Select2 Jenis Materi Add */
+            $("#jenis_materi_add").select2({
+                dropdownParent: $('#MateriDosenModalAdd'),
+                placeholder: "Cari berdasarkan jenis ...",
                 allowClear: true
             });
 
             /* Select2 Tahun Ajaran Edit */
             $("#tahun_ajaran_id_edit").select2({
-                dropdownParent: $('#MateriTahunanModalEdit'),
+                dropdownParent: $('#MateriDosenModalEdit'),
                 placeholder: "Cari berdasarkan tahun ...",
+                allowClear: true
+            });
+
+            /* Select2 Jenis Materi Edit */
+            $("#jenis_materi_edit").select2({
+                dropdownParent: $('#MateriDosenModalEdit'),
+                placeholder: "Cari berdasarkan jenis ...",
                 allowClear: true
             });
         });

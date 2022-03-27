@@ -20,6 +20,8 @@ use App\Http\Controllers\JudulMahasiswaController;
 use App\Http\Controllers\KonsulJudulController;
 use App\Http\Controllers\KonsulProposalController;
 use App\Http\Controllers\PartialController;
+use App\Http\Controllers\MateriDosenController;
+use App\Http\Controllers\DsnKonsulJudulController;
 /* End Controller */
 
 /*
@@ -121,14 +123,28 @@ Route::group(['middleware' => 'auth'], function(){
 
     /* Dosen */
     Route::group(['middleware' => 'CheckRole:dosen'], function(){
+
+        /* Kelola Materi Dosen */
+        Route::resource('materi-dosen', MateriDosenController::class, ['except' => [
+            'update'
+        ]]);
+        Route::post('/materi-dosen/{materi_dosen}', [MateriDosenController::class, 'update'])->name('materi-dosen.update');
+        Route::post('/materi-dosen/delete/{materi_dosen}', [MateriDosenController::class, 'destroy'])->name('materi-dosen.destroy');
+
+        /* Data Pembimbing */
+        Route::get('/data-mahasiswa', [DataPembimbingController::class, 'indexDsn'])->name('data-mahasiswa.indexDsn');
+        Route::get('/data-mahasiswa/{id}', [DataPembimbingController::class, 'showDsn'])->name('data-mahasiswa.showDsn');
+
+        /* Konsul Judul */
+        Route::get('/peninjauan-konsultasi-judul', [DsnKonsulJudulController::class, 'index'])->name('peninjauan-judul.index');
+        Route::get('/peninjauan-konsultasi-judul/{kode}', [DsnKonsulJudulController::class, 'detail'])->name('peninjauan-judul.detail');
+        Route::get('/peninjauan-konsultasi-judul/komen/{kode}', [DsnKonsulJudulController::class, 'komen'])->name('peninjauan-judul.komen');
+        Route::post('/peninjauan-konsultasi-judul', [DsnKonsulJudulController::class, 'store'])->name('peninjauan-judul.store');
+        Route::post('/peninjauan-konsultasi-judul/komen', [DsnKonsulJudulController::class, 'storeKomen'])->name('peninjauan-judul.storeKomen');
     });
 
     /* Mahasiswa */
     Route::group(['middleware' => 'CheckRole:mahasiswa'], function(){
-
-        /* Ketentuan TA */
-        Route::get('/ketentuan-ta', [KetentuanTaController::class, 'indexMhs'])->name('ketentuan-ta.indexMhs');
-        Route::get('/download/ketentuan/mhs/{ketentuan_ta}', [KetentuanTaController::class, 'downloadMhs'])->name('download.indexMhs');
 
         /* Kelola Pengajuan Judul */
         Route::resource('pengajuan-judul', PengajuanJudulController::class, ['except' => [
@@ -152,5 +168,11 @@ Route::group(['middleware' => 'auth'], function(){
         /* Mhs Partial */
         Route::get('/materi/{proposal}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
         Route::get('/riwayat/{proposal}', [PartialController::class, 'RiwayatKonsul'])->name('partial.RiwayatKonsul');
+    });
+
+    /* Mahasiswa && Dosen */
+    Route::group(['middleware' => 'CheckRole:mahasiswa,dosen'], function(){
+        /* Ketentuan TA */
+        Route::get('/ketentuan-ta', [KetentuanTaController::class, 'index'])->name('ketentuan-ta.index');
     });
 });

@@ -53,8 +53,7 @@
                         <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="link_add" class="col-form-label">Link Zoom:</label><br>
-                                <textarea class="form-control" name="link_add" id="link_add" style="width: 100%"
-                                    rows="3"></textarea>
+                                <textarea class="form-control" name="link_add" id="link_add" style="width: 100%" rows="3"></textarea>
                                 <span class="text-danger error-text link_add_error"></span>
                             </div>
                         </div>
@@ -120,8 +119,7 @@
                         <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="link_edit" class="col-form-label">Link Zoom: </label><br>
-                                <textarea class="form-control" name="link_edit" id="link_edit" style="width: 100%"
-                                    rows="3"></textarea>
+                                <textarea class="form-control" name="link_edit" id="link_edit" style="width: 100%" rows="3"></textarea>
                                 <span class="text-danger error-text link_edit_error"></span>
                             </div>
                         </div>
@@ -171,8 +169,7 @@
                     <div class="row mb-1">
                         <div class="col-md-12">
                             <label for="link_show" class="col-form-label">Link Zoom: </label><br>
-                            <textarea class="form-control" name="link_show" id="link_show" style="width: 100%" rows="3"
-                                readonly></textarea>
+                            <textarea class="form-control" name="link_show" id="link_show" style="width: 100%" rows="3" readonly></textarea>
                         </div>
                     </div>
                 </div>

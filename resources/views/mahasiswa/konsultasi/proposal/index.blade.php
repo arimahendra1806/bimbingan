@@ -1,6 +1,24 @@
 @extends('layouts.minia.header')
 
 @section('content')
+    {{-- Modal Show --}}
+    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">File Konsultasi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-1">
+                        <iframe style="width:100%; height:530px;" frameborder="0" id="fileView"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- END Modal Show --}}
+
     <div class="container-fluid">
         <!-- start page title -->
         <div class="row">
@@ -40,42 +58,53 @@
                                 <b>konsultasi</b>.
                             </p>
                             <hr>
-                            <form id="Store" enctype="multipart/form-data" files="true">
-                                <div class="row mb-1">
-                                    <div class="col-md-4">
-                                        <label for="pembimbing_kode" class="col-form-label">Kode Bimbingan: <b
-                                                class="info">*Otomatis Terisi</b></label>
-                                        <input type="text" class="form-control" id="pembimbing_kode"
-                                            name="pembimbing_kode"
-                                            value="{{ $user->mahasiswa->dospem->bimbingan->kode_bimbingan }}" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="tahun_ajaran_id" class="col-form-label">Tahun Ajaran: <b
-                                                class="info">*Otomatis Terisi</b></label>
-                                        <input type="text" class="form-control" id="tahun_ajaran_id"
-                                            name="tahun_ajaran_id" value="{{ $tahun_id->tahun_ajaran }}" readonly>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="status_konsultasi" class="col-form-label">Status: <b
-                                                class="info">*Otomatis Terisi</b></label>
-                                        <input type="text" class="form-control" id="status_konsultasi"
-                                            name="status_konsultasi"
-                                            value="{{ $user->mahasiswa->dospem->bimbingan->status_konsultasi }}" readonly>
-                                    </div>
+                            <div class="row mb-1">
+                                <div class="col-md-4">
+                                    <label for="kode_bimbingan" class="col-form-label">Kode Bimbingan: <b
+                                            class="info">*Otomatis Terisi</b></label>
+                                    <input type="text" class="form-control" id="kode_bimbingan" name="kode_bimbingan"
+                                        value="{{ $detail['kode_bimbingan'] }}" readonly>
                                 </div>
+                                <div class="col-md-4">
+                                    <label for="tahun_ajaran_id" class="col-form-label">Tahun Ajaran: <b
+                                            class="info">*Otomatis Terisi</b></label>
+                                    <input type="text" class="form-control" id="tahun_ajaran_id" name="tahun_ajaran_id"
+                                        value="{{ $tahun_id->tahun_ajaran }}" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="status_konsultasi" class="col-form-label">Status: <b
+                                            class="info">*Otomatis Terisi</b></label>
+                                    <input type="text" class="form-control" id="status_konsultasi"
+                                        name="status_konsultasi" value="{{ $detail['status_konsultasi'] }}" readonly>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-md-12">
+                                    <label for="keterangan" class="col-form-label">Keterangan Konsultasi Sebelumnya: <b
+                                            class="info">*Otomatis Terisi</b></label><br>
+                                    <textarea class="form-control" name="keterangan" id="keterangan" style="width: 100%" rows="3" aria-valuetext=""
+                                        readonly>{{ $detail['keterangan'] }}</textarea>
+                                </div>
+                            </div>
+                            <form id="Store" enctype="multipart/form-data" files="true">
+                                @csrf
                                 <div class="row mb-3">
                                     <div class="col-md-12">
                                         <label for="file_upload" class="col-form-label">File Upload: <b
                                                 class="error">*Pastikan format PDF | Max 2MB</b></label>
-                                        <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
-                                            value="{{ $user->mahasiswa->dospem->bimbingan->file_upload }}"
-                                            style="display: none" readonly>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
+                                                value="{{ $detail['file'] }}" style="display: none" readonly>
+                                            <a href="javascript:void(0)" class="btn btn-info waves-effect waves-light"
+                                                type="button" data-toggle="tooltip" title="Pertinjau File" id="btnShow">
+                                                <i class="far fa-file-pdf"></i>
+                                            </a>
+                                        </div>
                                         <input type="file" class="form-control" id="file_upload" name="file_upload">
                                         <span class="text-danger error-text file_upload_error"></span>
-                                        <iframe style="width:100%; height:400px;" frameborder="0" id="fileView"></iframe>
                                     </div>
                                 </div>
-                                <div class="row mb-1">
+                                <div class="row mb-3">
                                     <div class="col-md-12 d-flex justify-content-end">
                                         <input type="submit" class="btn btn-primary" name="addSave"
                                             value="Konsultasi Sekarang">
@@ -88,6 +117,7 @@
                                 <div class="col-md-12">
                                     <label for="komen" class="col-form-label text-secondary">Ketikan Komentar :</label>
                                     <form class="row gx-3 gy-2 align-items-center" id="KomenStore">
+                                        @csrf
                                         <div class="hstack gap-3">
                                             <input class="form-control me-auto" type="text"
                                                 placeholder="Ketik pesan anda disini.." id="komentar" name="komentar">
@@ -104,7 +134,7 @@
                             </div>
                             <div class="row mb-2">
                                 <div class="col-md-12">
-                                    <table class="table dt-responsive nowrap w-100 borderless" id="KomenTabels">
+                                    <table class="table table-responsive nowrap w-100 borderless" id="KomenTabels">
                                         <thead style="display: none;">
                                             <tr>
                                                 <th></th>
@@ -158,9 +188,15 @@
                 } else {
                     document.getElementById('fileShow').style.display = "block";
                     document.getElementById('fileView').style.display = "block";
-                    $('iframe').attr("src", "{{ asset('dokumen/konsultasi/proposal') }}" + "/" + x);
                 }
             })
+
+            /* Button Show */
+            $("#btnShow").click(function() {
+                $('#Modal').modal('show');
+                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/proposal') }}" + "/" + document
+                    .getElementById('fileShow').value);
+            });
 
             /* Get data table */
             var tableKomen = $('#KomenTabels').DataTable({
@@ -178,9 +214,10 @@
                     {
                         targets: [0],
                         data: function(data, type, dataToSet) {
-                            return "<b>" + data.nama + "</b>&nbsp;&nbsp;" + data.waktu_komentar
+                            return "<div class='text-wrap width-200'><b>" + data.nama +
+                                "</b>&nbsp;&nbsp;" + data.waktu_komentar
                                 .toLocaleString() +
-                                "<br>" + data.komentar
+                                "<br>" + data.komentar + "</div>"
                         }
                     }
                 ],
@@ -190,7 +227,8 @@
                 bFilter: false,
                 bInfo: false,
                 oLanguage: {
-                    sEmptyTable: "Belum terdapat komentar"
+                    sEmptyTable: "Belum terdapat komentar",
+                    sProcessing: "Sedang memproses..."
                 },
                 scrollY: "200px",
                 scrollCollapse: true,
@@ -234,6 +272,8 @@
                                 $('span.' + prefix + '_error').text(val[0]);
                             });
                         } else if (data.status == 1) {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Konsultasi Sekarang";
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops, Muncul Kesalahan !!',

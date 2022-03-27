@@ -47,8 +47,7 @@
                         <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="alamat_add" class="col-form-label">Alamat:</label><br>
-                                <textarea class="form-control" name="alamat_add" id="alamat_add" style="width: 100%"
-                                    rows="2"></textarea>
+                                <textarea class="form-control" name="alamat_add" id="alamat_add" style="width: 100%" rows="2"></textarea>
                                 <span class="text-danger error-text alamat_add_error"></span>
                             </div>
                         </div>
@@ -106,8 +105,7 @@
                         <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="alamat_edit" class="col-form-label">Alamat:</label><br>
-                                <textarea class="form-control" name="alamat_edit" id="alamat_edit" style="width: 100%"
-                                    rows="2"></textarea>
+                                <textarea class="form-control" name="alamat_edit" id="alamat_edit" style="width: 100%" rows="2"></textarea>
                                 <span class="text-danger error-text alamat_edit_error"></span>
                             </div>
                         </div>
@@ -156,8 +154,7 @@
                     <div class="row mb-1">
                         <div class="col-md-12">
                             <label for="alamat_show" class="col-form-label">Alamat:</label><br>
-                            <textarea class="form-control" name="alamat_show" id="alamat_show" style="width: 100%"
-                                rows="3" readonly></textarea>
+                            <textarea class="form-control" name="alamat_show" id="alamat_show" style="width: 100%" rows="3" readonly></textarea>
                         </div>
                     </div>
                 </div>

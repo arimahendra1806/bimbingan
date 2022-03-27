@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Models\DosenModel;
+use App\Models\TahunAjaran;
 
 class DosPemMateriModel extends Model
 {
@@ -18,4 +20,24 @@ class DosPemMateriModel extends Model
 
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
+
+    /**
+     * Get the user that owns the DosPemMateriModel
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function dosen()
+    {
+        return $this->belongsTo(DosenModel::class, 'dosen_id', 'id');
+    }
+
+    /**
+     * Get the user that owns the DosPemMateriModel
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function tahun()
+    {
+        return $this->belongsTo(TahunAjaran::class, 'tahun_ajaran_id', 'id');
+    }
 }

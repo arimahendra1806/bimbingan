@@ -24,7 +24,7 @@
                     <div class="card-header">
                         <h4 class="card-title">Data Dosen Pembimbing</h4>
                         <p class="card-title-desc">
-                            Berikut adalah detail dari <b>Dosen Pembimbing</b> anda selama mengerjakan <b>Tugas Akhir</b>,
+                            Berikut adalah detail dari <b>Dosen Pembimbing</b> Anda selama mengerjakan <b>Tugas Akhir</b>,
                             diharapkan Mahasiswa memanfaatkan waktu untuk <b>konsultasi</b> sebaik mungkin.
                         </p>
                     </div>

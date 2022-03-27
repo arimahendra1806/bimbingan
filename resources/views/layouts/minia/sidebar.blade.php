@@ -109,14 +109,84 @@
                     </li>
                 @elseif(Auth::check() && Auth::user()->role == 'dosen')
                     <li>
+                        <a href="{{ route('ketentuan-ta.index') }}">
+                            <i data-feather="bookmark"></i>
+                            <span data-key="t-dashboard">Ketentuan TA</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('materi-dosen.index') }}">
+                            <i data-feather="file"></i>
+                            <span data-key="t-dashboard">Materi Pembimbing</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('data-mahasiswa.indexDsn') }}">
+                            <i data-feather="user"></i>
+                            <span data-key="t-dashboard">Data Mahasiswa</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="tag"></i>
+                            <span data-key="t-apps">Peninjauan Konsultasi</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('peninjauan-judul.index') }}">
+                                    <span data-key="t-email">Judul</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('bimbingan-proposal.index') }}">
+                                    <span data-key="t-email">Proposal</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);">
+                                    <span data-key="t-invoices">Laporan</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);">
+                                    <span data-key="t-contacts">Program</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);">
+                            <i data-feather="monitor"></i>
+                            <span data-key="t-dashboard">Persetujuan Jadwal Zoom</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="bell"></i>
+                            <span data-key="t-apps">Informasi</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="javascript: void(0);">
+                                    <span data-key="t-chat">Pengumuman</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript: void(0);">
+                                    <span data-key="t-chat">Peringatan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
                         <a href="javascript: void(0);">
                             <i data-feather="menu"></i>
-                            <span data-key="t-dashboard">Tes Dosen</span>
+                            <span data-key="t-dashboard">Progress Bimbingan</span>
                         </a>
                     </li>
                 @elseif(Auth::check() && Auth::user()->role == 'mahasiswa')
                     <li>
-                        <a href="{{ route('ketentuan-ta.indexMhs') }}">
+                        <a href="{{ route('ketentuan-ta.index') }}">
                             <i data-feather="bookmark"></i>
                             <span data-key="t-dashboard">Ketentuan TA</span>
                         </a>
