@@ -1,34 +1,16 @@
 @extends('layouts.minia.header')
 
 @section('content')
-    {{-- Modal Show --}}
-    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">File Konsultasi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-1">
-                        <iframe style="width:100%; height:530px;" frameborder="0" id="fileView"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- END Modal Show --}}
-
     <div class="container-fluid">
         <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Konsultasi Judul</h4>
+                    <h4 class="mb-sm-0 font-size-18">Konsultasi Program</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Konsultasi Judul</li>
+                            <li class="breadcrumb-item active">Konsultasi Program</li>
                         </ol>
                     </div>
                 </div>
@@ -44,10 +26,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Konsultasi Judul</h4>
+                        <h4 class="card-title">Konsultasi Program</h4>
                         <p class="card-title-desc">
-                            Lengkapi form berikut untuk melakukan <b>konsultasi</b>, silahkan upload file hasil pengerjaan
-                            kalian.
+                            Lengkapi form berikut untuk melakukan <b>konsultasi</b>, silahkan upload link video hasil
+                            pengerjaan program kalian.
                         </p>
                     </div>
                     <div class="card-body">
@@ -86,22 +68,22 @@
                                         readonly>{{ $detail['keterangan'] }}</textarea>
                                 </div>
                             </div>
-                            <form id="Store" enctype="multipart/form-data" files="true">
+                            <form id="Store">
                                 @csrf
                                 <div class="row mb-3">
                                     <div class="col-md-12">
-                                        <label for="file_upload" class="col-form-label">File Upload: <b
-                                                class="error">*Pastikan format PDF | Max 2MB</b></label>
+                                        <label for="link_upload" class="col-form-label">Link Video: <b
+                                                class="error">*Pastikan upload di Youtube</b></label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
-                                                value="{{ $detail['file'] }}" style="display: none" readonly>
-                                            <a href="javascript:void(0)" class="btn btn-info waves-effect waves-light"
-                                                type="button" data-toggle="tooltip" title="Pertinjau File" id="btnShow">
-                                                <i class="far fa-file-pdf"></i>
+                                            <input type="text" class="form-control no-outline" id="linkShow" name="linkShow"
+                                                value="{{ $detail['link'] }}" style="display: none" readonly>
+                                            <a class="btn btn-info waves-effect waves-light image-popup-video-map"
+                                                type="button" data-toggle="tooltip" title="Pertinjau Video" id="btnShow">
+                                                <i class="fab fa-youtube-square"></i>
                                             </a>
                                         </div>
-                                        <input type="file" class="form-control" id="file_upload" name="file_upload">
-                                        <span class="text-danger error-text file_upload_error"></span>
+                                        <input type="text" class="form-control" id="link_upload" name="link_upload">
+                                        <span class="text-danger error-text link_upload_error"></span>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -134,7 +116,7 @@
                             </div>
                             <div class="row mb-2">
                                 <div class="col-md-12">
-                                    <table class="table dt-responsive nowrap w-100 borderless" id="KomenTabels">
+                                    <table class="table table-responsive nowrap w-100 borderless" id="KomenTabels">
                                         <thead style="display: none;">
                                             <tr>
                                                 <th></th>
@@ -164,10 +146,17 @@
         type="text/css" />
     <!-- alertifyjs js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/alertifyjs/build/alertify.min.js"></script>
+    <!-- glightbox css -->
+    <link rel="stylesheet" href="{{ asset('vendor/minia') }}/assets/libs/glightbox/css/glightbox.min.css">
+    <!-- glightbox js -->
+    <script src="{{ asset('vendor/minia') }}/assets/libs/glightbox/js/glightbox.min.js"></script>
 
     <script>
-        /* Inisiasi Partial Bab Proposal U/ Materi dan Riwayat */
-        var jenis = "Judul"
+        /* Inisiasi Partial Bab Program U/ Materi dan Riwayat */
+        var jenis = "Program"
+        var lightboxvideo = GLightbox({
+            selector: ".image-popup-video-map"
+        });
     </script>
 
     <script>
@@ -181,14 +170,24 @@
 
             /* Kondisi Jika Belum Konsultasi */
             function tampilan() {
-                var x = document.getElementById('fileShow').value;
+                var x = document.getElementById('linkShow').value;
                 if (x) {
-                    $('#fileShow').show();
+                    $('#linkShow').show();
                     $('#btnShow').show();
                 } else {
-                    $('#fileShow').hide();
+                    $('#linkShow').hide();
                     $('#btnShow').hide();
                 }
+            }
+
+            /* Function detail link video */
+            function linkVideo() {
+                var getLink = document.getElementById('linkShow').value;
+                getLink = getLink.replace('https://', '//');
+
+                lightboxvideo.setElements([{
+                    href: getLink
+                }]);
             }
 
             /* run function tampilan */
@@ -200,7 +199,7 @@
             var tableKomen = $('#KomenTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('bimbingan-judul.index') }}",
+                ajax: "{{ route('bimbingan-program.index') }}",
                 columns: [{
                     name: 'komentar'
                 }, ],
@@ -240,9 +239,7 @@
 
             /* Button Show File */
             $("#btnShow").click(function() {
-                $('#Modal').modal('show');
-                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/judul') }}" + "/" + document
-                    .getElementById('fileShow').value);
+                linkVideo();
             });
 
             /* Button Refresh Komen */
@@ -261,7 +258,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('bimbingan-judul.store') }}",
+                    url: "{{ route('bimbingan-program.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -288,14 +285,11 @@
                         } else {
                             form.addSave.disabled = false;
                             form.addSave.value = "Konsultasi Sekarang";
-                            $("#file_upload").val('');
                             $('#status_konsultasi').val(data.data.status_konsultasi);
-                            $('#fileShow').val(data.data.file_upload);
-                            $('iframe').attr("src",
-                                "{{ asset('dokumen/konsultasi/judul') }}" +
-                                "/" +
-                                data.data.file_upload);
-                            tampilan()
+                            $('#linkShow').val(data.data.link_upload);
+                            $('#link_upload').val("");
+                            linkVideo();
+                            tampilan();
                             tableRiwayat.ajax.reload();
                             Swal.fire({
                                 title: data.msg,
@@ -327,7 +321,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('bimbingan-judul.storeKomen') }}",
+                    url: "{{ route('bimbingan-program.storeKomen') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -344,8 +338,6 @@
                                 $('span.' + prefix + '_error').text(val[0]);
                             });
                         } else if (data.status == 1) {
-                            form.komenSave.disabled = false;
-                            form.komenSave.value = "Kirim";
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops, Muncul Kesalahan !!',

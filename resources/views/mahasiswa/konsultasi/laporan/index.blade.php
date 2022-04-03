@@ -24,17 +24,49 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Konsultasi Judul</h4>
+                    <h4 class="mb-sm-0 font-size-18">Konsultasi Laporan</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Konsultasi Judul</li>
+                            <li class="breadcrumb-item active">Konsultasi Laporan</li>
                         </ol>
                     </div>
                 </div>
             </div>
         </div>
         <!-- end page title -->
+
+        <!-- Info -->
+        <div class="hide" id="cetakKonsultasi">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card bg-transparent border-warning">
+                        <div class="card-header bg-transparent border-warning">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="card-title text-warning"><i class="fas fa-exclamation-triangle"></i> |
+                                        Informasi</h4>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                    <a class="d-block text-warning" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseCetak" aria-expanded="false" aria-controls="collapseCetak">
+                                        <i class="min fas fa-angle-double-down pull-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show" id="collapseCetak">
+                            <div class="card-body" style="text-align: justify">
+                                <p>
+                                    Konsultasi sudah selesai, silahkan cetak kartu konsultasi melalui berikut
+                                    <u><a href="{{ route('bimbingan-judul.index') }}">Cetak Sekarang</a></u>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Card Materi -->
         @include('partial.materiKonsul')
@@ -44,7 +76,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Konsultasi Judul</h4>
+                        <h4 class="card-title">Konsultasi Laporan</h4>
                         <p class="card-title-desc">
                             Lengkapi form berikut untuk melakukan <b>konsultasi</b>, silahkan upload file hasil pengerjaan
                             kalian.
@@ -93,7 +125,7 @@
                                         <label for="file_upload" class="col-form-label">File Upload: <b
                                                 class="error">*Pastikan format PDF | Max 2MB</b></label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
+                                            <input type="text" class="form-control no-outline" id="linkShow" name="linkShow"
                                                 value="{{ $detail['file'] }}" style="display: none" readonly>
                                             <a href="javascript:void(0)" class="btn btn-info waves-effect waves-light"
                                                 type="button" data-toggle="tooltip" title="Pertinjau File" id="btnShow">
@@ -134,7 +166,7 @@
                             </div>
                             <div class="row mb-2">
                                 <div class="col-md-12">
-                                    <table class="table dt-responsive nowrap w-100 borderless" id="KomenTabels">
+                                    <table class="table table-responsive nowrap w-100 borderless" id="KomenTabels">
                                         <thead style="display: none;">
                                             <tr>
                                                 <th></th>
@@ -166,8 +198,8 @@
     <script src="{{ asset('vendor/minia') }}/assets/libs/alertifyjs/build/alertify.min.js"></script>
 
     <script>
-        /* Inisiasi Partial Bab Proposal U/ Materi dan Riwayat */
-        var jenis = "Judul"
+        /* Inisiasi Partial Bab Laporan U/ Materi dan Riwayat */
+        var jenis = "Laporan"
     </script>
 
     <script>
@@ -181,13 +213,21 @@
 
             /* Kondisi Jika Belum Konsultasi */
             function tampilan() {
-                var x = document.getElementById('fileShow').value;
+                var x = document.getElementById('linkShow').value;
                 if (x) {
-                    $('#fileShow').show();
+                    $('#linkShow').show();
                     $('#btnShow').show();
                 } else {
-                    $('#fileShow').hide();
+                    $('#linkShow').hide();
                     $('#btnShow').hide();
+                }
+                var y = document.getElementById('status_konsultasi').value;
+                if (y == "Disetujui") {
+                    document.getElementById('cetakKonsultasi').classList.remove("hide");
+                    $('#cetakKonsultasi').show();
+                } else {
+                    document.getElementById('cetakKonsultasi').classList.remove("hide");
+                    $('#cetakKonsultasi').hide();
                 }
             }
 
@@ -200,7 +240,7 @@
             var tableKomen = $('#KomenTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('bimbingan-judul.index') }}",
+                ajax: "{{ route('bimbingan-laporan.index') }}",
                 columns: [{
                     name: 'komentar'
                 }, ],
@@ -241,8 +281,8 @@
             /* Button Show File */
             $("#btnShow").click(function() {
                 $('#Modal').modal('show');
-                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/judul') }}" + "/" + document
-                    .getElementById('fileShow').value);
+                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/laporan') }}" + "/" + document
+                    .getElementById('linkShow').value);
             });
 
             /* Button Refresh Komen */
@@ -261,7 +301,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('bimbingan-judul.store') }}",
+                    url: "{{ route('bimbingan-laporan.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -290,12 +330,12 @@
                             form.addSave.value = "Konsultasi Sekarang";
                             $("#file_upload").val('');
                             $('#status_konsultasi').val(data.data.status_konsultasi);
-                            $('#fileShow').val(data.data.file_upload);
+                            $('#linkShow').val(data.data.file_upload);
                             $('iframe').attr("src",
-                                "{{ asset('dokumen/konsultasi/judul') }}" +
+                                "{{ asset('dokumen/konsultasi/laporan') }}" +
                                 "/" +
                                 data.data.file_upload);
-                            tampilan()
+                            tampilan();
                             tableRiwayat.ajax.reload();
                             Swal.fire({
                                 title: data.msg,
@@ -327,7 +367,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('bimbingan-judul.storeKomen') }}",
+                    url: "{{ route('bimbingan-laporan.storeKomen') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -344,8 +384,6 @@
                                 $('span.' + prefix + '_error').text(val[0]);
                             });
                         } else if (data.status == 1) {
-                            form.komenSave.disabled = false;
-                            form.komenSave.value = "Kirim";
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops, Muncul Kesalahan !!',

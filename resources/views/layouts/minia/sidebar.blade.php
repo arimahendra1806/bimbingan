@@ -138,17 +138,17 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('bimbingan-proposal.index') }}">
+                                <a href="{{ route('peninjauan-proposal.index') }}">
                                     <span data-key="t-email">Proposal</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('peninjauan-laporan.index') }}">
                                     <span data-key="t-invoices">Laporan</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('peninjauan-program.index') }}">
                                     <span data-key="t-contacts">Program</span>
                                 </a>
                             </li>
@@ -220,12 +220,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('bimbingan-laporan.index') }}">
                                     <span data-key="t-invoices">Laporan</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('bimbingan-program.index') }}">
                                     <span data-key="t-contacts">Program</span>
                                 </a>
                             </li>

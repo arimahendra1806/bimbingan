@@ -11,7 +11,7 @@ use App\Models\KomentarModel;
 use App\Models\TahunAjaran;
 use DataTables, Auth, Validator;
 
-class DsnKonsulJudulController extends Controller
+class DsnKonsulProgramController extends Controller
 {
     public function index(Request $request){
         /* Ambil data data tahun_ajaran */
@@ -28,20 +28,20 @@ class DsnKonsulJudulController extends Controller
         /* Ambil data table daftar mahasiswa */
         if($request->ajax()){
             $data = BimbinganModel::whereIn('pembimbing_kode', $arr_in)
-                ->where('jenis_bimbingan', 'Judul')
+                ->where('jenis_bimbingan', 'Program')
                 ->where('status_konsultasi', '!=', 'Belum Konsultasi')
                 ->get()->load('pembimbing.mahasiswa');
             return DataTables::of($data)->addIndexColumn()->toJson();
         }
 
         /* Return menuju view */
-        return view('dosen.konsultasi.judul.index');
+        return view('dosen.konsultasi.program.index');
     }
 
     public function detail(Request $request, $kode){
         /* Ambil data tabel bimbingan sesuai parameter */
         $data = BimbinganModel::with('pembimbing.mahasiswa.judul')->where('kode_bimbingan', $kode)
-                ->where('jenis_bimbingan', 'Judul')
+                ->where('jenis_bimbingan', 'Program')
                 ->first();
 
         /* Ambil data array */
@@ -50,7 +50,7 @@ class DsnKonsulJudulController extends Controller
             'nama' => $data->pembimbing->mahasiswa->nama_mahasiswa,
             'tanggal' => $data->tanggal_konsultasi,
             'judul' => $data->pembimbing->mahasiswa->judul->judul,
-            'file' => $data->file_upload,
+            'link' => $data->link_video,
             'status' => $data->status_konsultasi,
             'keterangan' => $data->keterangan_konsultasi
         ];
@@ -69,7 +69,7 @@ class DsnKonsulJudulController extends Controller
         /* Ambil data table komentar sesuai parameter */
         if($request->ajax()){
             $data = KomentarModel::latest()->where('bimbingan_kode', $kode)
-                ->where('bimbingan_jenis', 'Judul')->get();
+                ->where('bimbingan_jenis', 'Program')->get();
             return DataTables::of($data)->toJson();
         }
     }
@@ -77,7 +77,7 @@ class DsnKonsulJudulController extends Controller
     public function store(Request $request){
         /* Peraturan validasi  */
         $rules = [
-            'progres' => ['required'],
+            // 'progres' => ['required'],
             'keterangan' => ['required'],
         ];
 
@@ -86,7 +86,7 @@ class DsnKonsulJudulController extends Controller
 
         /* Nama kolom validasi */
         $attributes = [
-            'progres' => 'Status Konsultasi',
+            // 'progres' => 'Status Konsultasi',
             'keterangan' => 'Keterangan',
         ];
 
@@ -99,35 +99,20 @@ class DsnKonsulJudulController extends Controller
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
             /* Ambil data tabel bimbingan sesuai parameter */
-            $data = BimbinganModel::with('pembimbing.mahasiswa.judul')->where('kode_bimbingan', $request->kd)
-                ->where('jenis_bimbingan', 'Judul')
+            $data = BimbinganModel::with('pembimbing.mahasiswa')->where('kode_bimbingan', $request->kd)
+                ->where('jenis_bimbingan', 'Program')
                 ->first();
 
-            /* Jika request progres sama dengan disetujui */
-            if($request->progres == "Disetujui"){
-                /* Update data progres bimbingan */
-                ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update(['judul' => '5']);
+            ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update(['program' => '5']);
 
-                /* Update data judul */
-                $data->pembimbing->mahasiswa->judul->status = "Diterima";
-                $data->pembimbing->mahasiswa->judul->save();
-            } else {
-                /* Update data progres bimbingan */
-                ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update(['judul' => '0']);
-
-                /* Update data judul */
-                $data->pembimbing->mahasiswa->judul->status = "Mendapat Pembimbing";
-                $data->pembimbing->mahasiswa->judul->save();
-            }
-
-            /* Update data judul */
-            $data->status_konsultasi = $request->progres;
+            /* Update data progra */
+            $data->status_konsultasi = "Lanjutkan Pengerjaan";
             $data->keterangan_konsultasi = $request->keterangan;
             $data->status_pesan = "3";
             $data->save();
 
             /* Return json berhasil */
-            return response()->json(['status' => 1, 'msg' => "Berhasil Perbarui Peninjauan", 'data' => $data]);
+            return response()->json(['status' => 1, 'msg' => "Berhasil Perbarui Peninjauan"]);
         }
     }
 
@@ -156,14 +141,9 @@ class DsnKonsulJudulController extends Controller
         } else {
             /* Ambil data mahasiswa login */
             $user = User::with(['dosen.dospem.bimbingan' => function($q){
-                $q->where('jenis_bimbingan', 'Judul');
+                $q->where('jenis_bimbingan', 'Program');
             }])->find(Auth::user()->id);
 
-            /* Ambil data data tahun_ajaran */
-            if($user->dosen->dospem->bimbingan->status_konsultasi == "Disetujui"){
-                $data = "Diskusi ditutup, silahkan lanjut untuk peninjauan berikutnya!";
-                return response()->json(['status' => 1, 'data' => $data]);
-            } else {
                 /* Insert ke tabel komentar */
                 $data = new KomentarModel;
                 $data->bimbingan_kode = $user->dosen->dospem->bimbingan->kode_bimbingan;
@@ -174,7 +154,7 @@ class DsnKonsulJudulController extends Controller
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);
-            }
+            // }
         }
     }
 }

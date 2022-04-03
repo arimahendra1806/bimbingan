@@ -19,9 +19,14 @@ use App\Http\Controllers\DataPembimbingController;
 use App\Http\Controllers\JudulMahasiswaController;
 use App\Http\Controllers\KonsulJudulController;
 use App\Http\Controllers\KonsulProposalController;
+use App\Http\Controllers\KonsulLaporanController;
+use App\Http\Controllers\KonsulProgramController;
 use App\Http\Controllers\PartialController;
 use App\Http\Controllers\MateriDosenController;
 use App\Http\Controllers\DsnKonsulJudulController;
+use App\Http\Controllers\DsnKonsulProposalController;
+use App\Http\Controllers\DsnKonsulLaporanController;
+use App\Http\Controllers\DsnKonsulProgramController;
 /* End Controller */
 
 /*
@@ -141,6 +146,27 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/peninjauan-konsultasi-judul/komen/{kode}', [DsnKonsulJudulController::class, 'komen'])->name('peninjauan-judul.komen');
         Route::post('/peninjauan-konsultasi-judul', [DsnKonsulJudulController::class, 'store'])->name('peninjauan-judul.store');
         Route::post('/peninjauan-konsultasi-judul/komen', [DsnKonsulJudulController::class, 'storeKomen'])->name('peninjauan-judul.storeKomen');
+
+        /* Konsul Proposal */
+        Route::get('/peninjauan-konsultasi-proposal', [DsnKonsulProposalController::class, 'index'])->name('peninjauan-proposal.index');
+        Route::get('/peninjauan-konsultasi-proposal/{kode}', [DsnKonsulProposalController::class, 'detail'])->name('peninjauan-proposal.detail');
+        Route::get('/peninjauan-konsultasi-proposal/komen/{kode}', [DsnKonsulProposalController::class, 'komen'])->name('peninjauan-proposal.komen');
+        Route::post('/peninjauan-konsultasi-proposal', [DsnKonsulProposalController::class, 'store'])->name('peninjauan-proposal.store');
+        Route::post('/peninjauan-konsultasi-proposal/komen', [DsnKonsulProposalController::class, 'storeKomen'])->name('peninjauan-proposal.storeKomen');
+
+        /* Konsul Laporan */
+        Route::get('/peninjauan-konsultasi-laporan', [DsnKonsulLaporanController::class, 'index'])->name('peninjauan-laporan.index');
+        Route::get('/peninjauan-konsultasi-laporan/{kode}', [DsnKonsulLaporanController::class, 'detail'])->name('peninjauan-laporan.detail');
+        Route::get('/peninjauan-konsultasi-laporan/komen/{kode}', [DsnKonsulLaporanController::class, 'komen'])->name('peninjauan-laporan.komen');
+        Route::post('/peninjauan-konsultasi-laporan', [DsnKonsulLaporanController::class, 'store'])->name('peninjauan-laporan.store');
+        Route::post('/peninjauan-konsultasi-laporan/komen', [DsnKonsulLaporanController::class, 'storeKomen'])->name('peninjauan-laporan.storeKomen');
+
+        /* Konsul Program */
+        Route::get('/peninjauan-konsultasi-program', [DsnKonsulProgramController::class, 'index'])->name('peninjauan-program.index');
+        Route::get('/peninjauan-konsultasi-program/{kode}', [DsnKonsulProgramController::class, 'detail'])->name('peninjauan-program.detail');
+        Route::get('/peninjauan-konsultasi-program/komen/{kode}', [DsnKonsulProgramController::class, 'komen'])->name('peninjauan-program.komen');
+        Route::post('/peninjauan-konsultasi-program', [DsnKonsulProgramController::class, 'store'])->name('peninjauan-program.store');
+        Route::post('/peninjauan-konsultasi-program/komen', [DsnKonsulProgramController::class, 'storeKomen'])->name('peninjauan-program.storeKomen');
     });
 
     /* Mahasiswa */
@@ -165,9 +191,19 @@ Route::group(['middleware' => 'auth'], function(){
         Route::post('/konsultasi-proposal/store', [KonsulProposalController::class, 'store'])->name('bimbingan-proposal.store');
         Route::post('/komen/proposal/store', [KonsulProposalController::class, 'storeKomen'])->name('bimbingan-proposal.storeKomen');
 
+        /* Konsul Laporan */
+        Route::get('/konsultasi-laporan', [KonsulLaporanController::class, 'index'])->name('bimbingan-laporan.index');
+        Route::post('/konsultasi-laporan/store', [KonsulLaporanController::class, 'store'])->name('bimbingan-laporan.store');
+        Route::post('/komen/laporan/store', [KonsulLaporanController::class, 'storeKomen'])->name('bimbingan-laporan.storeKomen');
+
+        /* Konsul Program */
+        Route::get('/konsultasi-program', [KonsulProgramController::class, 'index'])->name('bimbingan-program.index');
+        Route::post('/konsultasi-program/store', [KonsulProgramController::class, 'store'])->name('bimbingan-program.store');
+        Route::post('/komen/program/store', [KonsulProgramController::class, 'storeKomen'])->name('bimbingan-program.storeKomen');
+
         /* Mhs Partial */
-        Route::get('/materi/{proposal}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
-        Route::get('/riwayat/{proposal}', [PartialController::class, 'RiwayatKonsul'])->name('partial.RiwayatKonsul');
+        Route::get('/materi/{jenis}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
+        Route::get('/riwayat/{jenis}', [PartialController::class, 'RiwayatKonsul'])->name('partial.RiwayatKonsul');
     });
 
     /* Mahasiswa && Dosen */

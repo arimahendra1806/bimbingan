@@ -22,6 +22,7 @@ class KonsulProposalController extends Controller
             $q->where('jenis_bimbingan', 'Proposal');
         }])->find(Auth::user()->id);
 
+        /* Ambil data array */
         $detail = [
             'kode_bimbingan' => $user->mahasiswa->dospem->bimbingan->kode_bimbingan,
             'status_konsultasi' => $user->mahasiswa->dospem->bimbingan->status_konsultasi,

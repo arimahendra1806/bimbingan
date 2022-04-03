@@ -1,36 +1,16 @@
 @extends('layouts.minia.header')
 
 @section('content')
-    {{-- Modal Show --}}
-    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">File Konsultasi</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <a class="btn btn-info waves-effect waves-light w-100" type="button" id="fileDownload" download="">Unduh
-                        File</a>
-                    <div class="mb-1">
-                        <iframe style="width:100%; height:530px;" frameborder="0" id="fileView"></iframe>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- END Modal Show --}}
-
     <div class="container-fluid">
         <!-- start page title -->
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Peninjauan Konsultasi Judul</h4>
+                    <h4 class="mb-sm-0 font-size-18">Peninjauan Konsultasi Program</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Peninjauan Konsultasi Judul</li>
+                            <li class="breadcrumb-item active">Peninjauan Konsultasi Program</li>
                         </ol>
                     </div>
 
@@ -42,7 +22,7 @@
             <div class="col-8">
                 <div class="card" style="min-height: 200px">
                     <div class="card-header">
-                        <h4 class="card-title">Peninjauan Konsultasi Judul</h4>
+                        <h4 class="card-title">Peninjauan Konsultasi Program</h4>
                         <p class="card-title-desc">
                             Diharapkan Dosen segara melakukan peninjauan terhadap konsultasi Mahasiswa dan <b>perbarui
                                 status konfirmasi</b>.
@@ -75,13 +55,13 @@
                             </div>
                             <div class="row mb-1">
                                 <div class="col-md-12">
-                                    <label for="fileShow" class="col-form-label">File Konsultasi:</label>
+                                    <label for="linkShow" class="col-form-label">Video Konsultasi Program:</label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
+                                        <input type="text" class="form-control no-outline" id="linkShow" name="linkShow"
                                             readonly>
-                                        <a href="javascript:void(0)" class="btn btn-info waves-effect waves-light"
-                                            type="button" data-toggle="tooltip" title="Pertinjau File" id="btnShow">
-                                            <i class="far fa-file-pdf"></i>
+                                        <a class="btn btn-info waves-effect waves-light image-popup-video-map" type="button"
+                                            data-toggle="tooltip" title="Pertinjau Video" id="btnShow">
+                                            <i class="fab fa-youtube-square"></i>
                                         </a>
                                     </div>
                                 </div>
@@ -90,16 +70,6 @@
                                 <form id="Store">
                                     @csrf
                                     <input type="hidden" name="kd" id="kd">
-                                    <div class="col-md-12 mb-1">
-                                        <label for="progres" class="col-form-label">Status Konsultasi: </label>
-                                        <select class="js-example-responsive form-control" style="width: 100%" id="progres"
-                                            name="progres">
-                                            <option value=""></option>
-                                            <option value="Disetujui">Disetujui</option>
-                                            <option value="Revisi">Revisi</option>
-                                        </select>
-                                        <span class="text-danger error-text progres_error"></span>
-                                    </div>
                                     <div class="col-md-12 mb-3">
                                         <label for="keterangan" class="col-form-label">Keterangan:</label><br>
                                         <textarea class="form-control" name="keterangan" id="keterangan" style="width: 100%" rows="3"></textarea>
@@ -149,12 +119,11 @@
             <div class="col-4">
                 <div class="card" style="min-height: 200px">
                     <div class="container mt-4">
-                        <h4 class="card-title">Daftar Konsultasi Judul</h4>
+                        <h4 class="card-title">Daftar Konsultasi Program</h4>
                         <p class="card-title-desc">
                             <i class="fas fa-comment-dots text-danger"></i> : Belum Dilihat |
                             <i class="fas fa-comment-dots text-warning"></i> : Sudah Dilihat |
-                            <i class="fas fa-comment-dots text-success"></i> : Sudah Dibalas |
-                            <i class="fas fa-comment-dots text-primary"></i> : Telah Disetujui
+                            <i class="fas fa-comment-dots text-success"></i> : Sudah Dibalas
                         </p>
                         <div class="table-responsive mt-2">
                             <table class="table nowrap w-100 borderless" style="cursor:pointer" id="Tabels">
@@ -181,18 +150,24 @@
     <!-- select2 js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.js"></script>
     <!-- datatables select css -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css">
-    <!-- datatables select js -->
-    <script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet"
+        href="{{ asset('vendor/minia') }}/assets/libs/datatables.net-select/css/select.dataTables.min.css">
     <!-- alertifyjs Css -->
     <link href="{{ asset('vendor/minia') }}/assets/libs/alertifyjs/build/css/alertify.min.css" rel="stylesheet"
         type="text/css" />
     <!-- alertifyjs js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/alertifyjs/build/alertify.min.js"></script>
+    <!-- glightbox css -->
+    <link rel="stylesheet" href="{{ asset('vendor/minia') }}/assets/libs/glightbox/css/glightbox.min.css">
+    <!-- glightbox js -->
+    <script src="{{ asset('vendor/minia') }}/assets/libs/glightbox/js/glightbox.min.js"></script>
 
     <script>
         $(document).ready(function() {
             var selectRowId = "";
+            var lightboxvideo = GLightbox({
+                selector: ".image-popup-video-map"
+            });
 
             /* Ajax Token */
             $.ajaxSetup({
@@ -221,22 +196,31 @@
 
             /* Function detail daftar mhs */
             function detail(kode) {
-                $.get('peninjauan-konsultasi-judul/' + kode, function(data) {
+                $.get('peninjauan-konsultasi-program/' + kode, function(data) {
                     $('#kd').val(data.detail.kd);
                     $('#nama_show').val(data.detail.nama);
                     $('#tanggal_show').val(data.detail.tanggal);
                     $('#judul_show').val(data.detail.judul);
-                    $('#fileShow').val(data.detail.file);
-                    $('#progres').val(data.detail.status).trigger('change');
+                    $('#linkShow').val(data.detail.link);
                     $('#keterangan').val(data.detail.keterangan);
                 });
+            }
+
+            /* Function detail link video */
+            function linkVideo() {
+                var getLink = document.getElementById('linkShow').value;
+                getLink = getLink.replace('https://', '//');
+
+                lightboxvideo.setElements([{
+                    href: getLink
+                }]);
             }
 
             /* Get data table daftar mhs */
             var table = $('#Tabels').DataTable({
                 processing: false,
                 serverSide: true,
-                ajax: "{{ route('peninjauan-judul.index') }}",
+                ajax: "{{ route('peninjauan-program.index') }}",
                 columns: [{
                     name: 'pembimbing.mahasiswa.nama_mahasiswa',
                     data: function(data, type, dataToSet) {
@@ -245,9 +229,6 @@
                                 data.pembimbing.mahasiswa.nama_mahasiswa;
                         } else if (data.status_pesan == 1) {
                             return '<i class="fas fa-comment-dots text-warning"> &nbsp;&nbsp;</i>' +
-                                data.pembimbing.mahasiswa.nama_mahasiswa;
-                        } else if (data.status_konsultasi == "Disetujui") {
-                            return '<i class="fas fa-comment-dots text-primary"> &nbsp;&nbsp;</i>' +
                                 data.pembimbing.mahasiswa.nama_mahasiswa;
                         } else {
                             return '<i class="fas fa-comment-dots text-success"> &nbsp;&nbsp;</i>' +
@@ -284,7 +265,7 @@
             var tableKomen = $('#KomenTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: 'peninjauan-konsultasi-judul/komen/0',
+                ajax: 'peninjauan-konsultasi-program/komen/0',
                 columns: [{
                     name: 'komentar'
                 }, ],
@@ -330,7 +311,7 @@
                         $("#" + selectRowId).addClass('selected');
                     });
                     detail(this_id);
-                    tableKomen.ajax.url("peninjauan-konsultasi-judul/komen/" + this_id).load();
+                    tableKomen.ajax.url("peninjauan-konsultasi-program/komen/" + this_id).load();
                     kedua();
                 } else {
                     $("#" + selectRowId).removeClass('selected');
@@ -343,13 +324,9 @@
                 $('[data-toggle="tooltip"]').tooltip();
             });
 
-            /* Button Show File*/
+            /* Button Show File */
             $("#btnShow").click(function() {
-                $('#Modal').modal('show');
-                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/judul') }}" + "/" + document
-                    .getElementById('fileShow').value);
-                $('#fileDownload').attr("href", "{{ asset('dokumen/konsultasi/judul') }}" + "/" +
-                    document.getElementById('fileShow').value);
+                linkVideo();
             });
 
             /* Button Refresh Komen*/
@@ -368,7 +345,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('peninjauan-judul.store') }}",
+                    url: "{{ route('peninjauan-program.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -387,9 +364,6 @@
                         } else {
                             form.addSave.disabled = false;
                             form.addSave.value = "Perbarui Peninjauan";
-                            $('#kd').val(data.data.kode_bimbingan);
-                            $('#progres').val(data.data.status_konsultasi).trigger('change');
-                            $('#keterangan').val(data.data.keterangan_konsultasi);
                             table.ajax.reload(function() {
                                 $("#" + selectRowId).addClass('selected');
                             })
@@ -423,7 +397,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('peninjauan-judul.storeKomen') }}",
+                    url: "{{ route('peninjauan-program.storeKomen') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -463,13 +437,6 @@
                         alertify.error('Oops, Muncul Kesalahan !!');
                     }
                 });
-            });
-
-            /* Select2 */
-            $("#progres").select2({
-                placeholder: "Cari berdasarkan status ...",
-                allowClear: true,
-                minimumResultsForSearch: -1
             });
         });
     </script>

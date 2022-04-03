@@ -26,11 +26,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Peninjauan Konsultasi Judul</h4>
+                    <h4 class="mb-sm-0 font-size-18">Peninjauan Konsultasi Laporan</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Peninjauan Konsultasi Judul</li>
+                            <li class="breadcrumb-item active">Peninjauan Konsultasi Laporan</li>
                         </ol>
                     </div>
 
@@ -42,7 +42,7 @@
             <div class="col-8">
                 <div class="card" style="min-height: 200px">
                     <div class="card-header">
-                        <h4 class="card-title">Peninjauan Konsultasi Judul</h4>
+                        <h4 class="card-title">Peninjauan Konsultasi Laporan</h4>
                         <p class="card-title-desc">
                             Diharapkan Dosen segara melakukan peninjauan terhadap konsultasi Mahasiswa dan <b>perbarui
                                 status konfirmasi</b>.
@@ -91,12 +91,18 @@
                                     @csrf
                                     <input type="hidden" name="kd" id="kd">
                                     <div class="col-md-12 mb-1">
-                                        <label for="progres" class="col-form-label">Status Konsultasi: </label>
+                                        <label for="progres" class="col-form-label">Status Konsultasi: <b
+                                                class="error">*Pilih bab yang akan Anda setujui, sisanya akan
+                                                berstatus revisi</b></label>
                                         <select class="js-example-responsive form-control" style="width: 100%" id="progres"
-                                            name="progres">
-                                            <option value=""></option>
-                                            <option value="Disetujui">Disetujui</option>
-                                            <option value="Revisi">Revisi</option>
+                                            name="progres[]" multiple="multiple">
+                                            <option value="Revisi">Revisi Semua</option>
+                                            <option value="laporan_bab1">Bab 1</option>
+                                            <option value="laporan_bab2">Bab 2</option>
+                                            <option value="laporan_bab3">Bab 3</option>
+                                            <option value="laporan_bab4">Bab 4</option>
+                                            <option value="laporan_bab5">Bab 5</option>
+                                            <option value="laporan_bab6">Bab 6</option>
                                         </select>
                                         <span class="text-danger error-text progres_error"></span>
                                     </div>
@@ -149,7 +155,7 @@
             <div class="col-4">
                 <div class="card" style="min-height: 200px">
                     <div class="container mt-4">
-                        <h4 class="card-title">Daftar Konsultasi Judul</h4>
+                        <h4 class="card-title">Daftar Konsultasi Laporan</h4>
                         <p class="card-title-desc">
                             <i class="fas fa-comment-dots text-danger"></i> : Belum Dilihat |
                             <i class="fas fa-comment-dots text-warning"></i> : Sudah Dilihat |
@@ -181,9 +187,8 @@
     <!-- select2 js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.js"></script>
     <!-- datatables select css -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css">
-    <!-- datatables select js -->
-    <script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet"
+        href="{{ asset('vendor/minia') }}/assets/libs/datatables.net-select/css/select.dataTables.min.css">
     <!-- alertifyjs Css -->
     <link href="{{ asset('vendor/minia') }}/assets/libs/alertifyjs/build/css/alertify.min.css" rel="stylesheet"
         type="text/css" />
@@ -221,13 +226,13 @@
 
             /* Function detail daftar mhs */
             function detail(kode) {
-                $.get('peninjauan-konsultasi-judul/' + kode, function(data) {
+                $.get('peninjauan-konsultasi-laporan/' + kode, function(data) {
                     $('#kd').val(data.detail.kd);
                     $('#nama_show').val(data.detail.nama);
                     $('#tanggal_show').val(data.detail.tanggal);
                     $('#judul_show').val(data.detail.judul);
                     $('#fileShow').val(data.detail.file);
-                    $('#progres').val(data.detail.status).trigger('change');
+                    $('#progres').val(data.status).trigger('change');
                     $('#keterangan').val(data.detail.keterangan);
                 });
             }
@@ -236,7 +241,7 @@
             var table = $('#Tabels').DataTable({
                 processing: false,
                 serverSide: true,
-                ajax: "{{ route('peninjauan-judul.index') }}",
+                ajax: "{{ route('peninjauan-laporan.index') }}",
                 columns: [{
                     name: 'pembimbing.mahasiswa.nama_mahasiswa',
                     data: function(data, type, dataToSet) {
@@ -284,7 +289,7 @@
             var tableKomen = $('#KomenTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: 'peninjauan-konsultasi-judul/komen/0',
+                ajax: 'peninjauan-konsultasi-laporan/komen/0',
                 columns: [{
                     name: 'komentar'
                 }, ],
@@ -330,7 +335,7 @@
                         $("#" + selectRowId).addClass('selected');
                     });
                     detail(this_id);
-                    tableKomen.ajax.url("peninjauan-konsultasi-judul/komen/" + this_id).load();
+                    tableKomen.ajax.url("peninjauan-konsultasi-laporan/komen/" + this_id).load();
                     kedua();
                 } else {
                     $("#" + selectRowId).removeClass('selected');
@@ -346,9 +351,9 @@
             /* Button Show File*/
             $("#btnShow").click(function() {
                 $('#Modal').modal('show');
-                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/judul') }}" + "/" + document
+                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/laporan') }}" + "/" + document
                     .getElementById('fileShow').value);
-                $('#fileDownload').attr("href", "{{ asset('dokumen/konsultasi/judul') }}" + "/" +
+                $('#fileDownload').attr("href", "{{ asset('dokumen/konsultasi/laporan') }}" + "/" +
                     document.getElementById('fileShow').value);
             });
 
@@ -368,7 +373,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('peninjauan-judul.store') }}",
+                    url: "{{ route('peninjauan-laporan.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -387,9 +392,6 @@
                         } else {
                             form.addSave.disabled = false;
                             form.addSave.value = "Perbarui Peninjauan";
-                            $('#kd').val(data.data.kode_bimbingan);
-                            $('#progres').val(data.data.status_konsultasi).trigger('change');
-                            $('#keterangan').val(data.data.keterangan_konsultasi);
                             table.ajax.reload(function() {
                                 $("#" + selectRowId).addClass('selected');
                             })
@@ -423,7 +425,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('peninjauan-judul.storeKomen') }}",
+                    url: "{{ route('peninjauan-laporan.storeKomen') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -468,8 +470,6 @@
             /* Select2 */
             $("#progres").select2({
                 placeholder: "Cari berdasarkan status ...",
-                allowClear: true,
-                minimumResultsForSearch: -1
             });
         });
     </script>

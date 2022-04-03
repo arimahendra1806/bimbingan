@@ -11,7 +11,7 @@ use App\Models\KomentarModel;
 use App\Models\TahunAjaran;
 use DataTables, Auth, Validator;
 
-class DsnKonsulJudulController extends Controller
+class DsnKonsulProposalController extends Controller
 {
     public function index(Request $request){
         /* Ambil data data tahun_ajaran */
@@ -28,20 +28,20 @@ class DsnKonsulJudulController extends Controller
         /* Ambil data table daftar mahasiswa */
         if($request->ajax()){
             $data = BimbinganModel::whereIn('pembimbing_kode', $arr_in)
-                ->where('jenis_bimbingan', 'Judul')
+                ->where('jenis_bimbingan', 'Proposal')
                 ->where('status_konsultasi', '!=', 'Belum Konsultasi')
                 ->get()->load('pembimbing.mahasiswa');
             return DataTables::of($data)->addIndexColumn()->toJson();
         }
 
         /* Return menuju view */
-        return view('dosen.konsultasi.judul.index');
+        return view('dosen.konsultasi.proposal.index');
     }
 
     public function detail(Request $request, $kode){
         /* Ambil data tabel bimbingan sesuai parameter */
-        $data = BimbinganModel::with('pembimbing.mahasiswa.judul')->where('kode_bimbingan', $kode)
-                ->where('jenis_bimbingan', 'Judul')
+        $data = BimbinganModel::with('pembimbing.mahasiswa.judul','progres')->where('kode_bimbingan', $kode)
+                ->where('jenis_bimbingan', 'Proposal')
                 ->first();
 
         /* Ambil data array */
@@ -55,6 +55,23 @@ class DsnKonsulJudulController extends Controller
             'keterangan' => $data->keterangan_konsultasi
         ];
 
+        /* Inisiasi data array status */
+        $arr_status = array();
+        /* Inisiasi data array jenis */
+        $arr_jenis = array("proposal_bab1", "proposal_bab2", "proposal_bab3", "proposal_bab4");
+
+        /* Perulangan cek data progres lebih dari 0 */
+        foreach ($arr_jenis as $key => $value_jenis) {
+            if($data->progres->$value_jenis > 0){
+                array_push($arr_status, $value_jenis);
+            }
+        }
+
+        /* Kondisi jika array status kosong */
+        if(count($arr_status) == 0 && $data->keterangan_konsultasi){
+            array_push($arr_status, "Revisi");
+        }
+
         /* Jika data status_pesan bukan 3 */
         if($data->status_pesan != "3"){
             $data->status_pesan = "1";
@@ -62,14 +79,14 @@ class DsnKonsulJudulController extends Controller
         }
 
         /* Return json dengan data */
-        return response()->json(['detail' => $arr_in]);
+        return response()->json(['detail' => $arr_in, 'status' => $arr_status]);
     }
 
     public function komen(Request $request, $kode){
         /* Ambil data table komentar sesuai parameter */
         if($request->ajax()){
             $data = KomentarModel::latest()->where('bimbingan_kode', $kode)
-                ->where('bimbingan_jenis', 'Judul')->get();
+                ->where('bimbingan_jenis', 'Proposal')->get();
             return DataTables::of($data)->toJson();
         }
     }
@@ -98,36 +115,83 @@ class DsnKonsulJudulController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            /* Ambil data tabel bimbingan sesuai parameter */
-            $data = BimbinganModel::with('pembimbing.mahasiswa.judul')->where('kode_bimbingan', $request->kd)
-                ->where('jenis_bimbingan', 'Judul')
-                ->first();
+            /* Inisiasi progres */
+            $progres = $request->progres;
 
-            /* Jika request progres sama dengan disetujui */
-            if($request->progres == "Disetujui"){
-                /* Update data progres bimbingan */
-                ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update(['judul' => '5']);
+            /* Inisiasi array select */
+            $select = array();
+            /* Inisiasi array jenis */
+            $arr_jenis = array("proposal_bab1", "proposal_bab2", "proposal_bab3", "proposal_bab4");
 
-                /* Update data judul */
-                $data->pembimbing->mahasiswa->judul->status = "Diterima";
-                $data->pembimbing->mahasiswa->judul->save();
-            } else {
-                /* Update data progres bimbingan */
-                ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update(['judul' => '0']);
-
-                /* Update data judul */
-                $data->pembimbing->mahasiswa->judul->status = "Mendapat Pembimbing";
-                $data->pembimbing->mahasiswa->judul->save();
+            /* Perulangan untuk mengambil data yg diselect */
+            for ($i = 0; $i < count($progres); $i++)
+            {
+                array_push($select, $progres[$i]);
             }
 
-            /* Update data judul */
-            $data->status_konsultasi = $request->progres;
-            $data->keterangan_konsultasi = $request->keterangan;
-            $data->status_pesan = "3";
-            $data->save();
+            /* Kondisi jika select lebih dari 1 dan berisi revisi */
+            if(count($select) > 1 && in_array("Revisi", $select)){
+                return response()->json(['status' => 0, 'error' => ['progres' => ['Status Konsultasi yang dipilih tidak valid.']]]);
+            } else {
+                /* Ambil data tabel bimbingan sesuai parameter */
+                $data = BimbinganModel::with('pembimbing.mahasiswa.judul', 'progres')->where('kode_bimbingan', $request->kd)
+                    ->where('jenis_bimbingan', 'Proposal')
+                    ->first();
 
-            /* Return json berhasil */
-            return response()->json(['status' => 1, 'msg' => "Berhasil Perbarui Peninjauan", 'data' => $data]);
+                /* Kondisi jika di array select ada kata revisi */
+                if(in_array("Revisi", $select)){
+                    /* Perulangan update data progres sesuai parameter array jenis */
+                    foreach ($arr_jenis as $key => $value_jenis) {
+                        ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update([$value_jenis => '0']);
+                    }
+
+                    /* Update data tabel bimbingan */
+                    $data->status_konsultasi = "Revisi";
+                    $data->keterangan_konsultasi = $request->keterangan;
+                    $data->status_pesan = "3";
+                    $data->save();
+
+                    /* Inisiasi array status */
+                    $arr_status = "Revisi";
+                } else {
+                    /* Inisiasi array unselect */
+                    $unselect = array_diff($arr_jenis, $select);
+                    /* Inisiasi buang kata proposal_ di array select */
+                    $y = str_replace(array('proposal_'), '',$unselect);
+                    /* Inisiasi tambah kata , di array select */
+                    $x = implode(", ",$y);
+                    /* Inisiasi tambah kata revisi di array select */
+                    $status = "Revisi ".$x;
+
+                    /* Perulangan update data progres sesuai parameter array select */
+                    foreach ($select as $key => $value_select) {
+                        ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update([$value_select => '7.5']);
+                    }
+
+                    /* Perulangan update data progres sesuai parameter array unselect */
+                    foreach ($unselect as $key => $value_unselect) {
+                        ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update([$value_unselect => '0']);
+                    }
+
+                    /* Kondisi jika total select sama dengan 4 */
+                    if(count($select) == 4){
+                        $data->status_konsultasi = "Disetujui";
+                    } else {
+                        $data->status_konsultasi = $status;
+                    }
+
+                    /* Update tabel bimbingan */
+                    $data->keterangan_konsultasi = $request->keterangan;
+                    $data->status_pesan = "3";
+                    $data->save();
+
+                    /* Inisiasi array status */
+                    $arr_status = $select;
+                }
+
+                /* Return json berhasil */
+                return response()->json(['status' => 1, 'msg' => "Berhasil Perbarui Peninjauan"]);
+            }
         }
     }
 
@@ -156,7 +220,7 @@ class DsnKonsulJudulController extends Controller
         } else {
             /* Ambil data mahasiswa login */
             $user = User::with(['dosen.dospem.bimbingan' => function($q){
-                $q->where('jenis_bimbingan', 'Judul');
+                $q->where('jenis_bimbingan', 'Proposal');
             }])->find(Auth::user()->id);
 
             /* Ambil data data tahun_ajaran */

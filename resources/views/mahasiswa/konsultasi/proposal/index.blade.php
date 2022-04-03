@@ -36,6 +36,38 @@
         </div>
         <!-- end page title -->
 
+        <!-- Info -->
+        <div class="hide" id="cetakKonsultasi">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card bg-transparent border-warning">
+                        <div class="card-header bg-transparent border-warning">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="card-title text-warning"><i class="fas fa-exclamation-triangle"></i> |
+                                        Informasi</h4>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                    <a class="d-block text-warning" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseCetak" aria-expanded="false" aria-controls="collapseCetak">
+                                        <i class="min fas fa-angle-double-down pull-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show" id="collapseCetak">
+                            <div class="card-body" style="text-align: justify">
+                                <p>
+                                    Konsultasi sudah selesai, silahkan cetak kartu konsultasi melalui berikut
+                                    <u><a href="{{ route('bimbingan-judul.index') }}">Cetak Sekarang</a></u>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Card Materi -->
         @include('partial.materiKonsul')
 
@@ -180,22 +212,29 @@
             });
 
             /* Kondisi Jika Belum Konsultasi */
-            $(function() {
+            function tampilan() {
                 var x = document.getElementById('fileShow').value;
-                if (x == 0) {
-                    document.getElementById('fileShow').style.display = "none";
-                    document.getElementById('fileView').style.display = "none";
+                console.log(x);
+                if (x) {
+                    $('#fileShow').show();
+                    $('#btnShow').show();
                 } else {
-                    document.getElementById('fileShow').style.display = "block";
-                    document.getElementById('fileView').style.display = "block";
+                    $('#fileShow').hide();
+                    $('#btnShow').hide();
                 }
-            })
+                var y = document.getElementById('status_konsultasi').value;
+                if (y == "Disetujui") {
+                    document.getElementById('cetakKonsultasi').classList.remove("hide");
+                    $('#cetakKonsultasi').show();
+                } else {
+                    document.getElementById('cetakKonsultasi').classList.remove("hide");
+                    $('#cetakKonsultasi').hide();
+                }
+            }
 
-            /* Button Show */
-            $("#btnShow").click(function() {
-                $('#Modal').modal('show');
-                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/proposal') }}" + "/" + document
-                    .getElementById('fileShow').value);
+            /* run function tampilan */
+            $(function() {
+                tampilan();
             });
 
             /* Get data table */
@@ -240,6 +279,14 @@
                 $('[data-toggle="tooltip"]').tooltip();
             });
 
+            /* Button Show File */
+            $("#btnShow").click(function() {
+                $('#Modal').modal('show');
+                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/proposal') }}" + "/" + document
+                    .getElementById('fileShow').value);
+            });
+
+            /* Button Refresh Komen */
             $("#btnRefresh").click(function() {
                 tableKomen.ajax.reload();
             });
@@ -289,8 +336,7 @@
                                 "{{ asset('dokumen/konsultasi/proposal') }}" +
                                 "/" +
                                 data.data.file_upload);
-                            document.getElementById('fileShow').style.display = "block";
-                            document.getElementById('fileView').style.display = "block";
+                            tampilan();
                             tableRiwayat.ajax.reload();
                             Swal.fire({
                                 title: data.msg,

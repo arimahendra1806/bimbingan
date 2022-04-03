@@ -272,13 +272,13 @@
                 if (isEmpty) {
                     document.getElementById('pertama').classList.remove("hide");
                     document.getElementById('kedua').classList.remove("hide");
-                    document.getElementById('pertama').style.display = "block";
-                    document.getElementById('kedua').style.display = "none";
+                    $('#pertama').show();
+                    $('#kedua').hide();
                 } else {
                     document.getElementById('pertama').classList.remove("hide");
                     document.getElementById('kedua').classList.remove("hide");
-                    document.getElementById('pertama').style.display = "none";
-                    document.getElementById('kedua').style.display = "block";
+                    $('#pertama').hide();
+                    $('#kedua').show();
                 }
             });
 
@@ -387,8 +387,8 @@
                             form.addSave.value = "Ajukan Sekarang";
                             document.getElementById('pertama').classList.remove("hide");
                             document.getElementById('kedua').classList.remove("hide");
-                            document.getElementById('pertama').style.display = "none";
-                            document.getElementById('kedua').style.display = "block";
+                            $('#pertama').hide();
+                            $('#kedua').show();
                             table.ajax.reload();
                             Swal.fire({
                                 title: data.msg,
@@ -467,6 +467,7 @@
                 minimumResultsForSearch: -1
             });
 
+            /* Select2 Anggota Add */
             $("#id_anggota_add").select2({});
 
             /* Select2 Pengerjaan Edit */
@@ -476,6 +477,7 @@
                 minimumResultsForSearch: -1
             });
 
+            /* Select2 Anggota Edit */
             $("#id_anggota_edit").select2({
                 dropdownParent: $('#ModalEdit')
             });

@@ -10,7 +10,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use DataTables, Auth, File, Validator;
 
-class KonsulJudulController extends Controller
+class KonsulLaporanController extends Controller
 {
     public function index(Request $request)
     {
@@ -19,7 +19,7 @@ class KonsulJudulController extends Controller
 
         /* Ambil data mahasiswa login */
         $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
-            $q->where('jenis_bimbingan', 'Judul');
+            $q->where('jenis_bimbingan', 'Laporan');
         }])->find(Auth::user()->id);
 
         /* Ambil data array */
@@ -33,12 +33,12 @@ class KonsulJudulController extends Controller
         /* Ambil data table Komentar */
         if ($request->ajax()){
             $data = KomentarModel::latest()->where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
-                ->where('bimbingan_jenis', 'Judul')->get();
+                ->where('bimbingan_jenis', 'Laporan')->get();
             return DataTables::of($data)->toJson();
         }
 
         /* Return menuju view */
-        return view('mahasiswa.konsultasi.judul.index', compact('tahun_id','detail'));
+        return view('mahasiswa.konsultasi.laporan.index', compact('tahun_id','detail'));
     }
 
     public function store(Request $request)
@@ -66,13 +66,13 @@ class KonsulJudulController extends Controller
         } else {
             /* Ambil data mahasiswa login */
             $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
-                $q->where('jenis_bimbingan', 'Judul');
+                $q->where('jenis_bimbingan', 'Laporan');
             }])->find(Auth::user()->id);
             $bimbingan = $user->mahasiswa->dospem->bimbingan;
 
             /* Kondisi jika status disetujui */
             if($bimbingan->status_konsultasi == "Disetujui"){
-                $data = "Konsultasi judul sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
+                $data = "Konsultasi laporan sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
                 return response()->json(['status' => 1, 'data' => $data]);
             } else {
                 /* Ambil data data tahun_ajaran */
@@ -81,9 +81,9 @@ class KonsulJudulController extends Controller
                 /* Simpan file bimbingan */
                 $file = $request->file('file_upload');
                 $filename = time()."_".$file->getClientOriginalName();
-                $file->move(public_path('dokumen/konsultasi/judul'), $filename);
+                $file->move(public_path('dokumen/konsultasi/laporan'), $filename);
                 /* Hapus file bimbingan sebelumnya */
-                File::delete('dokumen/konsultasi/judul/'.$request->fileShow);
+                File::delete('dokumen/konsultasi/laporan/'.$request->fileShow);
 
                 /* Update data table bimbingan */
                 $bimbingan->file_upload = $filename;
@@ -129,7 +129,7 @@ class KonsulJudulController extends Controller
         } else {
             /* Ambil data mahasiswa login */
             $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
-                $q->where('jenis_bimbingan', 'Judul');
+                $q->where('jenis_bimbingan', 'Laporan');
             }])->find(Auth::user()->id);
 
             /* Ambil data data tahun_ajaran */

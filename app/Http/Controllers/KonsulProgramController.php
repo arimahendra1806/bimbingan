@@ -10,7 +10,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use DataTables, Auth, File, Validator;
 
-class KonsulJudulController extends Controller
+class KonsulProgramController extends Controller
 {
     public function index(Request $request)
     {
@@ -19,7 +19,7 @@ class KonsulJudulController extends Controller
 
         /* Ambil data mahasiswa login */
         $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
-            $q->where('jenis_bimbingan', 'Judul');
+            $q->where('jenis_bimbingan', 'Program');
         }])->find(Auth::user()->id);
 
         /* Ambil data array */
@@ -27,25 +27,25 @@ class KonsulJudulController extends Controller
             'kode_bimbingan' => $user->mahasiswa->dospem->bimbingan->kode_bimbingan,
             'status_konsultasi' => $user->mahasiswa->dospem->bimbingan->status_konsultasi,
             'keterangan' => $user->mahasiswa->dospem->bimbingan->keterangan_konsultasi,
-            'file' => $user->mahasiswa->dospem->bimbingan->file_upload
+            'link' => $user->mahasiswa->dospem->bimbingan->link_video
         ];
 
         /* Ambil data table Komentar */
         if ($request->ajax()){
             $data = KomentarModel::latest()->where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
-                ->where('bimbingan_jenis', 'Judul')->get();
+                ->where('bimbingan_jenis', 'Program')->get();
             return DataTables::of($data)->toJson();
         }
 
         /* Return menuju view */
-        return view('mahasiswa.konsultasi.judul.index', compact('tahun_id','detail'));
+        return view('mahasiswa.konsultasi.program.index', compact('tahun_id','detail'));
     }
 
     public function store(Request $request)
     {
         /* Peraturan validasi  */
         $rules = [
-            'file_upload' => ['required','file','max:2048','mimes:pdf']
+            'link_upload' => ['required']
         ];
 
         /* Pesan validasi */
@@ -53,7 +53,7 @@ class KonsulJudulController extends Controller
 
         /* Nama kolom validasi */
         $attributes = [
-            'file_upload' => 'File Konsultasi'
+            'link_upload' => 'Link Video Konsultasi'
         ];
 
         /* Validasi input */
@@ -66,27 +66,27 @@ class KonsulJudulController extends Controller
         } else {
             /* Ambil data mahasiswa login */
             $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
-                $q->where('jenis_bimbingan', 'Judul');
+                $q->where('jenis_bimbingan', 'Program');
             }])->find(Auth::user()->id);
             $bimbingan = $user->mahasiswa->dospem->bimbingan;
 
             /* Kondisi jika status disetujui */
-            if($bimbingan->status_konsultasi == "Disetujui"){
-                $data = "Konsultasi judul sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
-                return response()->json(['status' => 1, 'data' => $data]);
-            } else {
+            // if($bimbingan->status_konsultasi == "Disetujui"){
+            //     $data = "Konsultasi program sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
+            //     return response()->json(['status' => 1, 'data' => $data]);
+            // } else {
                 /* Ambil data data tahun_ajaran */
                 $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
                 /* Simpan file bimbingan */
-                $file = $request->file('file_upload');
-                $filename = time()."_".$file->getClientOriginalName();
-                $file->move(public_path('dokumen/konsultasi/judul'), $filename);
+                // $file = $request->file('file_upload');
+                // $filename = time()."_".$file->getClientOriginalName();
+                // $file->move(public_path('dokumen/konsultasi/program'), $filename);
                 /* Hapus file bimbingan sebelumnya */
-                File::delete('dokumen/konsultasi/judul/'.$request->fileShow);
+                // File::delete('dokumen/konsultasi/program/'.$request->fileShow);
 
                 /* Update data table bimbingan */
-                $bimbingan->file_upload = $filename;
+                $bimbingan->link_video = $request->link_upload;
                 $bimbingan->status_konsultasi = "Belum Disetujui";
                 $bimbingan->tanggal_konsultasi = Carbon::now();
                 $bimbingan->status_pesan = "0";
@@ -99,8 +99,8 @@ class KonsulJudulController extends Controller
                 $data2->save();
 
                 /* Return json berhasil */
-                return response()->json(['status' => 2, 'msg' => "Berhasil Melakukan Konsultasi!", 'data' => ['file_upload' => $bimbingan->file_upload, 'status_konsultasi' => $bimbingan->status_konsultasi]]);
-            }
+                return response()->json(['status' => 2, 'msg' => "Berhasil Melakukan Konsultasi!", 'data' => ['link_upload' => $bimbingan->link_video, 'status_konsultasi' => $bimbingan->status_konsultasi]]);
+            // }
         }
     }
 
@@ -129,14 +129,14 @@ class KonsulJudulController extends Controller
         } else {
             /* Ambil data mahasiswa login */
             $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
-                $q->where('jenis_bimbingan', 'Judul');
+                $q->where('jenis_bimbingan', 'Program');
             }])->find(Auth::user()->id);
 
-            /* Ambil data data tahun_ajaran */
-            if($user->mahasiswa->dospem->bimbingan->status_konsultasi == "Disetujui"){
-                $data = "Diskusi ditutup, silahkan lanjut untuk konsultasi berikutnya!";
-                return response()->json(['status' => 1, 'data' => $data]);
-            } else {
+            // /* Ambil data data tahun_ajaran */
+            // if($user->mahasiswa->dospem->bimbingan->status_konsultasi == "Disetujui"){
+            //     $data = "Diskusi ditutup, silahkan lanjut untuk konsultasi berikutnya!";
+            //     return response()->json(['status' => 1, 'data' => $data]);
+            // } else {
                 /* Insert ke tabel komentar */
                 $data = new KomentarModel;
                 $data->bimbingan_kode = $user->mahasiswa->dospem->bimbingan->kode_bimbingan;
@@ -147,7 +147,7 @@ class KonsulJudulController extends Controller
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);
-            }
+            // }
         }
     }
 }
