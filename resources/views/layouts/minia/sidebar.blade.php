@@ -95,9 +95,9 @@
                         </a>
                     </li>
                     <li>
-                        <a href="javascript: void(0);">
+                        <a href="{{ route('progres-konsultasi.index') }}">
                             <i data-feather="menu"></i>
-                            <span data-key="t-dashboard">Progress Bimbingan</span>
+                            <span data-key="t-dashboard">Progres Konsultasi</span>
                         </a>
                     </li>
                 @elseif(Auth::check() && Auth::user()->role == 'kaprodi')
@@ -105,6 +105,12 @@
                         <a href="javascript: void(0);">
                             <i data-feather="menu"></i>
                             <span data-key="t-dashboard">Tes Kaprodi</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('progres-konsultasi.index') }}">
+                            <i data-feather="menu"></i>
+                            <span data-key="t-dashboard">Progres Konsultasi</span>
                         </a>
                     </li>
                 @elseif(Auth::check() && Auth::user()->role == 'dosen')
@@ -179,9 +185,9 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="javascript: void(0);">
+                        <a href="{{ route('progres-konsultasi.index') }}">
                             <i data-feather="menu"></i>
-                            <span data-key="t-dashboard">Progress Bimbingan</span>
+                            <span data-key="t-dashboard">Progres Konsultasi</span>
                         </a>
                     </li>
                 @elseif(Auth::check() && Auth::user()->role == 'mahasiswa')

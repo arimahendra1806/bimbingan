@@ -410,8 +410,6 @@
                                 $(this).remove();
                             });
                         } else {
-                            form.addSave.disabled = false;
-                            form.addSave.value = "Tambahkan Data";
                             $("[id*='mhs_add']").each(function() {
                                 $(this).remove();
                             });

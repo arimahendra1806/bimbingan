@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Models\BimbinganModel;
 
 class ProgresBimbinganModel extends Model
 {
@@ -18,4 +19,10 @@ class ProgresBimbinganModel extends Model
 
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
+
+    /* progres_bimbingan */
+    public function bimbingan()
+    {
+        return $this->belongsTo(BimbinganModel::class,'bimbingan_kode','kode_bimbingan');
+    }
 }

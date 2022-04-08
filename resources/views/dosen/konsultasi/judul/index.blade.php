@@ -181,9 +181,8 @@
     <!-- select2 js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.js"></script>
     <!-- datatables select css -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css">
-    <!-- datatables select js -->
-    <script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet"
+        href="{{ asset('vendor/minia') }}/assets/libs/datatables.net-select/css/select.dataTables.min.css">
     <!-- alertifyjs Css -->
     <link href="{{ asset('vendor/minia') }}/assets/libs/alertifyjs/build/css/alertify.min.css" rel="stylesheet"
         type="text/css" />

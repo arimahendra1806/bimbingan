@@ -6,7 +6,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Expor Daftar Judul Mahasiswa</h5>
+                    <h5 class="modal-title">Ekspor Daftar Judul Mahasiswa</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form id="ExportForm">
@@ -71,7 +71,7 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-end">
                             <a href="javascript:void(0)" class="btn btn-primary btn-md waves-effect waves-light mb-1"
-                                data-toggle="tooltip" title="Export Data" id="btnExport">
+                                data-toggle="tooltip" title="Ekspor Data" id="btnExport">
                                 <i class="fas fa-file-export"></i>
                             </a>
                         </div>
@@ -182,6 +182,7 @@
 
             /* Ajax Export */
             $("#ExportForm").submit(function(e) {
+                // disable button
                 var form = this;
                 form.eksporSave.disabled = true;
                 form.eksporSave.value = "Sedang memproses...";
@@ -191,6 +192,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
+                    // tampilan progress
                     xhr: function() {
                         var xhr = new window.XMLHttpRequest();
                         xhr.upload.addEventListener("progress", function(evt) {
@@ -247,7 +249,7 @@
             $("#btnDownload").click(function() {
                 setTimeout(function() {
                     Swal.fire({
-                        title: "Expor Daftar Judul Berhasil!",
+                        title: "Ekspor Daftar Judul Berhasil!",
                         icon: "success",
                     }).then(function() {
                         $("#Modal").modal('hide');

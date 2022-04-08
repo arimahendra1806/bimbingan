@@ -27,6 +27,7 @@ use App\Http\Controllers\DsnKonsulJudulController;
 use App\Http\Controllers\DsnKonsulProposalController;
 use App\Http\Controllers\DsnKonsulLaporanController;
 use App\Http\Controllers\DsnKonsulProgramController;
+use App\Http\Controllers\ProgresKonsultasiController;
 /* End Controller */
 
 /*
@@ -167,6 +168,7 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/peninjauan-konsultasi-program/komen/{kode}', [DsnKonsulProgramController::class, 'komen'])->name('peninjauan-program.komen');
         Route::post('/peninjauan-konsultasi-program', [DsnKonsulProgramController::class, 'store'])->name('peninjauan-program.store');
         Route::post('/peninjauan-konsultasi-program/komen', [DsnKonsulProgramController::class, 'storeKomen'])->name('peninjauan-program.storeKomen');
+
     });
 
     /* Mahasiswa */
@@ -210,5 +212,12 @@ Route::group(['middleware' => 'auth'], function(){
     Route::group(['middleware' => 'CheckRole:mahasiswa,dosen'], function(){
         /* Ketentuan TA */
         Route::get('/ketentuan-ta', [KetentuanTaController::class, 'index'])->name('ketentuan-ta.index');
+    });
+
+    /* Koordinator && Dosen && Kaprodi */
+    Route::group(['middleware' => 'CheckRole:koordinator,dosen,kaprodi'], function(){
+        /* Progres */
+        Route::get('/progres-konsultasi-mahasiswa', [ProgresKonsultasiController::class, 'index'])->name('progres-konsultasi.index');
+        Route::get('/progres-konsultasi-mahasiswa/{id}/{urutan}', [ProgresKonsultasiController::class, 'show'])->name('progres-konsultasi.show');
     });
 });
