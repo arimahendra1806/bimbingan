@@ -62,7 +62,7 @@ class User extends Authenticatable
     /* notifikasi */
     public function notifikasi()
     {
-        return $this->belongsTo(NotifikasiModel::class,'id','users_id');
+        return $this->belongsTo(NotifikasiModel::class,'id','kepada');
     }
 
     /* dosen */

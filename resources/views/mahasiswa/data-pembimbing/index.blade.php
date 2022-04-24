@@ -29,21 +29,23 @@
                         </p>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="Tabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kode Pembimbing</th>
-                                    <th>Nama Pembimbing</th>
-                                    <th>NIDN</th>
-                                    <th>Email</th>
-                                    <th>No Telepon</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Kode Pembimbing</th>
+                                        <th>Nama Pembimbing</th>
+                                        <th>NIDN</th>
+                                        <th>Email</th>
+                                        <th>No Telepon</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

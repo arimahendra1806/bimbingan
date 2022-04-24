@@ -25,12 +25,12 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li>
-                                <a href="{{ route('tahun-ajaran.index') }}">
+                                <a href="{{ route('kelola-tahun-ajaran.index') }}">
                                     <span data-key="t-chat">Tahun Ajaran</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('materi-tahunan.index') }}">
+                                <a href="{{ route('kelola-materi-tahunan.index') }}">
                                     <span data-key="t-chat">Materi Tahunan</span>
                                 </a>
                             </li>
@@ -43,12 +43,12 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('kelola-pengumuman.index') }}">
                                     <span data-key="t-chat">Pengumuman</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('kelola-peringatan.index') }}">
                                     <span data-key="t-chat">Peringatan</span>
                                 </a>
                             </li>
@@ -71,19 +71,19 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('dosen-pembimbing.index') }}">
+                                <a href="{{ route('kelola-dosen-pembimbing.index') }}">
                                     <span data-key="t-chat">Data Dosen Pembimbing</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('pengguna.index') }}">
+                                <a href="{{ route('kelola-pengguna.index') }}">
                                     <span data-key="t-user-list">Pengguna Aplikasi</span>
                                 </a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="{{ route('link-zoom.index') }}">
+                        <a href="{{ route('kelola-link-zoom.index') }}">
                             <i data-feather="video"></i>
                             <span data-key="t-dashboard">Kelola Link Zoom</span>
                         </a>
@@ -102,9 +102,45 @@
                     </li>
                 @elseif(Auth::check() && Auth::user()->role == 'kaprodi')
                     <li>
-                        <a href="javascript: void(0);">
-                            <i data-feather="menu"></i>
-                            <span data-key="t-dashboard">Tes Kaprodi</span>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="bell"></i>
+                            <span data-key="t-apps">Kelola Informasi</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('kelola-pengumuman.index') }}">
+                                    <span data-key="t-chat">Pengumuman</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('kelola-peringatan.index') }}">
+                                    <span data-key="t-chat">Peringatan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="file-text"></i>
+                            <span data-key="t-apps">Data Pengguna</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('data-dosen.indexKaprodi') }}">
+                                    <span data-key="t-chat">Data Dosen</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('data-mhs.indexKaprodi') }}">
+                                    <span data-key="t-chat">Data Mahasiswa</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="{{ route('data-dospem.indexKaprodi') }}">
+                            <i data-feather="users"></i>
+                            <span data-key="t-dashboard">Data Pembimbing</span>
                         </a>
                     </li>
                     <li>
@@ -173,12 +209,12 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('kelola-pengumuman.index') }}">
                                     <span data-key="t-chat">Pengumuman</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('kelola-peringatan.index') }}">
                                     <span data-key="t-chat">Peringatan</span>
                                 </a>
                             </li>
@@ -250,12 +286,12 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('pengumuman.indexMhs') }}">
                                     <span data-key="t-chat">Pengumuman</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript: void(0);">
+                                <a href="{{ route('peringatan.indexMhs') }}">
                                     <span data-key="t-chat">Peringatan</span>
                                 </a>
                             </li>

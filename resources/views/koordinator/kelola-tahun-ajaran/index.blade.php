@@ -141,19 +141,22 @@
                                 <i class="fas fa-plus-circle"></i>
                             </a>
                         </div>
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="TahunAjaranTabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tahun Ajaran</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100"
+                                id="TahunAjaranTabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tahun Ajaran</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -181,7 +184,7 @@
             var table = $('#TahunAjaranTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('tahun-ajaran.index') }}",
+                ajax: "{{ route('kelola-tahun-ajaran.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -234,7 +237,7 @@
             $('body').on('click', '#btnEdit', function() {
                 $(document).find('span.error-text').text('');
                 var this_id = $(this).data('id');
-                $.get('tahun-ajaran/' + this_id, function(data) {
+                $.get('kelola-tahun-ajaran/' + this_id, function(data) {
                     $('#TahunAjaranModalEdit').modal('show');
                     $('#tahun_ajaran_id_edit').val(data.id);
                     $('#tahun_ajaran_edit').val(data.tahun_ajaran);
@@ -245,7 +248,7 @@
             /* Button Show */
             $('body').on('click', '#btnShow', function() {
                 var this_id = $(this).data('id');
-                $.get('tahun-ajaran/' + this_id, function(data) {
+                $.get('kelola-tahun-ajaran/' + this_id, function(data) {
                     $('#TahunAjaranModalShow').modal('show');
                     $('#tahun_ajaran_show').val(data.tahun_ajaran);
                     $('#tahun_status_show').val(data.status);
@@ -264,7 +267,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "tahun-ajaran/delete/" + this_id,
+                            url: "kelola-tahun-ajaran/delete/" + this_id,
                             type: 'post',
                             data: {
                                 "id": this_id,
@@ -294,7 +297,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('tahun-ajaran.store') }}",
+                    url: "{{ route('kelola-tahun-ajaran.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -346,7 +349,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "tahun-ajaran/" + this_id,
+                    url: "kelola-tahun-ajaran/" + this_id,
                     type: "POST",
                     data: formData,
                     cache: false,

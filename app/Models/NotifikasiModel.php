@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Models\InformasiModel;
 
 class NotifikasiModel extends Model
 {
@@ -14,8 +15,13 @@ class NotifikasiModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "notifikasi";
-    protected $fillable = ["id", "users_id", "tahun_ajaran_id", "judul", "subyek", "status"];
+    protected $fillable = ["id", "informasi_id", "kepada", "jenis", "status"];
 
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
+
+    public function informasi()
+    {
+        return $this->belongsTo(InformasiModel::class,'informasi_id','id');
+    }
 }

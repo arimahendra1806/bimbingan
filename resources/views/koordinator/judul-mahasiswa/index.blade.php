@@ -75,22 +75,24 @@
                                 <i class="fas fa-file-export"></i>
                             </a>
                         </div>
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="Tabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tahun Ajaran</th>
-                                    <th>Kode Pembimbing</th>
-                                    <th>Nama Pembimbing</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Judul Mahasiswa</th>
-                                    <th>Status Judul</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tahun Ajaran</th>
+                                        <th>Kode Pembimbing</th>
+                                        <th>Nama Pembimbing</th>
+                                        <th>Nama Mahasiswa</th>
+                                        <th>Judul Mahasiswa</th>
+                                        <th>Status Judul</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

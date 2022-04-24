@@ -2,19 +2,19 @@
 
 @section('content')
     {{-- Modal Show --}}
-    <div class="modal fade" id="MhsModalShow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="ModalShow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Detail Data Mahasiswa</h5>
+                    <h5 class="modal-title">Detail Data Pembimbing</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h6>Identitas</h6>
                     <div class="row mb-1">
                         <div class="col-md-6">
-                            <label for="nim_show" class="col-form-label">NIM:</label>
-                            <input type="text" class="form-control no-outline" id="nim_show" name="nim_show" readonly>
+                            <label for="nama_dosen_show" class="col-form-label">Nama Dosen Pembimbing:</label>
+                            <input type="text" class="form-control no-outline" id="nama_dosen_show" name="nama_dosen_show"
+                                readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="nama_mhs_show" class="col-form-label">Nama Mahasiswa:</label>
@@ -24,41 +24,24 @@
                     </div>
                     <div class="row mb-1">
                         <div class="col-md-6">
-                            <label for="email_show" class="col-form-label">Email:</label>
-                            <input type="text" class="form-control no-outline" id="email_show" name="email_show" readonly>
+                            <label for="judul_show" class="col-form-label">Judul:</label><br>
+                            <textarea class="form-control" name="judul_show" id="judul_show" style="width: 100%" rows="3" readonly></textarea>
                         </div>
                         <div class="col-md-6">
-                            <label for="no_telepon_show" class="col-form-label">Nomor Telepon:</label>
-                            <input type="text" class="form-control no-outline" id="no_telepon_show" name="no_telepon_show"
-                                readonly>
+                            <label for="studi_show" class="col-form-label">Studi Kasus:</label><br>
+                            <textarea class="form-control" name="studi_show" id="studi_show" style="width: 100%" rows="3" readonly></textarea>
                         </div>
                     </div>
-                    <div class="row mb-1">
-                        <div class="col-md-12">
-                            <label for="alamat_show" class="col-form-label">Alamat:</label><br>
-                            <textarea class="form-control" name="alamat_show" id="alamat_show" style="width: 100%" rows="3" readonly></textarea>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="status_pengerjaan_show" class="col-form-label">Status Pengerjaan:</label>
+                            <input type="text" class="form-control no-outline" id="status_pengerjaan_show"
+                                name="status_pengerjaan_show" readonly>
                         </div>
-                    </div>
-                    <hr>
-                    <h6>Tugas Akhir</h6>
-                    <div class="row mb-1">
-                        <div class="col-md-12">
-                            <label for="judul_show" class="col-form-label">Judul:</label><br>
-                            <textarea class="form-control" name="judul_show" id="judul_show" style="width: 100%" rows="2" readonly></textarea>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-md-12">
-                            <label for="studi_kasus_show" class="col-form-label">Studi Kasus:</label><br>
-                            <textarea class="form-control" name="studi_kasus_show" id="studi_kasus_show" style="width: 100%" rows="2"
-                                readonly></textarea>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-md-12">
-                            <label for="pengerjaan_show" class="col-form-label">Pengerjaan:</label>
-                            <input type="text" class="form-control no-outline" id="pengerjaan_show" name="pengerjaan_show"
-                                readonly>
+                        <div class="col-md-6">
+                            <label for="status_judul_show" class="col-form-label">Status Judul:</label>
+                            <input type="text" class="form-control no-outline" id="status_judul_show"
+                                name="status_judul_show" readonly>
                         </div>
                     </div>
                 </div>
@@ -75,11 +58,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Data Mahasiswa</h4>
+                    <h4 class="mb-sm-0 font-size-18">Daftar Data Pembimbing</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Data Mahasiswa</li>
+                            <li class="breadcrumb-item active">Daftar Data Pembimbing</li>
                         </ol>
                     </div>
 
@@ -91,10 +74,9 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Data Mahasiswa</h4>
+                        <h4 class="card-title">Daftar Data Pembimbing</h4>
                         <p class="card-title-desc">
-                            Berikut adalah detail dari <b>Mahasiswa yang Anda bimbing</b> untuk mengerjakan
-                            <b>Tugas Akhir</b>.
+                            Berikut adalah data Pembimbing yang telah dikelola oleh <b>Koordinator</b>.
                         </p>
                     </div>
                     <div class="card-body">
@@ -103,10 +85,10 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Pembimbing</th>
+                                        <th>Tahun Ajaran</th>
+                                        <th>Nama Pembimbing</th>
                                         <th>Nama Mahasiswa</th>
-                                        <th>Pengerjaan</th>
-                                        <th>Judul</th>
+                                        <th>Judul Mahasiswa</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -136,29 +118,22 @@
             var table = $('#Tabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('data-mahasiswa.indexDsn') }}",
+                ajax: "{{ route('data-dospem.indexKaprodi') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'kode_pembimbing',
-                        name: 'kode_pembimbing'
+                        data: 'tahun.tahun_ajaran',
+                        name: 'tahun.tahun_ajaran'
+                    },
+                    {
+                        data: 'dosen.nama_dosen',
+                        name: 'dosen.nama_dosen'
                     },
                     {
                         data: 'mahasiswa.nama_mahasiswa',
                         name: 'mahasiswa.nama_mahasiswa'
-                    },
-                    {
-                        name: 'judul.pengerjaan',
-                        data: function(data, type, dataToSet) {
-                            if (data.judul.pengerjaan == "Sendiri") {
-                                return data.judul.pengerjaan;
-                            } else {
-                                return data.judul.pengerjaan + " bersama " + data.judul.anggota
-                                    .nama_mahasiswa;
-                            }
-                        }
                     },
                     {
                         data: 'judul.judul',
@@ -168,11 +143,6 @@
                         data: 'action',
                         name: 'action'
                     },
-                    {
-                        data: null,
-                        name: 'judul.anggota.nama_mahasiswa',
-                        visible: false
-                    }
                 ],
                 columnDefs: [{
                         searchable: false,
@@ -184,7 +154,9 @@
                         targets: [0, 5]
                     },
                 ],
-                order: [1],
+                order: [
+                    [1, 'asc']
+                ],
                 oLanguage: {
                     sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
                 }
@@ -198,21 +170,19 @@
             /* Button Show */
             $('body').on('click', '#btnShow', function() {
                 var this_id = $(this).data('id');
-                $.get('data-mahasiswa/' + this_id, function(data) {
-                    $('#MhsModalShow').modal('show');
-                    $('#nim_show').val(data.mahasiswa.nim);
+                $.get('daftar-data-pembimbing/' + this_id, function(data) {
+                    $('#ModalShow').modal('show');
+                    $('#nama_dosen_show').val(data.dosen.nama_dosen);
                     $('#nama_mhs_show').val(data.mahasiswa.nama_mahasiswa);
-                    $('#email_show').val(data.mahasiswa.email);
-                    $('#no_telepon_show').val("+62" + data.mahasiswa.no_telepon);
-                    $('#alamat_show').val(data.mahasiswa.alamat);
                     $('#judul_show').val(data.judul.judul);
-                    $('#studi_kasus_show').val(data.judul.studi_kasus);
-                    if (data.judul.pengerjaan == "Sendiri") {
-                        $('#pengerjaan_show').val(data.judul.pengerjaan);
+                    $('#studi_show').val(data.judul.studi_kasus);
+                    if (data.judul.pengerjaan == "Kelompok") {
+                        $('#status_pengerjaan_show').val(data.judul.pengerjaan + ' dengan ' + data
+                            .judul.anggota.nama_mahasiswa);
                     } else {
-                        $('#pengerjaan_show').val(data.judul.pengerjaan + " bersama " + data.judul
-                            .anggota.nama_mahasiswa);
+                        $('#status_pengerjaan_show').val(data.judul.pengerjaan);
                     }
+                    $('#status_judul_show').val(data.judul.status);
                 });
             });
         });

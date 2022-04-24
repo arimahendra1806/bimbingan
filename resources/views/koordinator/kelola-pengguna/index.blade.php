@@ -239,21 +239,24 @@
                                 <i class="fas fa-plus-circle"></i>
                             </a>
                         </div>
-                        <table class="table table-bordered dt-responsive  nowrap w-100" id="PenggunaTabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Username</th>
-                                    <th>Tahun Ajaran</th>
-                                    <th>Nama Pengguna</th>
-                                    <th>Role Pengguna</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100"
+                                id="PenggunaTabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Username</th>
+                                        <th>Tahun Ajaran</th>
+                                        <th>Nama Pengguna</th>
+                                        <th>Role Pengguna</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -281,7 +284,7 @@
             var table = $('#PenggunaTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('pengguna.index') }}",
+                ajax: "{{ route('kelola-pengguna.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -348,7 +351,7 @@
             $('body').on('click', '#btnEdit', function() {
                 $(document).find('span.error-text').text('');
                 var this_id = $(this).data('id');
-                $.get('pengguna/' + this_id, function(data) {
+                $.get('kelola-pengguna/' + this_id, function(data) {
                     $('#PenggunaModalEdit').modal('show');
                     $('#pengguna_id_edit').val(data.id);
                     $('#username_edit').val(data.username);
@@ -362,7 +365,7 @@
             /* Button Show */
             $('body').on('click', '#btnShow', function() {
                 var this_id = $(this).data('id');
-                $.get('pengguna/' + this_id, function(data) {
+                $.get('kelola-pengguna/' + this_id, function(data) {
                     $('#PenggunaModalShow').modal('show');
                     $('#pengguna_id_show').val(data.id);
                     $('#username_show').val(data.username);
@@ -384,7 +387,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "pengguna/delete/" + this_id,
+                            url: "kelola-pengguna/delete/" + this_id,
                             type: 'post',
                             data: {
                                 "id": this_id,
@@ -414,7 +417,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('pengguna.store') }}",
+                    url: "{{ route('kelola-pengguna.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -466,7 +469,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "pengguna/" + this_id,
+                    url: "kelola-pengguna/" + this_id,
                     type: "POST",
                     data: formData,
                     cache: false,

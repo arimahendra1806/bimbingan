@@ -159,20 +159,23 @@
                                 <i class="fas fa-plus-circle"></i>
                             </a>
                         </div>
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="MateriTahunanTabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tahun Ajaran</th>
-                                    <th>File Materi</th>
-                                    <th>Keterangan</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100"
+                                id="MateriTahunanTabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tahun Ajaran</th>
+                                        <th>File Materi</th>
+                                        <th>Keterangan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -200,7 +203,7 @@
             var table = $('#MateriTahunanTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('materi-tahunan.index') }}",
+                ajax: "{{ route('kelola-materi-tahunan.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -258,7 +261,7 @@
                 $(document).find('span.error-text').text('');
                 $('#file_materi_edit').val("");
                 var this_id = $(this).data('id');
-                $.get('materi-tahunan/' + this_id, function(data) {
+                $.get('kelola-materi-tahunan/' + this_id, function(data) {
                     $('#MateriTahunanModalEdit').modal('show');
                     $('#materi_id_edit').val(data.id);
                     $('#tahun_ajaran_id_edit').val(data.tahun_ajaran_id).trigger('change');
@@ -270,7 +273,7 @@
             /* Button Show */
             $('body').on('click', '#btnShow', function() {
                 var this_id = $(this).data('id');
-                $.get('materi-tahunan/' + this_id, function(data) {
+                $.get('kelola-materi-tahunan/' + this_id, function(data) {
                     $('#MateriTahunanModalShow').modal('show');
                     $('#tahun_ajaran_id_show').val(data.tahun.tahun_ajaran);
                     $('#file_materi_show').val(data.file_materi);
@@ -292,7 +295,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "materi-tahunan/delete/" + this_id,
+                            url: "kelola-materi-tahunan/delete/" + this_id,
                             type: 'post',
                             data: {
                                 "id": this_id,
@@ -323,7 +326,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "{{ route('materi-tahunan.store') }}",
+                    url: "{{ route('kelola-materi-tahunan.store') }}",
                     data: formData,
                     cache: false,
                     contentType: false,
@@ -375,7 +378,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "materi-tahunan/" + this_id,
+                    url: "kelola-materi-tahunan/" + this_id,
                     data: formData,
                     cache: false,
                     contentType: false,

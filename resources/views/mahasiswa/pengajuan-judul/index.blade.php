@@ -226,22 +226,24 @@
                             </p>
                         </div>
                         <div class="card-body">
-                            <table class="table table-bordered dt-responsive nowrap w-100" id="Tabels">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Tahun Ajaran</th>
-                                        <th>Judul Yang Diajukan</th>
-                                        <th>Studi Kasus</th>
-                                        <th>Pengerjaan</th>
-                                        <th>Status</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr></tr>
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Tahun Ajaran</th>
+                                            <th>Judul Yang Diajukan</th>
+                                            <th>Studi Kasus</th>
+                                            <th>Pengerjaan</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

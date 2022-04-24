@@ -189,21 +189,24 @@
                                 <i class="fas fa-plus-circle"></i>
                             </a>
                         </div>
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="MateriDosenTabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tahun Ajaran</th>
-                                    <th>File Materi</th>
-                                    <th>Jenis Materi</th>
-                                    <th>Keterangan</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100"
+                                id="MateriDosenTabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tahun Ajaran</th>
+                                        <th>File Materi</th>
+                                        <th>Jenis Materi</th>
+                                        <th>Keterangan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

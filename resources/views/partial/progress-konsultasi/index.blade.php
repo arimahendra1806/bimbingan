@@ -104,16 +104,18 @@
                         <div class="row border mb-2"></div>
                         <div class="row border p-2 pt-3">
                             <div class="col">
-                                <table id="tabel" class="table table-md" cellspacing="0"
-                                    style="width:100%; cursor:pointer; min-height:350px">
-                                    <thead>
-                                        <tr>
-                                            <th>Nama</th>
-                                            <th>Progres</th>
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                                <div class="table-responsive">
+                                    <table id="tabel" class="table table-md" cellspacing="0"
+                                        style="width:100%; cursor:pointer; min-height:350px">
+                                        <thead>
+                                            <tr>
+                                                <th>Nama</th>
+                                                <th>Progres</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -233,7 +235,7 @@
                         "previous": "Sebelumnya"
                     },
                     select: {
-                        rows: "%d baris terpilih",
+                        rows: "%d kolom terpilih",
                     }
                 },
                 lengthMenu: [9, 30, 60, 90, 120],

@@ -7,6 +7,7 @@ use App\Models\ProgresBimbinganModel;
 use App\Models\DosenModel;
 use App\Models\DosPemModel;
 use App\Models\BimbinganModel;
+use App\Models\TahunAjaran;
 use DataTables, Validator;
 
 class ProgresKonsultasiController extends Controller
@@ -15,9 +16,12 @@ class ProgresKonsultasiController extends Controller
         /* Ambil data dosen */
         $dosen_id = DosenModel::all()->sortBy('nama_dosen');
 
+        /* Ambil data tahun_ajaran */
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
         /* Ambil data tabel progres bimbingan */
         if($request->ajax()){
-            $data = ProgresBimbinganModel::get()->load('bimbingan.pembimbing.mahasiswa.judul.anggota');
+            $data = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->get()->load('bimbingan.pembimbing.mahasiswa.judul.anggota');
             return DataTables::of($data)->addIndexColumn()
                 ->addColumn('total', function($model){
                     $total = $model->judul + $model->proposal_bab1 + $model->proposal_bab2 +
@@ -48,7 +52,7 @@ class ProgresKonsultasiController extends Controller
         if($id == "Semua"){
             /* Ambil data tabel progres bimbingan */
             if($request->ajax()){
-                $data = ProgresBimbinganModel::get()->load('bimbingan.pembimbing.mahasiswa.judul.anggota');
+                $data = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->get()->load('bimbingan.pembimbing.mahasiswa.judul.anggota');
                 return DataTables::of($data)->addIndexColumn()
                     ->addColumn('total', function($model){
                         $total = $model->judul + $model->proposal_bab1 + $model->proposal_bab2 +

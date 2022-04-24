@@ -10,7 +10,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h6>Identitas</h6>
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="nim_show" class="col-form-label">NIM:</label>
@@ -35,30 +34,15 @@
                     </div>
                     <div class="row mb-1">
                         <div class="col-md-12">
+                            <label for="tahun_ajaran_id_show" class="col-form-label">Tahun Ajaran:</label>
+                            <input type="text" class="form-control no-outline" id="tahun_ajaran_id_show"
+                                name="tahun_ajaran_id_show" readonly>
+                        </div>
+                    </div>
+                    <div class="row mb-1">
+                        <div class="col-md-12">
                             <label for="alamat_show" class="col-form-label">Alamat:</label><br>
                             <textarea class="form-control" name="alamat_show" id="alamat_show" style="width: 100%" rows="3" readonly></textarea>
-                        </div>
-                    </div>
-                    <hr>
-                    <h6>Tugas Akhir</h6>
-                    <div class="row mb-1">
-                        <div class="col-md-12">
-                            <label for="judul_show" class="col-form-label">Judul:</label><br>
-                            <textarea class="form-control" name="judul_show" id="judul_show" style="width: 100%" rows="2" readonly></textarea>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-md-12">
-                            <label for="studi_kasus_show" class="col-form-label">Studi Kasus:</label><br>
-                            <textarea class="form-control" name="studi_kasus_show" id="studi_kasus_show" style="width: 100%" rows="2"
-                                readonly></textarea>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-md-12">
-                            <label for="pengerjaan_show" class="col-form-label">Pengerjaan:</label>
-                            <input type="text" class="form-control no-outline" id="pengerjaan_show" name="pengerjaan_show"
-                                readonly>
                         </div>
                     </div>
                 </div>
@@ -75,11 +59,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Data Mahasiswa</h4>
+                    <h4 class="mb-sm-0 font-size-18">Daftar Data Mahasiswa</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Data Mahasiswa</li>
+                            <li class="breadcrumb-item active">Daftar Data Mahasiswa</li>
                         </ol>
                     </div>
 
@@ -91,22 +75,22 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Data Mahasiswa</h4>
+                        <h4 class="card-title">Daftar Data Mahasiswa</h4>
                         <p class="card-title-desc">
-                            Berikut adalah detail dari <b>Mahasiswa yang Anda bimbing</b> untuk mengerjakan
-                            <b>Tugas Akhir</b>.
+                            Berikut adalah data Mahasiswa yang telah dikelola oleh <b>Koordinator</b>.
                         </p>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="MhsTabels">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Pembimbing</th>
+                                        <th>NIM</th>
+                                        <th>Tahun Ajaran</th>
                                         <th>Nama Mahasiswa</th>
-                                        <th>Pengerjaan</th>
-                                        <th>Judul</th>
+                                        <th>Email</th>
+                                        <th>Telepon</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -123,6 +107,7 @@
 @endsection
 
 @section('js')
+    {{-- DataTables --}}
     <script>
         $(document).ready(function() {
             /* Ajax Token */
@@ -133,58 +118,58 @@
             });
 
             /* Get data table */
-            var table = $('#Tabels').DataTable({
+            var table = $('#MhsTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('data-mahasiswa.indexDsn') }}",
+                ajax: "{{ route('data-mhs.indexKaprodi') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'kode_pembimbing',
-                        name: 'kode_pembimbing'
+                        data: 'nim',
+                        name: 'nim'
                     },
                     {
-                        data: 'mahasiswa.nama_mahasiswa',
-                        name: 'mahasiswa.nama_mahasiswa'
+                        data: 'tahun.tahun_ajaran',
+                        name: 'tahun.tahun_ajaran'
                     },
                     {
-                        name: 'judul.pengerjaan',
-                        data: function(data, type, dataToSet) {
-                            if (data.judul.pengerjaan == "Sendiri") {
-                                return data.judul.pengerjaan;
-                            } else {
-                                return data.judul.pengerjaan + " bersama " + data.judul.anggota
-                                    .nama_mahasiswa;
-                            }
-                        }
+                        data: 'nama_mahasiswa',
+                        name: 'nama_mahasiswa'
                     },
                     {
-                        data: 'judul.judul',
-                        name: 'judul.judul'
+                        data: 'email',
+                        name: 'email'
+                    },
+                    {
+                        data: 'no_telepon',
+                        name: 'no_telepon'
                     },
                     {
                         data: 'action',
                         name: 'action'
-                    },
-                    {
-                        data: null,
-                        name: 'judul.anggota.nama_mahasiswa',
-                        visible: false
                     }
                 ],
                 columnDefs: [{
                         searchable: false,
                         orderable: false,
-                        targets: [0, 5]
+                        targets: [0, 6]
                     },
                     {
                         width: '1%',
-                        targets: [0, 5]
+                        targets: [0, 6]
                     },
+                    {
+                        targets: [5],
+                        render: function(data, type, full, meta) {
+                            return '+62' + data;
+                        }
+                    }
                 ],
-                order: [1],
+                order: [
+                    [1, 'asc']
+                ],
                 oLanguage: {
                     sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
                 }
@@ -198,23 +183,17 @@
             /* Button Show */
             $('body').on('click', '#btnShow', function() {
                 var this_id = $(this).data('id');
-                $.get('data-mahasiswa/' + this_id, function(data) {
+                $.get('daftar-data-mahasiswa/' + this_id, function(data) {
                     $('#MhsModalShow').modal('show');
-                    $('#nim_show').val(data.mahasiswa.nim);
-                    $('#nama_mhs_show').val(data.mahasiswa.nama_mahasiswa);
-                    $('#email_show').val(data.mahasiswa.email);
-                    $('#no_telepon_show').val("+62" + data.mahasiswa.no_telepon);
-                    $('#alamat_show').val(data.mahasiswa.alamat);
-                    $('#judul_show').val(data.judul.judul);
-                    $('#studi_kasus_show').val(data.judul.studi_kasus);
-                    if (data.judul.pengerjaan == "Sendiri") {
-                        $('#pengerjaan_show').val(data.judul.pengerjaan);
-                    } else {
-                        $('#pengerjaan_show').val(data.judul.pengerjaan + " bersama " + data.judul
-                            .anggota.nama_mahasiswa);
-                    }
+                    $('#tahun_ajaran_id_show').val(data.tahun.tahun_ajaran);
+                    $('#nim_show').val(data.nim);
+                    $('#nama_mhs_show').val(data.nama_mahasiswa);
+                    $('#alamat_show').val(data.alamat);
+                    $('#email_show').val(data.email);
+                    $('#no_telepon_show').val('+62' + data.no_telepon);
                 });
             });
         });
     </script>
+    {{-- END DataTables --}}
 @endsection

@@ -259,20 +259,22 @@
                                 <i class="fas fa-file-import"></i>
                             </a>
                         </div>
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="LinkTabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Dosen</th>
-                                    <th>Tahun Ajaran</th>
-                                    <th>ID Meeting</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="LinkTabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama Dosen</th>
+                                        <th>Tahun Ajaran</th>
+                                        <th>ID Meeting</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -304,7 +306,7 @@
             var table = $('#LinkTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('link-zoom.index') }}",
+                ajax: "{{ route('kelola-link-zoom.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -371,7 +373,7 @@
             $('body').on('click', '#btnEdit', function() {
                 $(document).find('span.error-text').text('');
                 var this_id = $(this).data('id');
-                $.get('link-zoom/' + this_id, function(data) {
+                $.get('kelola-link-zoom/' + this_id, function(data) {
                     $('#LinkModalEdit').modal('show');
                     $('#link_id_edit').val(data.id);
                     $('#tahun_ajaran_id_edit').val(data.tahun_ajaran_id).trigger('change');
@@ -385,7 +387,7 @@
             /* Button Show */
             $('body').on('click', '#btnShow', function() {
                 var this_id = $(this).data('id');
-                $.get('link-zoom/' + this_id, function(data) {
+                $.get('kelola-link-zoom/' + this_id, function(data) {
                     $('#LinkModalShow').modal('show');
                     $('#tahun_ajaran_id_show').val(data.tahun.tahun_ajaran);
                     if (data.dosen) {
@@ -411,7 +413,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "link-zoom/delete/" + this_id,
+                            url: "kelola-link-zoom/delete/" + this_id,
                             type: 'post',
                             data: {
                                 "id": this_id,
@@ -450,7 +452,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('link-zoom.store') }}",
+                    url: "{{ route('kelola-link-zoom.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -502,7 +504,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "link-zoom/" + this_id,
+                    url: "kelola-link-zoom/" + this_id,
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -564,7 +566,7 @@
                         }, false);
                         return xhr;
                     },
-                    url: "{{ route('link-zoom.import') }}",
+                    url: "{{ route('kelola-link-zoom.import') }}",
                     type: "POST",
                     data: formData,
                     cache: false,

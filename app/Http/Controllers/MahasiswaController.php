@@ -271,4 +271,26 @@ class MahasiswaController extends Controller
             return response()->json(['msg' => "Berhasil Mengimpor Data!"]);
         }
     }
+
+    public function indexKaprodi(Request $request)
+    {
+        /* Ambil data tahun_ajaran */
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
+        /* Ambil data tabel mahasiswa */
+        if ($request->ajax()){
+            $data = MahasiswaModel::where('tahun_ajaran_id', $tahun_id->id)->latest()->get()->load('tahun');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($model){
+                    $btn = '<a class="btn btn-info" id="btnShow" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
+
+        /* Return menuju view */
+        return view('kaprodi.data-mahasiswa.index');
+    }
 }

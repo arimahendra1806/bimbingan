@@ -242,21 +242,23 @@
                                 <i class="fas fa-file-import"></i>
                             </a>
                         </div>
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="DosenTabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>NIDN</th>
-                                    <th>Nama Dosen</th>
-                                    <th>Email</th>
-                                    <th>Telepon</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="DosenTabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>NIDN</th>
+                                        <th>Nama Dosen</th>
+                                        <th>Email</th>
+                                        <th>Telepon</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

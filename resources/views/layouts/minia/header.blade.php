@@ -18,11 +18,6 @@
     <link href="{{ asset('vendor/minia') }}/assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css"
         rel="stylesheet" type="text/css" />
 
-    <!-- Responsive datatable examples -->
-    <link
-        href="{{ asset('vendor/minia') }}/assets/libs/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css"
-        rel="stylesheet" type="text/css" />
-
     <!-- Sweet Alert-->
     <link href="{{ asset('vendor/minia') }}/assets/libs/sweetalert2/sweetalert2.min.css" rel="stylesheet"
         type="text/css" />
@@ -106,17 +101,11 @@
 
     <!-- Required datatable js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
-
     <script src="{{ asset('vendor/minia') }}/assets/libs/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+
     <!-- Buttons examples -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
     <script src="{{ asset('vendor/minia') }}/assets/libs/datatables.net-buttons-bs4/js/buttons.bootstrap4.min.js">
-    </script>
-
-    <!-- Responsive examples -->
-    <script src="{{ asset('vendor/minia') }}/assets/libs/datatables.net-responsive/js/dataTables.responsive.min.js">
-    </script>
-    <script src="{{ asset('vendor/minia') }}/assets/libs/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js">
     </script>
 
     <!-- Datatable init js -->
@@ -133,6 +122,27 @@
     <script src="{{ asset('vendor/minia') }}/assets/js/app.js"></script>
 
     @yield('js')
+
+    <script>
+        function loaderNotif() {
+            $('#countNotif').load("{{ route('topbar-notif.informasi') }}");
+            $('#countNotifPengumuman').load("{{ route('topbar-notif.pengumuman') }}");
+            $('#countNotifPeringatan').load("{{ route('topbar-notif.peringatan') }}");
+        }
+
+        $(document).ready(function() {
+
+            loaderNotif();
+
+            $("#btnReadAll").click(function() {
+                $.ajax({
+                    url: "{{ route('topbar-notif.readAll') }}"
+                }).done(function() {
+                    loaderNotif();
+                });
+            });
+        });
+    </script>
 
 </body>
 

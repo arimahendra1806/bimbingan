@@ -15,7 +15,7 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-12">
-                                <label for="dosen_edit" class="col-form-label">NIDN: </label>
+                                <label for="dosen_edit" class="col-form-label">Nama Dosen: </label>
                                 <select class="js-example-responsive form-control" style="width: 100%" id="dosen_edit"
                                     name="dosen_edit">
                                     <option value=""></option>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="row mb-1">
                             <div class="col-md-12">
-                                <label for="mhs_edit" class="col-form-label">NIM: </label>
+                                <label for="mhs_edit" class="col-form-label">Nama Mahasiswa: </label>
                                 <select class="js-example-responsive form-control" style="width: 100%" id="mhs_edit"
                                     name="mhs_edit">
                                     <option value=""></option>
@@ -114,13 +114,14 @@
                                         </div>
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered dt-responsive nowrap w-100" id="JudulTabels">
+                                        <table class="table table-bordered table-striped dt-responsive nowrap w-100"
+                                            id="JudulTabels">
                                             <thead>
                                                 <tr>
                                                     <th></th>
                                                     <th>Nama Mahasiswa</th>
                                                     <th>Pengajuan Judul Tugas Akhir</th>
-                                                    <th>Status</th>
+                                                    <th>Status Judul</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -156,21 +157,23 @@
                         </p>
                     </div>
                     <div class="card-body">
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="DosPemTabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Tahun Ajaran</th>
-                                    <th>Kode Pembimbing</th>
-                                    <th>Nama Dosen</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="DosPemTabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tahun Ajaran</th>
+                                        <th>Kode Pembimbing</th>
+                                        <th>Nama Dosen</th>
+                                        <th>Nama Mahasiswa</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -203,7 +206,7 @@
             var tableJudul = $('#JudulTabels').DataTable({
                 processing: true,
                 serverSide: false,
-                ajax: "{{ route('dosen-pembimbing.judul') }}",
+                ajax: "{{ route('kelola-dosen-pembimbing.judul') }}",
                 columns: [{
                         data: 'mahasiswa_id',
                         name: 'DT_RowIndex'
@@ -272,7 +275,7 @@
             var tableDosPem = $('#DosPemTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('dosen-pembimbing.index') }}",
+                ajax: "{{ route('kelola-dosen-pembimbing.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
@@ -324,7 +327,7 @@
             /* Button Edit */
             $('body').on('click', '#btnEdit', function() {
                 var this_id = $(this).data('id');
-                $.get('dosen-pembimbing/' + this_id, function(data) {
+                $.get('kelola-dosen-pembimbing/' + this_id, function(data) {
                     $('#ModalEdit').modal('show');
                     $('#pembimbing_id_edit').val(data.id);
                     $('#kode_edit').val(data.kode_pembimbing);
@@ -345,7 +348,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "dosen-pembimbing/delete/" + this_id,
+                            url: "kelola-dosen-pembimbing/delete/" + this_id,
                             type: 'post',
                             data: {
                                 "id": this_id,
@@ -390,7 +393,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('dosen-pembimbing.store') }}",
+                    url: "{{ route('kelola-dosen-pembimbing.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -452,7 +455,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "dosen-pembimbing/" + this_id,
+                    url: "kelola-dosen-pembimbing/" + this_id,
                     type: "POST",
                     data: formData,
                     cache: false,

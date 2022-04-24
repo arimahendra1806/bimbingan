@@ -265,4 +265,23 @@ class DosenController extends Controller
             return response()->json(['msg' => "Berhasil Mengimpor Data!"]);
         }
     }
+
+    public function indexKaprodi(Request $request)
+    {
+        /* Ambil data tabel dosen */
+        if ($request->ajax()){
+            $data = DosenModel::latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($model){
+                    $btn = '<a class="btn btn-info" id="btnShow" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
+
+        /* Return menuju view */
+        return view('kaprodi.data-dosen.index');
+    }
 }

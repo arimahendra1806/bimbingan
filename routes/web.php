@@ -28,6 +28,9 @@ use App\Http\Controllers\DsnKonsulProposalController;
 use App\Http\Controllers\DsnKonsulLaporanController;
 use App\Http\Controllers\DsnKonsulProgramController;
 use App\Http\Controllers\ProgresKonsultasiController;
+use App\Http\Controllers\PengumumanController;
+use App\Http\Controllers\PeringatanController;
+use App\Http\Controllers\TopbarController;
 /* End Controller */
 
 /*
@@ -61,22 +64,26 @@ Route::get('/logout', [AuthController::class, 'logout']);
 /* Middleware && Auth */
 Route::group(['middleware' => 'auth'], function(){
     Route::get('/dashboard', [DashboardController::class, 'home'])->name('dashboard.home');
+    Route::get('/topbar/notif/informasi', [TopbarController::class, 'informasi'])->name('topbar-notif.informasi');
+    Route::get('/topbar/notif/informasi/pengumuman', [TopbarController::class, 'informasiPengumuman'])->name('topbar-notif.pengumuman');
+    Route::get('/topbar/notif/informasi/peringatan', [TopbarController::class, 'informasiPeringatan'])->name('topbar-notif.peringatan');
+    Route::get('/topbar/notif/informasi/read/all', [TopbarController::class, 'readAll'])->name('topbar-notif.readAll');
 
     /* Koordinator */
     Route::group(['middleware' => 'CheckRole:koordinator'], function(){
         /* Kelola Tahun Ajaran */
-        Route::resource('tahun-ajaran', TahunAjaranController::class, ['except' => [
+        Route::resource('kelola-tahun-ajaran', TahunAjaranController::class, ['except' => [
             'destroy','update'
         ]]);
-        Route::post('/tahun-ajaran/{tahun_ajaran}', [TahunAjaranController::class, 'update'])->name('tahun-ajaran.update');
-        Route::post('/tahun-ajaran/delete/{tahun_ajaran}', [TahunAjaranController::class, 'destroy'])->name('tahun-ajaran.destroy');
+        Route::post('/kelola-tahun-ajaran/{tahun_ajaran}', [TahunAjaranController::class, 'update'])->name('kelola-tahun-ajaran.update');
+        Route::post('/kelola-tahun-ajaran/delete/{tahun_ajaran}', [TahunAjaranController::class, 'destroy'])->name('kelola-tahun-ajaran.destroy');
 
         /* Kelola Materi Tahunan */
-        Route::resource('materi-tahunan', MateriTahunanController::class, ['except' => [
+        Route::resource('kelola-materi-tahunan', MateriTahunanController::class, ['except' => [
             'destroy','update'
         ]]);
-        Route::post('/materi-tahunan/{materi_tahunan}', [MateriTahunanController::class, 'update'])->name('materi-tahunan.update');
-        Route::post('/materi-tahunan/delete/{materi_tahunan}', [MateriTahunanController::class, 'destroy'])->name('materi-tahunan.destroy');
+        Route::post('/kelola-materi-tahunan/{materi_tahunan}', [MateriTahunanController::class, 'update'])->name('kelola-materi-tahunan.update');
+        Route::post('/kelola-materi-tahunan/delete/{materi_tahunan}', [MateriTahunanController::class, 'destroy'])->name('kelola-materi-tahunan.destroy');
 
         /* Kelola Dosen */
         Route::resource('kelola-dosen', DosenController::class, ['except' => [
@@ -95,28 +102,28 @@ Route::group(['middleware' => 'auth'], function(){
         Route::post('/import/mahasiswa', [MahasiswaController::class, 'import'])->name('kelola-mahasiswa.import');
 
         /* Kelola Pengguna */
-        Route::resource('pengguna', UserController::class, ['except' => [
+        Route::resource('kelola-pengguna', UserController::class, ['except' => [
             'destroy','update'
         ]]);
-        Route::post('/pengguna/{pengguna}', [UserController::class, 'update'])->name('pengguna.update');
-        Route::post('/pengguna/delete/{pengguna}', [UserController::class, 'destroy'])->name('pengguna.destroy');
+        Route::post('/kelola-pengguna/{pengguna}', [UserController::class, 'update'])->name('kelola-pengguna.update');
+        Route::post('/kelola-pengguna/delete/{pengguna}', [UserController::class, 'destroy'])->name('kelola-pengguna.destroy');
 
         /* Kelola Link Zoom */
-        Route::resource('link-zoom', LinkZoomController::class, ['except' => [
+        Route::resource('kelola-link-zoom', LinkZoomController::class, ['except' => [
             'destroy','update'
         ]]);
-        Route::post('/link-zoom/{link_zoom}', [LinkZoomController::class, 'update'])->name('link-zoom.update');
-        Route::post('/link-zoom/delete/{link_zoom}', [LinkZoomController::class, 'destroy'])->name('link-zoom.destroy');
-        Route::post('/import/link', [LinkZoomController::class, 'import'])->name('link-zoom.import');
+        Route::post('/kelola-link-zoom/{link_zoom}', [LinkZoomController::class, 'update'])->name('kelola-link-zoom.update');
+        Route::post('/kelola-link-zoom/delete/{link_zoom}', [LinkZoomController::class, 'destroy'])->name('kelola-link-zoom.destroy');
+        Route::post('/import/link', [LinkZoomController::class, 'import'])->name('kelola-link-zoom.import');
 
         /* Kelola Dosen Pembimbing */
-        Route::resource('dosen-pembimbing', DosPemController::class, ['except' => [
+        Route::resource('kelola-dosen-pembimbing', DosPemController::class, ['except' => [
             'destroy','update'
         ]]);
-        Route::post('/dosen-pembimbing/{dosen_pembimbing}', [DosPemController::class, 'update'])->name('dosen-pembimbing.update');
-        Route::post('/dosen-pembimbing/delete/{dosen_pembimbing}', [DosPemController::class, 'destroy'])->name('dosen-pembimbing.destroy');
-        Route::get('/data/judul/pengajuan', [DosPemController::class, 'judul'])->name('dosen-pembimbing.judul');
-        Route::get('/data/jumlah/pembimbing/{id}', [DosPemController::class, 'jumlahNidn'])->name('dosen-pembimbing.jumlahNidn');
+        Route::post('/kelola-dosen-pembimbing/{dosen_pembimbing}', [DosPemController::class, 'update'])->name('kelola-dosen-pembimbing.update');
+        Route::post('/kelola-dosen-pembimbing/delete/{dosen_pembimbing}', [DosPemController::class, 'destroy'])->name('kelola-dosen-pembimbing.destroy');
+        Route::get('/data/judul/pengajuan', [DosPemController::class, 'judul'])->name('kelola-dosen-pembimbing.judul');
+        Route::get('/data/jumlah/pembimbing/{id}', [DosPemController::class, 'jumlahNidn'])->name('kelola-dosen-pembimbing.jumlahNidn');
 
         /* Data Judul Mahasiswa */
         Route::get('/judul-mahasiswa', [JudulMahasiswaController::class, 'indexKoor'])->name('judul-mahasiswa.indexKoor');
@@ -125,6 +132,17 @@ Route::group(['middleware' => 'auth'], function(){
 
     /* Kaprodi */
     Route::group(['middleware' => 'CheckRole:kaprodi'], function(){
+        /* Data Dosen */
+        Route::get('/daftar-data-dosen', [DosenController::class, 'indexKaprodi'])->name('data-dosen.indexKaprodi');
+        Route::get('/daftar-data-dosen/{data_dosen}', [DosenController::class, 'show'])->name('data-dosen.show');
+
+        /* Data Mahasiswa */
+        Route::get('/daftar-data-mahasiswa', [MahasiswaController::class, 'indexKaprodi'])->name('data-mhs.indexKaprodi');
+        Route::get('/daftar-data-mahasiswa/{data_mahasiswa}', [MahasiswaController::class, 'show'])->name('data-mhs.show');
+
+        /* Data Pembimbing */
+        Route::get('/daftar-data-pembimbing', [JudulMahasiswaController::class, 'indexKaprodi'])->name('data-dospem.indexKaprodi');
+        Route::get('/daftar-data-pembimbing/{data_pembimbing}', [JudulMahasiswaController::class, 'show'])->name('data-dospem.show');
     });
 
     /* Dosen */
@@ -203,9 +221,20 @@ Route::group(['middleware' => 'auth'], function(){
         Route::post('/konsultasi-program/store', [KonsulProgramController::class, 'store'])->name('bimbingan-program.store');
         Route::post('/komen/program/store', [KonsulProgramController::class, 'storeKomen'])->name('bimbingan-program.storeKomen');
 
+        /* Pengumuman */
+        Route::get('/pengumuman', [PengumumanController::class, 'indexMhs'])->name('pengumuman.indexMhs');
+        Route::get('/pengumuman/role/info', [PengumumanController::class, 'roleInfo'])->name('pengumuman.roleInfo');
+        Route::get('/pengumuman/role/info/{pengumuman}', [PengumumanController::class, 'roleDetail'])->name('pengumuman.roleDetail');
+
+        /* Peringatan */
+        Route::get('/peringatan', [PeringatanController::class, 'indexMhs'])->name('peringatan.indexMhs');
+        Route::get('/peringatan/role/info', [PeringatanController::class, 'roleInfo'])->name('peringatan.roleInfo');
+        Route::get('/peringatan/role/info/{peringatan}', [PeringatanController::class, 'roleDetail'])->name('peringatan.roleDetail');
+
         /* Mhs Partial */
         Route::get('/materi/{jenis}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
         Route::get('/riwayat/{jenis}', [PartialController::class, 'RiwayatKonsul'])->name('partial.RiwayatKonsul');
+
     });
 
     /* Mahasiswa && Dosen */
@@ -219,5 +248,25 @@ Route::group(['middleware' => 'auth'], function(){
         /* Progres */
         Route::get('/progres-konsultasi-mahasiswa', [ProgresKonsultasiController::class, 'index'])->name('progres-konsultasi.index');
         Route::get('/progres-konsultasi-mahasiswa/{id}/{urutan}', [ProgresKonsultasiController::class, 'show'])->name('progres-konsultasi.show');
+
+        /* Pengumuman */
+        Route::resource('kelola-pengumuman', PengumumanController::class, ['except' => [
+            'update'
+        ]]);
+        Route::post('/kelola-pengumuman/{pengumuman}', [PengumumanController::class, 'update'])->name('kelola-pengumuman.update');
+        Route::post('/kelola-pengumuman/delete/{pengumuman}', [PengumumanController::class, 'destroy'])->name('kelola-pengumuman.destroy');
+        Route::get('/kelola-pengumuman/kepada/{pengumuman}', [PengumumanController::class, 'kepada'])->name('kelola-pengumuman.kepada');
+        Route::get('/kelola-pengumuman/role/info', [PengumumanController::class, 'roleInfo'])->name('kelola-pengumuman.roleInfo');
+        Route::get('/kelola-pengumuman/role/info/{pengumuman}', [PengumumanController::class, 'roleDetail'])->name('kelola-pengumuman.roleDetail');
+
+        /* Peringatan */
+        Route::resource('kelola-peringatan', PeringatanController::class, ['except' => [
+            'update'
+        ]]);
+        Route::post('/kelola-peringatan/{peringatan}', [PeringatanController::class, 'update'])->name('kelola-peringatan.update');
+        Route::post('/kelola-peringatan/delete/{peringatan}', [PeringatanController::class, 'destroy'])->name('kelola-peringatan.destroy');
+        Route::get('/kelola-peringatan/kepada/{peringatan}', [PeringatanController::class, 'kepada'])->name('kelola-peringatan.kepada');
+        Route::get('/kelola-peringatan/role/info', [PeringatanController::class, 'roleInfo'])->name('kelola-peringatan.roleInfo');
+        Route::get('/kelola-peringatan/role/info/{peringatan}', [PeringatanController::class, 'roleDetail'])->name('kelola-peringatan.roleDetail');
     });
 });
