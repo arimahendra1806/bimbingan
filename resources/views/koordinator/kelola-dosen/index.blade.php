@@ -96,8 +96,7 @@
                                 <label for="no_telepon_edit" class="col-form-label">Nomor Telepon:</label>
                                 <div class="input-group">
                                     <div class="input-group-text">+62</div>
-                                    <input type="text" class="form-control" id="no_telepon_edit" name="no_telepon_edit"
-                                        placeholder="e.g: 81XXXXXXXX">
+                                    <input type="text" class="form-control" id="no_telepon_edit" name="no_telepon_edit">
                                 </div>
                                 <span class="text-danger error-text no_telepon_edit_error"></span>
                             </div>

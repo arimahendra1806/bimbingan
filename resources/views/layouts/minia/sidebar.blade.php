@@ -197,9 +197,9 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="javascript: void(0);">
+                        <a href="{{ route('peninjauan-jadwal-zoom.indexDsn') }}">
                             <i data-feather="monitor"></i>
-                            <span data-key="t-dashboard">Persetujuan Jadwal Zoom</span>
+                            <span data-key="t-dashboard">Peninjauan Jadwal Zoom</span>
                         </a>
                     </li>
                     <li>
@@ -274,7 +274,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="javascript: void(0);">
+                        <a href="{{ route('pengajuan-zoom.index') }}">
                             <i data-feather="monitor"></i>
                             <span data-key="t-dashboard">Pengajuan Jadwal Zoom</span>
                         </a>

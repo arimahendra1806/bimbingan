@@ -22,7 +22,7 @@ class DosPemModel extends Model
     protected $table = "dosen_pembimbing";
     protected $fillable = ["id","kode_pembimbing","dosen_id","mahasiswa_id","tahun_ajaran_id"];
 
-    protected $cascadeDeletes = ['pengajuan','pengajuan1','pengajuan2','pengajuan3','pengajuan4','pengajuan5','bimbingan'];
+    protected $cascadeDeletes = ['pengajuan','pengajuanAnggota','bimbingan'];
     protected $dates = ['deleted_at'];
 
     /* pengajuan_jadwal_zoom */
@@ -32,33 +32,9 @@ class DosPemModel extends Model
     }
 
     /* pengajuan_jadwal_zoom */
-    public function pengajuan1()
+    public function pengajuanAnggota()
     {
-        return $this->belongsTo(PengajuanZoomModel::class,'kode_pembimbing','pembimbing_kode_1');
-    }
-
-    /* pengajuan_jadwal_zoom */
-    public function pengajuan2()
-    {
-        return $this->belongsTo(PengajuanZoomModel::class,'kode_pembimbing','pembimbing_kode_2');
-    }
-
-    /* pengajuan_jadwal_zoom */
-    public function pengajuan3()
-    {
-        return $this->belongsTo(PengajuanZoomModel::class,'kode_pembimbing','pembimbing_kode_3');
-    }
-
-    /* pengajuan_jadwal_zoom */
-    public function pengajuan4()
-    {
-        return $this->belongsTo(PengajuanZoomModel::class,'kode_pembimbing','pembimbing_kode_4');
-    }
-
-    /* pengajuan_jadwal_zoom */
-    public function pengajuan5()
-    {
-        return $this->belongsTo(PengajuanZoomModel::class,'kode_pembimbing','pembimbing_kode_5');
+        return $this->belongsTo(PengajuanZoomAnggotaModel::class,'kode_pembimbing','pembimbing_kode');
     }
 
     /* bimbingan */
@@ -83,6 +59,12 @@ class DosPemModel extends Model
     public function judul()
     {
         return $this->belongsTo(PengajuanJudulModel::class,'mahasiswa_id','mahasiswa_id');
+    }
+
+    /* inisiasi zoom */
+    public function zoom()
+    {
+        return $this->belongsTo(LinkZoomModel::class,'dosen_id','dosen_id');
     }
 
     /* inisiasi tahun */

@@ -14,6 +14,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\LinkZoomController;
 use App\Http\Controllers\KetentuanTaController;
 use App\Http\Controllers\PengajuanJudulController;
+use App\Http\Controllers\PengajuanZoomController;
 use App\Http\Controllers\DosPemController;
 use App\Http\Controllers\DataPembimbingController;
 use App\Http\Controllers\JudulMahasiswaController;
@@ -31,6 +32,7 @@ use App\Http\Controllers\ProgresKonsultasiController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\PeringatanController;
 use App\Http\Controllers\TopbarController;
+use App\Http\Controllers\ProfilController;
 /* End Controller */
 
 /*
@@ -68,6 +70,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/topbar/notif/informasi/pengumuman', [TopbarController::class, 'informasiPengumuman'])->name('topbar-notif.pengumuman');
     Route::get('/topbar/notif/informasi/peringatan', [TopbarController::class, 'informasiPeringatan'])->name('topbar-notif.peringatan');
     Route::get('/topbar/notif/informasi/read/all', [TopbarController::class, 'readAll'])->name('topbar-notif.readAll');
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profile.index');
+    Route::post('/profil', [ProfilController::class, 'update'])->name('profile.update');
 
     /* Koordinator */
     Route::group(['middleware' => 'CheckRole:koordinator'], function(){
@@ -187,6 +191,11 @@ Route::group(['middleware' => 'auth'], function(){
         Route::post('/peninjauan-konsultasi-program', [DsnKonsulProgramController::class, 'store'])->name('peninjauan-program.store');
         Route::post('/peninjauan-konsultasi-program/komen', [DsnKonsulProgramController::class, 'storeKomen'])->name('peninjauan-program.storeKomen');
 
+        /* Peninjauan Jadwal Zoom */
+        Route::get('/peninjauan-jadwal-zoom', [PengajuanZoomController::class, 'indexDsn'])->name('peninjauan-jadwal-zoom.indexDsn');
+        Route::get('/peninjauan-jadwal-zoom/{peninjauan_zoom}', [PengajuanZoomController::class, 'showDsn'])->name('peninjauan-jadwal-zoom.showDsn');
+        Route::post('/peninjauan-jadwal-zoom/{peninjauan_zoom}', [PengajuanZoomController::class, 'updateDsn'])->name('peninjauan-jadwal-zoom.updateDsn');
+
     });
 
     /* Mahasiswa */
@@ -231,10 +240,19 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/peringatan/role/info', [PeringatanController::class, 'roleInfo'])->name('peringatan.roleInfo');
         Route::get('/peringatan/role/info/{peringatan}', [PeringatanController::class, 'roleDetail'])->name('peringatan.roleDetail');
 
+        /* Kelola Pengajuan Judul */
+        Route::resource('pengajuan-zoom', PengajuanZoomController::class, ['except' => [
+            'update'
+        ]]);
+        Route::post('/pengajuan-zoom/{pengajuan_zoom}', [PengajuanZoomController::class, 'update'])->name('pengajuan-zoom.update');
+
         /* Mhs Partial */
         Route::get('/materi/{jenis}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
         Route::get('/riwayat/{jenis}', [PartialController::class, 'RiwayatKonsul'])->name('partial.RiwayatKonsul');
-
+        Route::get('/jadwal-zoom', [PartialController::class, 'JadwalZoom'])->name('partial.JadwalZoom');
+        Route::post('/jadwal-zoom/{kode}', [PartialController::class, 'JadwalZoomStore'])->name('partial.JadwalZoomStore');
+        Route::get('/riwayat-jadwal-zoom', [PartialController::class, 'RiwayatJadwalZoom'])->name('partial.RiwayatJadwalZoom');
+        Route::get('/riwayat-jadwal-zoom/{riwayat}', [PartialController::class, 'RiwayatJadwalZoomShow'])->name('partial.RiwayatJadwalZoomShow');
     });
 
     /* Mahasiswa && Dosen */

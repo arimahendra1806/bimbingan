@@ -10,17 +10,7 @@
                     </span>
                     <span class="logo-lg">
                         <img src="{{ asset('vendor/minia') }}/assets/images/logo-sm.svg" alt="" height="24"> <span
-                            class="logo-txt">Minia</span>
-                    </span>
-                </a>
-
-                <a href="index.html" class="logo logo-light">
-                    <span class="logo-sm">
-                        <img src="{{ asset('vendor/minia') }}/assets/images/logo-sm.svg" alt="" height="24">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="{{ asset('vendor/minia') }}/assets/images/logo-sm.svg" alt="" height="24"> <span
-                            class="logo-txt">Minia</span>
+                            class="logo-txt">SITA</span>
                     </span>
                 </a>
             </div>
@@ -29,6 +19,13 @@
                 <i class="fa fa-fw fa-bars"></i>
             </button>
 
+            <span style="margin-top: 20px">
+                <p style="font-size: 20px; font-family: Arial, Helvetica, sans-serif;"><b>SITA</b> - <b>S</b>istem
+                    <b>I</b>nformasi
+                    <b>T</b>ugas
+                    <b>A</b>khir
+                </p>
+            </span>
             <!-- App Search-->
             {{-- <form class="app-search d-none d-lg-block">
                 <div class="position-relative">
@@ -152,7 +149,7 @@
                 </div>
             </div> --}}
 
-            <div class="dropdown d-inline-block">
+            <div class="dropdown d-inline-block" style="margin-right: 10px">
                 <button type="button" class="btn header-item noti-icon position-relative"
                     id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
@@ -229,17 +226,16 @@
             <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item bg-soft-light border-start border-end"
                     id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user"
-                        src="{{ asset('vendor/minia') }}/assets/images/users/avatar-1.jpg" alt="Header Avatar">
-                    <span class="d-none d-xl-inline-block ms-1 fw-medium">Shawn L.</span>
+                    <i class="mdi mdi-account-circle mdi-24px align-middle me-1"></i>
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium">{{ Auth::user()->name }}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item" href="{{ asset('vendor/minia') }}/apps-contacts-profile.html"><i
-                            class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> Profile</a>
-                    <a class="dropdown-item" href="{{ asset('vendor/minia') }}/auth-lock-screen.html"><i
-                            class="mdi mdi-lock font-size-16 align-middle me-1"></i> Lock Screen</a>
+                    {{-- <a class="dropdown-item" href="{{ asset('vendor/minia') }}/apps-contacts-profile.html"><i
+                            class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> Profile</a> --}}
+                    <a class="dropdown-item" href="{{ route('profile.index') }}"><i
+                            class="mdi mdi-account-key font-size-16 align-middle me-1"></i> Profil Saya</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="/logout"><i
                             class="mdi mdi-logout font-size-16 align-middle me-1"></i> Logout</a>

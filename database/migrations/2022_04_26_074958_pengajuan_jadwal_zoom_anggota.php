@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class PengajuanJadwalZoom extends Migration
+class PengajuanJadwalZoomAnggota extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,10 @@ class PengajuanJadwalZoom extends Migration
      */
     public function up()
     {
-        Schema::create('pengajuan_jadwal_zoom', function (Blueprint $table) {
+        Schema::create('pengajuan_jadwal_zoom_anggota', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_anggota_zoom', 50);
-            $table->integer('tahun_ajaran_id');
+            $table->string('anggota_zoom_kode', 50);
             $table->string('pembimbing_kode', 50);
-            $table->string('jam', 20);
-            $table->date('tanggal');
-            $table->string('status', 20);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +29,6 @@ class PengajuanJadwalZoom extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pengajuan_jadwal_zoom');
+        //
     }
 }

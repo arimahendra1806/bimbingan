@@ -9,34 +9,124 @@
                     <h5 class="modal-title">Detail Data Progres</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="row mb-1">
-                        <div class="col-md-6">
-                            <label for="nim" class="col-form-label">NIM:</label>
-                            <input type="text" class="form-control no-outline" id="nim" name="nim" readonly>
+                <form id="myform">
+                    <div class="modal-body">
+                        <div class="row mb-1">
+                            <div class="col-md-6">
+                                <label for="nim" class="col-form-label">NIM:</label>
+                                <input type="text" class="form-control no-outline" id="nim" name="nim" readonly>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="nama" class="col-form-label">Nama Mahasiswa:</label>
+                                <input type="text" class="form-control no-outline" id="nama" name="nama" readonly>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="nama" class="col-form-label">Nama Mahasiswa:</label>
-                            <input type="text" class="form-control no-outline" id="nama" name="nama" readonly>
+                        <div class="row mb-1">
+                            <div class="col-md-6">
+                                <label for="judul" class="col-form-label">Judul:</label><br>
+                                <textarea class="form-control" name="judul" id="judul" style="width: 100%" rows="2" readonly></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="studi" class="col-form-label">Studi Kasus:</label><br>
+                                <textarea class="form-control" name="studi" id="studi" style="width: 100%" rows="2" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-md-12">
+                                <label for="pengerjaan" class="col-form-label">Pengerjaan:</label>
+                                <input type="text" class="form-control no-outline" id="pengerjaan" name="pengerjaan"
+                                    readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <label class="col-form-label">Detail Pelaksanaan Konsultasi:</label>
+                            <div class="col-md-3">
+                                <label class="col-form-label">Konsultasi Judul</label>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KJ1">
+                                    <label class="form-check-label" for="KJ1">
+                                        Konsultasi Judul TA
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="col-form-label">Konsultasi Proposal</label>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KP1">
+                                    <label class="form-check-label" for="KP1">
+                                        Konsultasi Bab 1
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KP2">
+                                    <label class="form-check-label" for="KP2">
+                                        Konsultasi Bab 2
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KP3">
+                                    <label class="form-check-label" for="KP3">
+                                        Konsultasi Bab 3
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KP4">
+                                    <label class="form-check-label" for="KP4">
+                                        Konsultasi Bab 4
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="col-form-label">Konsultasi Laporan</label>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KL1">
+                                    <label class="form-check-label" for="KL1">
+                                        Konsultasi Bab 1
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KL2">
+                                    <label class="form-check-label" for="KL2">
+                                        Konsultasi Bab 2
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KL3">
+                                    <label class="form-check-label" for="KL3">
+                                        Konsultasi Bab 3
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KL4">
+                                    <label class="form-check-label" for="KL4">
+                                        Konsultasi Bab 4
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KL5">
+                                    <label class="form-check-label" for="KL5">
+                                        Konsultasi Bab 5
+                                    </label>
+                                </div>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KL6">
+                                    <label class="form-check-label" for="KL6">
+                                        Konsultasi Bab 6
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="col-form-label">Konsultasi Program</label>
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input" type="checkbox" id="KPR1">
+                                    <label class="form-check-label" for="KPR1">
+                                        Konsultasi Program TA
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mb-1">
-                        <div class="col-md-6">
-                            <label for="judul" class="col-form-label">Judul:</label><br>
-                            <textarea class="form-control" name="judul" id="judul" style="width: 100%" rows="2" readonly></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="studi" class="col-form-label">Studi Kasus:</label><br>
-                            <textarea class="form-control" name="studi" id="studi" style="width: 100%" rows="2" readonly></textarea>
-                        </div>
-                    </div>
-                    <div class="row mb-1">
-                        <div class="col-md-12">
-                            <label for="pengerjaan" class="col-form-label">Pengerjaan:</label>
-                            <input type="text" class="form-control no-outline" id="pengerjaan" name="pengerjaan" readonly>
-                        </div>
-                    </div>
-                </div>
+                </form>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
@@ -244,6 +334,7 @@
             /* select cards view */
             table.on('select', function(e, dt, type, indexes) {
                 var rowData = table.rows(indexes).data().toArray();
+                $('#myform').trigger('reset');
                 $('#Modal').modal('show');
                 $('#nim').val(rowData[0].bimbingan.pembimbing.mahasiswa.nim);
                 $('#nama').val(rowData[0].bimbingan.pembimbing.mahasiswa.nama_mahasiswa);
@@ -255,6 +346,42 @@
                     $('#pengerjaan').val(rowData[0].bimbingan.pembimbing.mahasiswa.judul.pengerjaan +
                         " bersama " + rowData[0].bimbingan.pembimbing.mahasiswa.judul.anggota
                         .nama_mahasiswa);
+                }
+                if (rowData[0].judul > 0) {
+                    $('#KJ1').prop('checked', true);
+                }
+                if (rowData[0].proposal_bab1 > 0) {
+                    $('#KP1').prop('checked', true);
+                }
+                if (rowData[0].proposal_bab2 > 0) {
+                    $('#KP2').prop('checked', true);
+                }
+                if (rowData[0].proposal_bab3 > 0) {
+                    $('#KP3').prop('checked', true);
+                }
+                if (rowData[0].proposal_bab4 > 0) {
+                    $('#KP4').prop('checked', true);
+                }
+                if (rowData[0].laporan_bab1 > 0) {
+                    $('#KL1').prop('checked', true);
+                }
+                if (rowData[0].laporan_bab2 > 0) {
+                    $('#KL2').prop('checked', true);
+                }
+                if (rowData[0].laporan_bab3 > 0) {
+                    $('#KL3').prop('checked', true);
+                }
+                if (rowData[0].laporan_bab4 > 0) {
+                    $('#KL4').prop('checked', true);
+                }
+                if (rowData[0].laporan_bab5 > 0) {
+                    $('#KL5').prop('checked', true);
+                }
+                if (rowData[0].laporan_bab6 > 0) {
+                    $('#KL6').prop('checked', true);
+                }
+                if (rowData[0].program > 0) {
+                    $('#KPR1').prop('checked', true);
                 }
             });
 

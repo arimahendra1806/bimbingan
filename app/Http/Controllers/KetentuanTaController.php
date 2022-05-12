@@ -28,6 +28,6 @@ class KetentuanTaController extends Controller
         }
 
         /* Return menuju view */
-        return view('partial.ketentuan-ta.index', compact('tahun_id'));
+        return view('partial.ketentuan-ta.index');
     }
 }

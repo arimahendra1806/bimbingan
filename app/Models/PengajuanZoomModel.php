@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Models\PengajuanZoomAnggotaModel;
+use App\Models\TahunAjaran;
+use App\Models\DosPemModel;
 
 class PengajuanZoomModel extends Model
 {
@@ -14,8 +17,26 @@ class PengajuanZoomModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "pengajuan_jadwal_zoom";
-    protected $fillable = ["id","pembimbing_kode","tahun_ajaran_id","pembimbing_kode_1","pembimbing_kode_2","pembimbing_kode_3","pembimbing_kode_4","pembimbing_kode_5","jam","tanggal","status"];
+    protected $fillable = ["id","kode_anggota_zoom","tahun_ajaran_id","pembimbing_kode","jam","tanggal","status"];
 
-    protected $cascadeDeletes = [];
+    protected $cascadeDeletes = ['anggota_zoom'];
     protected $dates = ['deleted_at'];
+
+    /* anggota zoom */
+    public function anggota_zoom()
+    {
+        return $this->belongsTo(PengajuanZoomAnggotaModel::class,'kode_anggota_zoom','anggota_zoom_kode');
+    }
+
+    /* inisiasi tahun */
+    public function tahun()
+    {
+        return $this->belongsTo(TahunAjaran::class,'tahun_ajaran_id','id');
+    }
+
+    /* inisiasi pembimbing */
+    public function pembimbing()
+    {
+        return $this->belongsTo(DosPemModel::class,'pembimbing_kode','kode_pembimbing');
+    }
 }
