@@ -41,7 +41,7 @@ class DosenModel extends Model
         return $this->belongsTo(DosPemMateriModel::class,'id','dosen_id');
     }
 
-    /* users */
+    /* inisiasi users */
     public function user()
     {
         return $this->belongsTo(User::class,'users_id','id');

@@ -20,8 +20,10 @@ class Bimbingan extends Migration
             $table->integer('tahun_ajaran_id');
             $table->string('file_upload')->nullable();
             $table->string('link_video')->nullable();
-            $table->string('jenis_bimbingan')->nullable();
+            $table->string('jenis_bimbingan', 100)->nullable();
             $table->string('status_konsultasi', 150)->nullable();
+            $table->datetime('tanggal_konsultasi')->nullable();
+            $table->string('keterangan_konsultasi')->nullable();
             $table->string('status_pesan', 150)->nullable();
             $table->timestamps();
             $table->softDeletes();

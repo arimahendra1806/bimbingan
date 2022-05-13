@@ -20,6 +20,7 @@ class MateriTahunanModel extends Model
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
 
+    /* inisiasi tahun_ajaran */
     public function tahun()
     {
         return $this->belongsTo(TahunAjaran::class,'tahun_ajaran_id','id');

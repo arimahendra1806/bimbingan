@@ -22,24 +22,27 @@ class InformasiModel extends Model
     protected $cascadeDeletes = ['notifikasi'];
     protected $dates = ['deleted_at'];
 
+    /* notifikasi */
+    public function notifikasi()
+    {
+        return $this->belongsTo(NotifikasiModel::class,'id','informasi_id');
+    }
+
     /* inisiasi tahun */
     public function tahun()
     {
         return $this->belongsTo(TahunAjaran::class,'tahun_ajaran_id','id');
     }
 
+    /* inisiasi users */
     public function pengirim()
     {
         return $this->belongsTo(User::class,'users_id','id');
     }
 
+    /* inisiasi users */
     public function penerima()
     {
         return $this->belongsTo(User::class,'kepada','id');
-    }
-
-    public function notifikasi()
-    {
-        return $this->belongsTo(NotifikasiModel::class,'id','informasi_id');
     }
 }

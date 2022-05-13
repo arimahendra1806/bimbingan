@@ -17,12 +17,12 @@ class Informasi extends Migration
             $table->id();
             $table->integer('users_id');
             $table->integer('tahun_ajaran_id');
-            $table->string('kepada_role');
+            $table->string('kepada_role', 50);
             $table->integer('kepada')->default('0');
             $table->string('judul')->nullable();
             $table->string('subyek')->nullable();
             $table->string('pesan')->nullable();
-            $table->string('jenis')->nullable();
+            $table->string('jenis', 20)->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

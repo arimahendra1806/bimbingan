@@ -20,7 +20,7 @@ class ProgresBimbinganModel extends Model
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
 
-    /* progres_bimbingan */
+    /* inisiasi progres_bimbingan */
     public function bimbingan()
     {
         return $this->belongsTo(BimbinganModel::class,'bimbingan_kode','kode_bimbingan');

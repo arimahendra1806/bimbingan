@@ -15,12 +15,12 @@ class PengajuanJudul extends Migration
     {
         Schema::create('pengajuan_judul', function (Blueprint $table) {
             $table->id();
-            $table->integer('mahasiswa_id');
-            $table->integer('tahun_ajaran_id')->unique();
+            $table->integer('mahasiswa_id')->unique();
+            $table->integer('tahun_ajaran_id');
             $table->string('judul')->nullable();
             $table->string('studi_kasus')->nullable();
-            $table->string('pengerjaan')->nullable();
-            $table->integer('id_anggota')->dafault(0);
+            $table->string('pengerjaan', 100)->nullable();
+            $table->integer('id_anggota')->default(0);
             $table->string('status')->nullable();
             $table->timestamps();
             $table->softDeletes();

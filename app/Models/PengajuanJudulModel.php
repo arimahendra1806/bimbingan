@@ -21,11 +21,13 @@ class PengajuanJudulModel extends Model
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
 
+    /* inisiasi tahun */
     public function tahun()
     {
         return $this->belongsTo(TahunAjaran::class,'tahun_ajaran_id','id');
     }
 
+    /* inisiasi mahasiswa */
     public function mahasiswa()
     {
         return $this->belongsTo(MahasiswaModel::class,'mahasiswa_id','id');

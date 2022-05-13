@@ -28,7 +28,7 @@ class TahunAjaran extends Model
     protected $table = "tahun_ajaran";
     protected $fillable = ["id", "tahun_ajaran", "status"];
 
-    protected $cascadeDeletes = ['userth','bimbinganth','dospemth','infoth','ketentuanth','linkth','mhsth','materith','notifth','zoomth','judulth','progresth'];
+    protected $cascadeDeletes = ['userth','bimbinganth','dospemth','infoth','ketentuanth','linkth','mhsth','materith','zoomth','judulth','progresth'];
     protected $dates = ['deleted_at'];
 
     public function userth()
@@ -69,11 +69,6 @@ class TahunAjaran extends Model
     public function materith()
     {
         return $this->belongsTo(DosPemMateriModel::class,'id','tahun_ajaran_id');
-    }
-
-    public function notifth()
-    {
-        return $this->belongsTo(NotifikasiModel::class,'id','tahun_ajaran_id');
     }
 
     public function zoomth()

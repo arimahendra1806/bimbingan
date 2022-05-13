@@ -29,22 +29,22 @@ class MahasiswaModel extends Model
         return $this->belongsTo(PengajuanJudulModel::class,'id','mahasiswa_id');
     }
 
-    /* pengajuan_judul */
+    /* pengajuan_judul (anggota) */
     public function anggota()
     {
         return $this->belongsTo(PengajuanJudulModel::class,'id','id_anggota');
-    }
-
-    /* user */
-    public function user()
-    {
-        return $this->belongsTo(User::class,'users_id','id');
     }
 
     /* dosen_pembimbing */
     public function dospem()
     {
         return $this->belongsTo(DosPemModel::class,'id','mahasiswa_id');
+    }
+
+    /* inisiasi user */
+    public function user()
+    {
+        return $this->belongsTo(User::class,'users_id','id');
     }
 
     /* inisiasi tahun */

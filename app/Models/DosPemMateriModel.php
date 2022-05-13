@@ -21,21 +21,13 @@ class DosPemMateriModel extends Model
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
 
-    /**
-     * Get the user that owns the DosPemMateriModel
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function dosen()
+    /* inisiasi dosen */
+     public function dosen()
     {
         return $this->belongsTo(DosenModel::class, 'dosen_id', 'id');
     }
 
-    /**
-     * Get the user that owns the DosPemMateriModel
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    /* inisiasi tahun_ajaran */
     public function tahun()
     {
         return $this->belongsTo(TahunAjaran::class, 'tahun_ajaran_id', 'id');

@@ -20,6 +20,7 @@ class NotifikasiModel extends Model
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
 
+    /* inisiasi informasi */
     public function informasi()
     {
         return $this->belongsTo(InformasiModel::class,'informasi_id','id');

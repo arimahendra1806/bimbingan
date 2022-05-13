@@ -21,11 +21,13 @@ class PengajuanZoomAnggotaModel extends Model
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
 
+    /* inisiasi pengajuan_zoom */
     public function jadwal()
     {
         return $this->belongsTo(PengajuanZoomModel::class,'anggota_zoom_kode','kode_anggota_zoom');
     }
 
+    /* inisiasi dospem */
     public function pembimbing()
     {
         return $this->belongsTo(DosPemModel::class,'pembimbing_kode','kode_pembimbing');

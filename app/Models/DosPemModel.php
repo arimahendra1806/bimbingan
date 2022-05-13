@@ -31,7 +31,7 @@ class DosPemModel extends Model
         return $this->belongsTo(PengajuanZoomModel::class,'kode_pembimbing','pembimbing_kode');
     }
 
-    /* pengajuan_jadwal_zoom */
+    /* pengajuan_jadwal_zoom_anggota */
     public function pengajuanAnggota()
     {
         return $this->belongsTo(PengajuanZoomAnggotaModel::class,'kode_pembimbing','pembimbing_kode');
@@ -55,22 +55,22 @@ class DosPemModel extends Model
         return $this->belongsTo(MahasiswaModel::class,'mahasiswa_id','id');
     }
 
-    /* inisiasi judul */
+    /* inisiasi tahun */
+    public function tahun()
+    {
+        return $this->belongsTo(TahunAjaran::class,'tahun_ajaran_id','id');
+    }
+
+    /* inisiasi tambahan judul */
     public function judul()
     {
         return $this->belongsTo(PengajuanJudulModel::class,'mahasiswa_id','mahasiswa_id');
     }
 
-    /* inisiasi zoom */
+    /* inisiasi tambahan link_zoom */
     public function zoom()
     {
         return $this->belongsTo(LinkZoomModel::class,'dosen_id','dosen_id');
-    }
-
-    /* inisiasi tahun */
-    public function tahun()
-    {
-        return $this->belongsTo(TahunAjaran::class,'tahun_ajaran_id','id');
     }
 
 }

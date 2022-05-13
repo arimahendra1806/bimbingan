@@ -21,11 +21,13 @@ class LinkZoomModel extends Model
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
 
+    /* inisiasi dosen */
     public function dosen()
     {
         return $this->belongsTo(DosenModel::class,'dosen_id','id');
     }
 
+    /* inisiasi dosen */
     public function tahun()
     {
         return $this->belongsTo(TahunAjaran::class,'tahun_ajaran_id','id');

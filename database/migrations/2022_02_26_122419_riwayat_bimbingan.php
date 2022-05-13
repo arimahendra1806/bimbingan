@@ -16,7 +16,7 @@ class RiwayatBimbingan extends Migration
         Schema::create('riwayat_bimbingan', function (Blueprint $table) {
             $table->id();
             $table->string('bimbingan_kode');
-            $table->string('bimbingan_jenis');
+            $table->string('bimbingan_jenis', 100);
             $table->datetime('waktu_bimbingan')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
             $table->softDeletes();
