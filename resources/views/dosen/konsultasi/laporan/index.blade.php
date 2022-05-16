@@ -289,7 +289,7 @@
                     name: 'pembimbing.mahasiswa.nama_mahasiswa',
                     data: function(data, type, dataToSet) {
                         if (data.status_pesan == 0) {
-                            return '<i class="fas fa-comment-dots text-danger">&nbsp;&nbsp;</i>' +
+                            return '<i class="fas fa-comment-dots text-danger"> &nbsp;&nbsp;</i>' +
                                 data.pembimbing.mahasiswa.nama_mahasiswa;
                         } else if (data.status_pesan == 1) {
                             return '<i class="fas fa-comment-dots text-warning"> &nbsp;&nbsp;</i>' +
