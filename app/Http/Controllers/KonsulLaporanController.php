@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Models\TahunAjaran;
 use App\Models\RiwayatBimbinganModel;
 use App\Models\KomentarModel;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Mail\MailController;
 use DataTables, Auth, File, Validator;
 
 class KonsulLaporanController extends Controller
@@ -67,7 +69,7 @@ class KonsulLaporanController extends Controller
             /* Ambil data mahasiswa login */
             $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
                 $q->where('jenis_bimbingan', 'Laporan');
-            }])->find(Auth::user()->id);
+            }],'mahasiswa.dospem.dosen')->find(Auth::user()->id);
             $bimbingan = $user->mahasiswa->dospem->bimbingan;
 
             /* Kondisi jika status disetujui */
@@ -97,6 +99,15 @@ class KonsulLaporanController extends Controller
                 $data2->bimbingan_kode = $bimbingan->kode_bimbingan;
                 $data2->bimbingan_jenis = $bimbingan->jenis_bimbingan;
                 $data2->save();
+
+                /* Notifikasi email */
+                $subjek = 'Konsultasi Laporan Terbaru';
+                $details = [
+                    'title' => 'Konsultasi Laporan dari Mahasiswa Bimbingan Anda',
+                    'body' => 'Anda menerima konsultasi laporan terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
+                ];
+
+                Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Berhasil Melakukan Konsultasi!", 'data' => ['file_upload' => $bimbingan->file_upload, 'status_konsultasi' => $bimbingan->status_konsultasi]]);
@@ -130,7 +141,7 @@ class KonsulLaporanController extends Controller
             /* Ambil data mahasiswa login */
             $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
                 $q->where('jenis_bimbingan', 'Laporan');
-            }])->find(Auth::user()->id);
+            }],'mahasiswa.dospem.dosen')->find(Auth::user()->id);
 
             /* Ambil data data tahun_ajaran */
             if($user->mahasiswa->dospem->bimbingan->status_konsultasi == "Disetujui"){
@@ -144,6 +155,15 @@ class KonsulLaporanController extends Controller
                 $data->nama = $user->mahasiswa->nama_mahasiswa;
                 $data->komentar = $request->komentar;
                 $data->save();
+
+                /* Notifikasi email */
+                $subjek = 'Komentar Konsultasi Laporan Terbaru';
+                $details = [
+                    'title' => 'Komentar Untuk Konsultasi Laporan dari Mahasiswa Bimbingan Anda',
+                    'body' => 'Anda menerima komentar untuk konsultasi laporan terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
+                ];
+
+                Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);

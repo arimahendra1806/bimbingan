@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Models\InformasiModel;
 use App\Models\NotifikasiModel;
 use App\Models\User;
@@ -10,13 +11,30 @@ use App\Models\TahunAjaran;
 use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
 use App\Models\DosPemModel;
+use App\Mail\MailController;
 use DataTables, Validator, Auth;
 
 class PeringatanController extends Controller
 {
     private function addNotif($array, $data_id){
-        /* Perulangan insert data notifikasi sesuai parameter */
+        $email = InformasiModel::find($data_id);
+
+        /* Perulangan insert data notifikasi sesuai parameter && notifikasi email */
         foreach ($array as $key => $value) {
+            $penerima = User::with('dosen','mahasiswa')->find($value);
+
+            $subjek = $email->subyek;
+            $details = [
+                'title' => $email->jenis . " - " . $email->judul,
+                'body' => $email->pesan
+            ];
+
+            if ($penerima->dosen){
+                Mail::to($penerima->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
+            } elseif ($penerima->mahasiswa){
+                Mail::to($penerima->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
+            }
+
             $data2 = new NotifikasiModel;
             $data2->informasi_id = $data_id;
             $data2->kepada = $value;

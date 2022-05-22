@@ -12,15 +12,17 @@ class MailController extends Mailable
     use Queueable, SerializesModels;
 
     public $details;
+    public $subjek;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($details)
+    public function __construct($details, $subjek)
     {
         $this->details = $details;
+        $this->subjek = $subjek;
     }
 
     /**
@@ -30,6 +32,6 @@ class MailController extends Mailable
      */
     public function build()
     {
-        return $this->subject('Pemberitahuan Terbaru')->view('mail.index');
+        return $this->subject($this->subjek)->view('mail.index');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Models\TahunAjaran;
 use App\Models\DosPemModel;
 use App\Models\PengajuanJudulModel;
@@ -10,6 +11,7 @@ use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
 use App\Models\BimbinganModel;
 use App\Models\ProgresBimbinganModel;
+use App\Mail\MailController;
 use DataTables, Validator;
 
 class DosPemController extends Controller
@@ -137,6 +139,19 @@ class DosPemController extends Controller
                 $data3->bimbingan_kode = $data2->kode_bimbingan;
                 $data3->tahun_ajaran_id = $tahun_id->id;
                 $data3->save();
+
+                /* Notifikasi email */
+                $subjek = 'Pemilihan Dosen Pembimbing Bagi Anda';
+                $details = [
+                    'title' => 'Penetapan Dosen Pembimbing',
+                    'body' => 'Susunan dosen pembimbing untuk Anda: ',
+                    'dospem' => 'Nama Dosen Pembimbing: '.$id_dsn->nama_dosen,
+                    'mhs' => 'Nama Mahasiswa: '.$id_mhs->nama_mahasiswa
+                ];
+
+                Mail::to($id_dsn->email)->send(new \App\Mail\MailController($details, $subjek));
+                Mail::to($id_mhs->email)->send(new \App\Mail\MailController($details, $subjek));
+
             }
 
             /* Return json berhasil */
@@ -217,6 +232,21 @@ class DosPemController extends Controller
             $data->dosen_id = $request->dosen_edit;
             $data->mahasiswa_id = $request->mhs_edit;
             $data->save();
+
+            /* Notifikasi email */
+            $id_dsn = DosenModel::find($request->dosen_edit);
+            $id_mhs = MahasiswaModel::find($request->mhs_edit);
+
+            $subjek = 'Pembaruhan Dosen Pembimbing Bagi Anda';
+            $details = [
+                'title' => 'Pembaruhan Dosen Pembimbing',
+                'body' => 'Susunan dosen pembimbing untuk Anda: ',
+                'dospem' => 'Nama Dosen Pembimbing: '.$id_dsn->nama_dosen,
+                'mhs' => 'Nama Mahasiswa: '.$id_mhs->nama_mahasiswa
+            ];
+
+            Mail::to($id_dsn->email)->send(new \App\Mail\MailController($details, $subjek));
+            Mail::to($id_mhs->email)->send(new \App\Mail\MailController($details, $subjek));
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);

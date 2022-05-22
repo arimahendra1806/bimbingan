@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Models\DosPemModel;
 use App\Models\BimbinganModel;
 use App\Models\ProgresBimbinganModel;
 use App\Models\KomentarModel;
 use App\Models\TahunAjaran;
+use App\Mail\MailController;
 use DataTables, Auth, Validator;
 
 class DsnKonsulJudulController extends Controller
@@ -126,6 +128,15 @@ class DsnKonsulJudulController extends Controller
             $data->status_pesan = "3";
             $data->save();
 
+            /* Notifikasi email */
+            $subjek = 'Tanggapan Konsultasi Judul Terbaru';
+            $details = [
+                'title' => 'Tanggapan Untuk Konsultasi Judul Anda',
+                'body' => 'Anda menerima tanggapan untuk konsultasi judul dari Dosen Pembimbing'
+            ];
+
+            Mail::to($data->pembimbing->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
+
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Perbarui Peninjauan", 'data' => $data]);
         }
@@ -157,7 +168,7 @@ class DsnKonsulJudulController extends Controller
             /* Ambil data mahasiswa login */
             $user = User::with(['dosen.dospem.bimbingan' => function($q){
                 $q->where('jenis_bimbingan', 'Judul');
-            }])->find(Auth::user()->id);
+            }],'dosen.dospem.mahasiswa')->find(Auth::user()->id);
 
             /* Ambil data data tahun_ajaran */
             if($user->dosen->dospem->bimbingan->status_konsultasi == "Disetujui"){
@@ -171,6 +182,15 @@ class DsnKonsulJudulController extends Controller
                 $data->nama = $user->dosen->nama_dosen;
                 $data->komentar = $request->komentar;
                 $data->save();
+
+                /* Notifikasi email */
+                $subjek = 'Tanggapan Komentar Konsultasi Judul Terbaru';
+                $details = [
+                    'title' => 'Tanggapan Komentar Untuk Konsultasi Judul Anda',
+                    'body' => 'Anda menerima tanggapan komentar untuk konsultasi judul dari Dosen Pembimbing'
+                ];
+
+                Mail::to($user->dosen->dospem->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);

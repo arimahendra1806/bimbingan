@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Online Web Tutor</title>
-</head>
-<body>
+
+<body style="color: black;">
 
     <h1>{{ $details['title'] }}</h1>
     <p>{{ $details['body'] }}</p>
 
-    <p>Thank you</p>
+    @isset($details['dospem'])
+        <ul>
+            <li>{{ $details['dospem'] }}</li>
+            <li>{{ $details['mhs'] }}</li>
+        </ul>
+    @endisset
+
+    <p>Dimohon untuk segara menindaklanjuti informasi terkait.</p>
 </body>
+
 </html>
