@@ -36,6 +36,38 @@
         </div>
         <!-- end page title -->
 
+        <!-- Info -->
+        <div class="hide" id="infoKonsultasi">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card bg-transparent border-warning">
+                        <div class="card-header bg-transparent border-warning">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4 class="card-title text-warning"><i class="fas fa-exclamation-triangle"></i> |
+                                        Informasi</h4>
+                                </div>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                    <a class="d-block text-warning" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseCetak" aria-expanded="false" aria-controls="collapseCetak">
+                                        <i class="min fas fa-angle-double-down pull-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="collapse show" id="collapseCetak">
+                            <div class="card-body" style="text-align: justify">
+                                <p>
+                                    Konsultasi judul sudah selesai, silahkan perbarui judul Anda apabila terdapat perubahan.
+                                    <u><a href="{{ route('pengajuan-judul.index') }}">Perbarui Judul</a></u>.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Card Materi -->
         @include('partial.materiKonsul')
 
@@ -189,6 +221,14 @@
                     $('#fileShow').hide();
                     $('#btnShow').hide();
                 }
+                var y = document.getElementById('status_konsultasi').value;
+                if (y == "Disetujui") {
+                    document.getElementById('infoKonsultasi').classList.remove("hide");
+                    $('#infoKonsultasi').show();
+                } else {
+                    document.getElementById('infoKonsultasi').classList.remove("hide");
+                    $('#infoKonsultasi').hide();
+                }
             }
 
             /* run function tampilan */
@@ -213,9 +253,7 @@
                         targets: [0],
                         data: function(data, type, dataToSet) {
                             return "<div class='text-wrap width-200'><b>" + data.nama +
-                                "</b>&nbsp;&nbsp;" + data.waktu_komentar
-                                .toLocaleString() +
-                                "<br>" + data.komentar + "</div>"
+                                "</b>&nbsp;&nbsp;" + data.waktu + "<br>" + data.komentar + "</div>"
                         }
                     }
                 ],

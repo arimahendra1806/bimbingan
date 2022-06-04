@@ -17,7 +17,7 @@ class MateriTahunanController extends Controller
     public function index(Request $request)
     {
         /* Ambil data tahun_ajaran */
-        $tahun_id = TahunAjaran::all()->sortByDesc('tahun_ajaran');
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Ambil data tabel materi tahunan */
         if ($request->ajax()){
@@ -81,9 +81,11 @@ class MateriTahunanController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
             /* Insert materi tahunan */
             $data = new MateriTahunanModel;
-            $data->tahun_ajaran_id = $request->tahun_ajaran_id_add;
+            $data->tahun_ajaran_id = $tahun_id->id;
 
             /* Jika request terdapat file */
             if ($request->hasFile('file_materi_add')){
@@ -175,7 +177,6 @@ class MateriTahunanController extends Controller
         } else {
             /* Update materi tahunan */
             $data = MateriTahunanModel::where('id', $materi_tahunan)->first();
-            $data->tahun_ajaran_id = $request->tahun_ajaran_id_edit;
 
             /* Jika request terdapat file */
             if ($request->hasFile('file_materi_edit')){

@@ -47,6 +47,8 @@ class ProgresKonsultasiController extends Controller
         $bimbingan = BimbinganModel::whereIn('pembimbing_kode', $arr_kp)->groupBy('kode_bimbingan');
         /* Membuat array data kode bimbingan dari tabel bimbingan */
         $arr_kb = $bimbingan->pluck('kode_bimbingan')->toArray();
+        /* Ambil data tahun_ajaran */
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Jika paramter sama dengan semua */
         if($id == "Semua"){

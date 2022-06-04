@@ -59,7 +59,7 @@
                             <div class="card-body" style="text-align: justify">
                                 <p>
                                     Konsultasi sudah selesai, silahkan cetak kartu konsultasi melalui berikut
-                                    <u><a href="{{ route('bimbingan-judul.index') }}">Cetak Sekarang</a></u>.
+                                    <u><a href="{{ route('kartu-proposal.cetak') }}">Cetak Sekarang</a></u>.
                                 </p>
                             </div>
                         </div>
@@ -254,9 +254,7 @@
                         targets: [0],
                         data: function(data, type, dataToSet) {
                             return "<div class='text-wrap width-200'><b>" + data.nama +
-                                "</b>&nbsp;&nbsp;" + data.waktu_komentar
-                                .toLocaleString() +
-                                "<br>" + data.komentar + "</div>"
+                                "</b>&nbsp;&nbsp;" + data.waktu + "<br>" + data.komentar + "</div>"
                         }
                     }
                 ],

@@ -19,7 +19,10 @@
         <!-- end page title -->
 
         <!-- Card Jadwal Zoom -->
-        @include('partial.jadwalZoom')
+        {{-- @isset($no_kp) --}}
+        {{-- @include('partial.jadwalZoom') --}}
+        {{-- @endisset --}}
+
 
         <h1>Mhs</h1>
         <a href="/logout">KELUAR</a>
@@ -37,5 +40,7 @@
             });
         });
     </script>
-    @yield('JadwalZoomJs')
+    {{-- @isset($no_kp) --}}
+    {{-- @yield('JadwalZoomJs') --}}
+    {{-- @endisset --}}
 @endsection

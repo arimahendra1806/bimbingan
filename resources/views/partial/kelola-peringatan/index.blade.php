@@ -15,13 +15,8 @@
                         <div class="row mb-1">
                             <div class="col-md-6">
                                 <label for="tahun_ajaran_add" class="col-form-label">Tahun Ajaran:</label>
-                                <select class="js-example-responsive form-control" style="width: 100%" id="tahun_ajaran_add"
-                                    name="tahun_ajaran_add">
-                                    <option value=""></option>
-                                    @foreach ($tahun_id as $tahun)
-                                        <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" class="form-control" id="tahun_ajaran_add" name="tahun_ajaran_add"
+                                    value="{{ $tahun_id->tahun_ajaran }}" readonly>
                                 <span class="text-danger error-text tahun_ajaran_add_error"></span>
                             </div>
                             <div class="col-md-6">
@@ -108,13 +103,8 @@
                         <div class="row mb-1">
                             <div class="col-md-6">
                                 <label for="tahun_ajaran_edit" class="col-form-label">Tahun Ajaran:</label>
-                                <select class="js-example-responsive form-control" style="width: 100%"
-                                    id="tahun_ajaran_edit" name="tahun_ajaran_edit">
-                                    <option value=""></option>
-                                    @foreach ($tahun_id as $tahun)
-                                        <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
-                                    @endforeach
-                                </select>
+                                <input type="text" class="form-control" id="tahun_ajaran_edit" name="tahun_ajaran_edit"
+                                    readonly>
                                 <span class="text-danger error-text tahun_ajaran_edit_error"></span>
                             </div>
                             <div class="col-md-6">
@@ -551,7 +541,6 @@
                 $('#FormAdd').trigger('reset');
                 $(document).find('span.error-text').text('');
                 $('#ModalAdd').modal('show');
-                $('#tahun_ajaran_add').val('').trigger('change');
                 $('#kepada_role_add').val('').trigger('change');
                 $('#kepada_add').val('').trigger('change');
                 $("#kepada_add").empty();
@@ -564,7 +553,7 @@
                 $.get('kelola-peringatan/' + this_id, function(data) {
                     $('#ModalEdit').modal('show');
                     $('#id_edit').val(data.id);
-                    $('#tahun_ajaran_edit').val(data.tahun_ajaran_id).trigger('change');
+                    $('#tahun_ajaran_edit').val(data.tahun.tahun_ajaran).trigger('change');
                     $('#jenis_edit').val(data.jenis);
                     $('#kepada_role_edit').val(data.kepada_role).trigger('change');
 
@@ -766,13 +755,6 @@
             });
 
             /* Select2 Tahun Ajaran Add */
-            $("#tahun_ajaran_add").select2({
-                dropdownParent: $('#ModalAdd'),
-                placeholder: "Pilih berdasarkan tahun ...",
-                allowClear: true
-            });
-
-            /* Select2 Tahun Ajaran Add */
             $("#kepada_role_add").select2({
                 dropdownParent: $('#ModalAdd'),
                 placeholder: "Pilih berdasarkan pengguna ...",
@@ -814,13 +796,6 @@
                         $('#kepada_add').val('').trigger('change');
                     });
                 }
-            });
-
-            /* Select2 Tahun Ajaran Edit */
-            $("#tahun_ajaran_edit").select2({
-                dropdownParent: $('#ModalEdit'),
-                placeholder: "Pilih berdasarkan tahun ...",
-                allowClear: true
             });
 
             /* Select2 Tahun Ajaran Edit */

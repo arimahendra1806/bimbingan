@@ -21,6 +21,7 @@ class LinkZoomController extends Controller
     {
         /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::all()->sortByDesc('tahun_ajaran');
+        $tahun_aktif = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Ambil data dosen */
         $dosen_id = DosenModel::all()->sortBy('nama_dosen');
@@ -41,7 +42,7 @@ class LinkZoomController extends Controller
         }
 
         /* Return menuju view */
-        return view('koordinator.kelola-link-zoom.index', compact('tahun_id', 'dosen_id'));
+        return view('koordinator.kelola-link-zoom.index', compact('tahun_id', 'dosen_id', 'tahun_aktif'));
     }
 
     /**
@@ -91,10 +92,12 @@ class LinkZoomController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
             /* Insert ke tabel link_zoom */
             $data = new LinkZoomModel;
             $data->dosen_id = $request->dosen_add;
-            $data->tahun_ajaran_id = $request->tahun_ajaran_id_add;
+            $data->tahun_ajaran_id = $tahun_id->id;
             $data->id_meeting = $request->id_meeting_add;
             $data->passcode = $request->passcode_add;
             $data->link_zoom = $request->link_add;

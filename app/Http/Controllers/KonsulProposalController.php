@@ -10,7 +10,7 @@ use App\Models\KomentarModel;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Mail\MailController;
-use DataTables, Auth, File, Validator;
+use DataTables, Auth, File, Validator, PDF;
 
 class KonsulProposalController extends Controller
 {
@@ -36,7 +36,13 @@ class KonsulProposalController extends Controller
         if ($request->ajax()){
             $data = KomentarModel::latest()->where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
                 ->where('bimbingan_jenis', 'Proposal')->get();
-            return DataTables::of($data)->toJson();
+            return DataTables::of($data)
+                ->addColumn('waktu', function($model){
+                    $waktu = Carbon::parse($model->waktu_komentar)->isoFormat('(D MMMM Y - hh:mm:ss)');
+                    return $waktu;
+                })
+                ->rawColumns(['waktu'])
+                ->toJson();
         }
 
         /* Return menuju view */
@@ -100,14 +106,14 @@ class KonsulProposalController extends Controller
                 $data2->bimbingan_jenis = $bimbingan->jenis_bimbingan;
                 $data2->save();
 
-                /* Notifikasi email */
-                $subjek = 'Konsultasi Proposal Terbaru';
-                $details = [
-                    'title' => 'Konsultasi Proposal dari Mahasiswa Bimbingan Anda',
-                    'body' => 'Anda menerima konsultasi proposal terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
-                ];
+                // /* Notifikasi email */
+                // $subjek = 'Konsultasi Proposal Terbaru';
+                // $details = [
+                //     'title' => 'Konsultasi Proposal dari Mahasiswa Bimbingan Anda',
+                //     'body' => 'Anda menerima konsultasi proposal terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
+                // ];
 
-                Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
+                // Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Berhasil Melakukan Konsultasi!", 'data' => ['file_upload' => $bimbingan->file_upload, 'status_konsultasi' => $bimbingan->status_konsultasi]]);
@@ -156,18 +162,34 @@ class KonsulProposalController extends Controller
                 $data->komentar = $request->komentar;
                 $data->save();
 
-                /* Notifikasi email */
-                $subjek = 'Komentar Konsultasi Proposal Terbaru';
-                $details = [
-                    'title' => 'Komentar Untuk Konsultasi Proposal dari Mahasiswa Bimbingan Anda',
-                    'body' => 'Anda menerima komentar untuk konsultasi proposal terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
-                ];
+                // /* Notifikasi email */
+                // $subjek = 'Komentar Konsultasi Proposal Terbaru';
+                // $details = [
+                //     'title' => 'Komentar Untuk Konsultasi Proposal dari Mahasiswa Bimbingan Anda',
+                //     'body' => 'Anda menerima komentar untuk konsultasi proposal terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
+                // ];
 
-                Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
+                // Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);
             }
         }
+    }
+
+    public function cetakPdf()
+    {
+    	/* Ambil data mahasiswa login */
+        $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
+            $q->where('jenis_bimbingan', 'Proposal');
+        }],'mahasiswa.dospem.dosen','mahasiswa.judul','mahasiswa.tahun')->find(Auth::user()->id);
+        $riwayat = RiwayatBimbinganModel::where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
+            ->where('bimbingan_jenis', 'Proposal')
+            ->get();
+
+        $hari = Carbon::now()->isoFormat('D MMMM Y');
+
+    	$pdf = PDF::loadview('/mahasiswa/konsultasi/proposal/proposal_pdf', compact('user','riwayat','hari'));
+    	return $pdf->stream();
     }
 }

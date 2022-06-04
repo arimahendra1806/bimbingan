@@ -21,6 +21,7 @@ class UserController extends Controller
     {
         /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::all()->sortByDesc('tahun_ajaran');
+        $tahun_aktif = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Ambil data dosen */
         $dosen_id = DosenModel::all()->sortBy('nama_dosen');
@@ -44,7 +45,7 @@ class UserController extends Controller
         }
 
         /* Return menuju view */
-        return view('koordinator.kelola-pengguna.index', compact('tahun_id', 'dosen_id', 'mhs_id'));
+        return view('koordinator.kelola-pengguna.index', compact('tahun_id', 'dosen_id', 'mhs_id', 'tahun_aktif'));
     }
 
     /**
@@ -94,10 +95,12 @@ class UserController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
             /* Insert ke tabel User */
             $data = new User;
             $data->username = $request->username_add;
-            $data->tahun_ajaran_id = $request->tahun_ajaran_id_add;
+            $data->tahun_ajaran_id = $tahun_id->id;
             $data->name = $request->nama_pengguna_add;
             $data->role = $request->role_pengguna_add;
             $data->password = Hash::make($request->password_pengguna_add);
@@ -231,6 +234,10 @@ class UserController extends Controller
                 $data->password = Hash::make($request->password_pengguna_edit);
             }
             $data->save();
+
+            if ($data->role == "mahasiswa"){
+                MahasiswaModel::where('users_id', $data->id)->update(['tahun_ajaran_id' => $request->tahun_ajaran_id_edit]);
+            }
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);

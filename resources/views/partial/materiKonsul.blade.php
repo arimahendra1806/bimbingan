@@ -46,6 +46,7 @@
             processing: true,
             serverSide: true,
             ajax: "/materi/" + jenis,
+            autoWidth: false,
             columns: [{
                     data: 'DT_RowIndex',
                     name: 'DT_RowIndex'

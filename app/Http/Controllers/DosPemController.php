@@ -140,17 +140,17 @@ class DosPemController extends Controller
                 $data3->tahun_ajaran_id = $tahun_id->id;
                 $data3->save();
 
-                /* Notifikasi email */
-                $subjek = 'Pemilihan Dosen Pembimbing Bagi Anda';
-                $details = [
-                    'title' => 'Penetapan Dosen Pembimbing',
-                    'body' => 'Susunan dosen pembimbing untuk Anda: ',
-                    'dospem' => 'Nama Dosen Pembimbing: '.$id_dsn->nama_dosen,
-                    'mhs' => 'Nama Mahasiswa: '.$id_mhs->nama_mahasiswa
-                ];
+                // /* Notifikasi email */
+                // $subjek = 'Pemilihan Dosen Pembimbing Bagi Anda';
+                // $details = [
+                //     'title' => 'Penetapan Dosen Pembimbing',
+                //     'body' => 'Susunan dosen pembimbing untuk Anda: ',
+                //     'dospem' => 'Nama Dosen Pembimbing: '.$id_dsn->nama_dosen,
+                //     'mhs' => 'Nama Mahasiswa: '.$id_mhs->nama_mahasiswa
+                // ];
 
-                Mail::to($id_dsn->email)->send(new \App\Mail\MailController($details, $subjek));
-                Mail::to($id_mhs->email)->send(new \App\Mail\MailController($details, $subjek));
+                // Mail::to($id_dsn->email)->send(new \App\Mail\MailController($details, $subjek));
+                // Mail::to($id_mhs->email)->send(new \App\Mail\MailController($details, $subjek));
 
             }
 
@@ -233,20 +233,20 @@ class DosPemController extends Controller
             $data->mahasiswa_id = $request->mhs_edit;
             $data->save();
 
-            /* Notifikasi email */
-            $id_dsn = DosenModel::find($request->dosen_edit);
-            $id_mhs = MahasiswaModel::find($request->mhs_edit);
+            // /* Notifikasi email */
+            // $id_dsn = DosenModel::find($request->dosen_edit);
+            // $id_mhs = MahasiswaModel::find($request->mhs_edit);
 
-            $subjek = 'Pembaruhan Dosen Pembimbing Bagi Anda';
-            $details = [
-                'title' => 'Pembaruhan Dosen Pembimbing',
-                'body' => 'Susunan dosen pembimbing untuk Anda: ',
-                'dospem' => 'Nama Dosen Pembimbing: '.$id_dsn->nama_dosen,
-                'mhs' => 'Nama Mahasiswa: '.$id_mhs->nama_mahasiswa
-            ];
+            // $subjek = 'Pembaruhan Dosen Pembimbing Bagi Anda';
+            // $details = [
+            //     'title' => 'Pembaruhan Dosen Pembimbing',
+            //     'body' => 'Susunan dosen pembimbing untuk Anda: ',
+            //     'dospem' => 'Nama Dosen Pembimbing: '.$id_dsn->nama_dosen,
+            //     'mhs' => 'Nama Mahasiswa: '.$id_mhs->nama_mahasiswa
+            // ];
 
-            Mail::to($id_dsn->email)->send(new \App\Mail\MailController($details, $subjek));
-            Mail::to($id_mhs->email)->send(new \App\Mail\MailController($details, $subjek));
+            // Mail::to($id_dsn->email)->send(new \App\Mail\MailController($details, $subjek));
+            // Mail::to($id_mhs->email)->send(new \App\Mail\MailController($details, $subjek));
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
@@ -280,7 +280,7 @@ class DosPemController extends Controller
 
         /* Ambil data tabel judul */
         if ($request->ajax()){
-            $data = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->get()->load('mahasiswa','anggota');
+            $data = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->where('status', 'diproses')->get()->load('mahasiswa','anggota');
             return DataTables::of($data)->toJson();
         }
 

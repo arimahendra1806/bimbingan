@@ -10,6 +10,7 @@ use App\Models\BimbinganModel;
 use App\Models\ProgresBimbinganModel;
 use App\Models\KomentarModel;
 use App\Models\TahunAjaran;
+use Carbon\Carbon;
 use App\Mail\MailController;
 use DataTables, Auth, Validator;
 
@@ -45,12 +46,13 @@ class DsnKonsulJudulController extends Controller
         $data = BimbinganModel::with('pembimbing.mahasiswa.judul')->where('kode_bimbingan', $kode)
                 ->where('jenis_bimbingan', 'Judul')
                 ->first();
+        $tgl = Carbon::parse($data->tanggal_konsultasi)->isoFormat('D MMMM Y');
 
         /* Ambil data array */
         $arr_in = [
             'kd' => $data->kode_bimbingan,
             'nama' => $data->pembimbing->mahasiswa->nama_mahasiswa,
-            'tanggal' => $data->tanggal_konsultasi,
+            'tanggal' => $tgl,
             'judul' => $data->pembimbing->mahasiswa->judul->judul,
             'file' => $data->file_upload,
             'status' => $data->status_konsultasi,
@@ -72,7 +74,13 @@ class DsnKonsulJudulController extends Controller
         if($request->ajax()){
             $data = KomentarModel::latest()->where('bimbingan_kode', $kode)
                 ->where('bimbingan_jenis', 'Judul')->get();
-            return DataTables::of($data)->toJson();
+            return DataTables::of($data)
+                ->addColumn('waktu', function($model){
+                    $waktu = Carbon::parse($model->waktu_komentar)->isoFormat('(D MMMM Y - hh:mm:ss)');
+                    return $waktu;
+                })
+                ->rawColumns(['waktu'])
+                ->toJson();
         }
     }
 
@@ -128,14 +136,14 @@ class DsnKonsulJudulController extends Controller
             $data->status_pesan = "3";
             $data->save();
 
-            /* Notifikasi email */
-            $subjek = 'Tanggapan Konsultasi Judul Terbaru';
-            $details = [
-                'title' => 'Tanggapan Untuk Konsultasi Judul Anda',
-                'body' => 'Anda menerima tanggapan untuk konsultasi judul dari Dosen Pembimbing'
-            ];
+            // /* Notifikasi email */
+            // $subjek = 'Tanggapan Konsultasi Judul Terbaru';
+            // $details = [
+            //     'title' => 'Tanggapan Untuk Konsultasi Judul Anda',
+            //     'body' => 'Anda menerima tanggapan untuk konsultasi judul dari Dosen Pembimbing'
+            // ];
 
-            Mail::to($data->pembimbing->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
+            // Mail::to($data->pembimbing->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Perbarui Peninjauan", 'data' => $data]);
@@ -166,31 +174,30 @@ class DsnKonsulJudulController extends Controller
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
             /* Ambil data mahasiswa login */
-            $user = User::with(['dosen.dospem.bimbingan' => function($q){
-                $q->where('jenis_bimbingan', 'Judul');
-            }],'dosen.dospem.mahasiswa')->find(Auth::user()->id);
+            $user = User::with('dosen.dospem.mahasiswa')->find(Auth::user()->id);
+            $bimbingan = BimbinganModel::where('kode_bimbingan', $request->kb)->first();
 
             /* Ambil data data tahun_ajaran */
-            if($user->dosen->dospem->bimbingan->status_konsultasi == "Disetujui"){
+            if($bimbingan->status_konsultasi == "Disetujui"){
                 $data = "Diskusi ditutup, silahkan lanjut untuk peninjauan berikutnya!";
                 return response()->json(['status' => 1, 'data' => $data]);
             } else {
                 /* Insert ke tabel komentar */
                 $data = new KomentarModel;
-                $data->bimbingan_kode = $user->dosen->dospem->bimbingan->kode_bimbingan;
-                $data->bimbingan_jenis = $user->dosen->dospem->bimbingan->jenis_bimbingan;
+                $data->bimbingan_kode = $request->kb;
+                $data->bimbingan_jenis = "Judul";
                 $data->nama = $user->dosen->nama_dosen;
                 $data->komentar = $request->komentar;
                 $data->save();
 
-                /* Notifikasi email */
-                $subjek = 'Tanggapan Komentar Konsultasi Judul Terbaru';
-                $details = [
-                    'title' => 'Tanggapan Komentar Untuk Konsultasi Judul Anda',
-                    'body' => 'Anda menerima tanggapan komentar untuk konsultasi judul dari Dosen Pembimbing'
-                ];
+                // /* Notifikasi email */
+                // $subjek = 'Tanggapan Komentar Konsultasi Judul Terbaru';
+                // $details = [
+                //     'title' => 'Tanggapan Komentar Untuk Konsultasi Judul Anda',
+                //     'body' => 'Anda menerima tanggapan komentar untuk konsultasi judul dari Dosen Pembimbing'
+                // ];
 
-                Mail::to($user->dosen->dospem->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
+                // Mail::to($user->dosen->dospem->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);

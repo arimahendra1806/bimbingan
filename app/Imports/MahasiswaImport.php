@@ -29,23 +29,25 @@ class MahasiswaImport implements WithStartRow, ToCollection
 
         foreach ($rows as $row)
         {
-            $data = User::create([
-                'username' => $row[1],
-                'tahun_ajaran_id' => $tahun->id,
-                'name' => $row[2],
-                'role' => "mahasiswa",
-                'password' => Hash::make($row[1]),
-            ]);
+            if($row->filter()->isNotEmpty()){
+                $data = User::create([
+                    'username' => $row[1],
+                    'tahun_ajaran_id' => $tahun->id,
+                    'name' => $row[2],
+                    'role' => "mahasiswa",
+                    'password' => Hash::make($row[1]),
+                ]);
 
-            MahasiswaModel::create([
-                'users_id' => $data->id,
-                'nim' => $row[1],
-                'tahun_ajaran_id' => $tahun->id,
-                'nama_mahasiswa' => $row[2],
-                'email' => $row[3],
-                'no_telepon' => $row[4],
-                'alamat' => $row[5],
-            ]);
+                MahasiswaModel::create([
+                    'users_id' => $data->id,
+                    'nim' => $row[1],
+                    'tahun_ajaran_id' => $tahun->id,
+                    'nama_mahasiswa' => $row[2],
+                    'email' => $row[3],
+                    'no_telepon' => $row[4],
+                    'alamat' => $row[5],
+                ]);
+            }
         }
     }
 

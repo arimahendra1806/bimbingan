@@ -17,23 +17,23 @@ use DataTables, Validator, Auth;
 class PeringatanController extends Controller
 {
     private function addNotif($array, $data_id){
-        $email = InformasiModel::find($data_id);
+        // $email = InformasiModel::find($data_id);
 
         /* Perulangan insert data notifikasi sesuai parameter && notifikasi email */
         foreach ($array as $key => $value) {
-            $penerima = User::with('dosen','mahasiswa')->find($value);
+            // $penerima = User::with('dosen','mahasiswa')->find($value);
 
-            $subjek = $email->subyek;
-            $details = [
-                'title' => $email->jenis . " - " . $email->judul,
-                'body' => $email->pesan
-            ];
+            // $subjek = $email->subyek;
+            // $details = [
+            //     'title' => $email->jenis . " - " . $email->judul,
+            //     'body' => $email->pesan
+            // ];
 
-            if ($penerima->dosen){
-                Mail::to($penerima->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
-            } elseif ($penerima->mahasiswa){
-                Mail::to($penerima->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
-            }
+            // if ($penerima->dosen){
+            //     Mail::to($penerima->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
+            // } elseif ($penerima->mahasiswa){
+            //     Mail::to($penerima->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
+            // }
 
             $data2 = new NotifikasiModel;
             $data2->informasi_id = $data_id;
@@ -127,7 +127,7 @@ class PeringatanController extends Controller
         $user_id = Auth::user()->id;
 
         /* Ambil data tahun_ajaran */
-        $tahun_id = TahunAjaran::all()->sortByDesc('tahun_ajaran');
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Ambil data tabel tahun ajaran */
         if ($request->ajax()){
@@ -199,11 +199,12 @@ class PeringatanController extends Controller
         } else {
             /* Ambil data user login */
             $user_id = Auth::user()->id;
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
             /* Insert data informasi */
             $data = new InformasiModel;
             $data->users_id = $user_id;
-            $data->tahun_ajaran_id = $request->tahun_ajaran_add;
+            $data->tahun_ajaran_id = $tahun_id->id;
             $data->kepada_role = $request->kepada_role_add;
             $data->kepada = $request->kepada_add;
             $data->judul = $request->judul_add;
@@ -282,7 +283,6 @@ class PeringatanController extends Controller
 
             /* Update peringatan */
             $data->users_id = $user_id;
-            $data->tahun_ajaran_id = $request->tahun_ajaran_edit;
             $data->kepada_role = $request->kepada_role_edit;
             $data->kepada = $request->kepada_edit;
             $data->judul = $request->judul_edit;

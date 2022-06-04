@@ -51,7 +51,13 @@ class PartialController extends Controller
             $data = RiwayatBimbinganModel::where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
                 ->where('bimbingan_jenis', $jenis)
                 ->get();
-            return DataTables::of($data)->addIndexColumn()->toJson();
+            return DataTables::of($data)->addIndexColumn()
+                ->addColumn('waktu', function($model){
+                    $waktu = \Carbon\Carbon::parse($model->waktu_bimbingan)->isoFormat('D MMMM Y / hh:mm:ss');
+                    return $waktu;
+                })
+                ->rawColumns(['waktu'])
+                ->toJson();
         }
 
         /* return json */

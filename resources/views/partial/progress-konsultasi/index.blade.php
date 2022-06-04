@@ -220,7 +220,7 @@
     <style>
         .cards tbody tr {
             float: left;
-            width: 23.5rem;
+            width: 30rem;
             margin: 0.5rem;
             border: 0.0625rem solid rgba(0, 0, 0, .125);
             border-radius: .25rem;
@@ -328,7 +328,7 @@
                         rows: "%d kolom terpilih",
                     }
                 },
-                lengthMenu: [9, 30, 60, 90, 120],
+                lengthMenu: [10, 30, 60, 90, 120],
             });
 
             /* select cards view */

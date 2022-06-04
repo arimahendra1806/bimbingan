@@ -25,14 +25,9 @@
                                 <span class="text-danger error-text dosen_add_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="tahun_ajaran_id_add" class="col-form-label">ID Tahun Ajaran:</label>
-                                <select class="js-example-responsive form-control" style="width: 100%"
-                                    id="tahun_ajaran_id_add" name="tahun_ajaran_id_add">
-                                    <option value=""></option>
-                                    @foreach ($tahun_id as $tahun)
-                                        <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
-                                    @endforeach
-                                </select>
+                                <label for="tahun_ajaran_id_add" class="col-form-label">Tahun Ajaran:</label>
+                                <input type="text" class="form-control" id="tahun_ajaran_id_add"
+                                    name="tahun_ajaran_id_add" value="{{ $tahun_aktif->tahun_ajaran }}" readonly>
                                 <span class="text-danger error-text tahun_ajaran_id_add_error"></span>
                             </div>
                         </div>
@@ -93,7 +88,7 @@
                                 <span class="text-danger error-text dosen_edit_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="tahun_ajaran_id_edit" class="col-form-label">ID Tahun Ajaran</label>
+                                <label for="tahun_ajaran_id_edit" class="col-form-label">Tahun Ajaran</label>
                                 <select class="js-example-responsive form-control" style="width: 100%"
                                     id="tahun_ajaran_id_edit" name="tahun_ajaran_id_edit">
                                     <option value=""></option>
@@ -365,7 +360,6 @@
                 $('#LinkFormAdd').trigger('reset');
                 $(document).find('span.error-text').text('');
                 $('#LinkModalAdd').modal('show');
-                $('#tahun_ajaran_id_add').val('').trigger('change');
                 $('#dosen_add').val('').trigger('change');
             });
 
@@ -614,13 +608,6 @@
             /* Import Info Gambar */
             const lightbox = GLightbox({
                 touchNavigation: true,
-            });
-
-            /* Select2 Tahun Ajaran Add */
-            $("#tahun_ajaran_id_add").select2({
-                dropdownParent: $('#LinkModalAdd'),
-                placeholder: "Cari berdasarkan tahun ...",
-                allowClear: true
             });
 
             /* Select2 NIDN Add */

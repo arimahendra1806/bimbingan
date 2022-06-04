@@ -59,8 +59,8 @@
                     name: 'bimbingan_jenis'
                 },
                 {
-                    data: 'waktu_bimbingan',
-                    name: 'waktu_bimbingan'
+                    data: 'waktu',
+                    name: 'waktu'
                 },
             ],
             columnDefs: [{

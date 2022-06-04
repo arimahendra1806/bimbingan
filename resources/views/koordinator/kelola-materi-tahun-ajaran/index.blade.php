@@ -13,14 +13,9 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-1">
-                            <label for="tahun_ajaran_id_add" class="col-form-label">ID Tahun Ajaran:</label>
-                            <select class="js-example-responsive form-control" style="width: 100%" id="tahun_ajaran_id_add"
-                                name="tahun_ajaran_id_add">
-                                <option value=""></option>
-                                @foreach ($tahun_id as $tahun)
-                                    <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
-                                @endforeach
-                            </select>
+                            <label for="tahun_ajaran_id_add" class="col-form-label">Tahun Ajaran:</label>
+                            <input type="text" class="form-control" id="tahun_ajaran_id_add" name="tahun_ajaran_id_add"
+                                value="{{ $tahun_id->tahun_ajaran }}" readonly>
                             <span class="text-danger error-text tahun_ajaran_id_add_error"></span>
                         </div>
                         <div class="mb-1">
@@ -58,14 +53,9 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-1">
-                            <label for="tahun_ajaran_id_edit" class="col-form-label">ID Tahun Ajaran:</label>
-                            <select class="js-example-responsive form-control" style="width: 100%" id="tahun_ajaran_id_edit"
-                                name="tahun_ajaran_id_edit">
-                                <option value=""></option>
-                                @foreach ($tahun_id as $tahun)
-                                    <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
-                                @endforeach
-                            </select>
+                            <label for="tahun_ajaran_id_edit" class="col-form-label">Tahun Ajaran:</label>
+                            <input type="text" class="form-control" id="tahun_ajaran_id_edit" name="tahun_ajaran_id_edit"
+                                readonly>
                             <span class="text-danger error-text tahun_ajaran_id_edit_error"></span>
                         </div>
                         <div class="mb-1">
@@ -253,7 +243,6 @@
                 $('#MateriTahunanFormAdd').trigger('reset');
                 $(document).find('span.error-text').text('');
                 $('#MateriTahunanModalAdd').modal('show');
-                $('#tahun_ajaran_id_add').val("").trigger('change');
             });
 
             /* Button Edit */
@@ -264,7 +253,7 @@
                 $.get('kelola-materi-tahunan/' + this_id, function(data) {
                     $('#MateriTahunanModalEdit').modal('show');
                     $('#materi_id_edit').val(data.id);
-                    $('#tahun_ajaran_id_edit').val(data.tahun_ajaran_id).trigger('change');
+                    $('#tahun_ajaran_id_edit').val(data.tahun.tahun_ajaran).trigger('change');
                     $('#fileShow').val(data.file_materi);
                     $('#keterangan_edit').val(data.keterangan);
                 });
@@ -414,19 +403,6 @@
                 });
             });
 
-            /* Select2 Tahun Ajaran Add */
-            $("#tahun_ajaran_id_add").select2({
-                dropdownParent: $('#MateriTahunanModalAdd'),
-                placeholder: "Cari berdasarkan tahun ...",
-                allowClear: true
-            });
-
-            /* Select2 Tahun Ajaran Edit */
-            $("#tahun_ajaran_id_edit").select2({
-                dropdownParent: $('#MateriTahunanModalEdit'),
-                placeholder: "Cari berdasarkan tahun ...",
-                allowClear: true
-            });
         });
     </script>
     {{-- END DataTables --}}

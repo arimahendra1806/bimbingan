@@ -10,7 +10,7 @@
                     </span>
                     <span class="logo-lg">
                         <img src="{{ asset('vendor/minia') }}/assets/images/logo-sm.svg" alt="" height="24"> <span
-                            class="logo-txt">SITA</span>
+                            class="logo-txt" style="font-size: 10pt">SITAMI POLINEMA</span>
                     </span>
                 </a>
             </div>
@@ -20,10 +20,13 @@
             </button>
 
             <span style="margin-top: 20px">
-                <p style="font-size: 20px; font-family: Arial, Helvetica, sans-serif;"><b>SITA</b> - <b>S</b>istem
+                <p style="font-size: 20px; font-family: Arial, Helvetica, sans-serif;"><b>SITAMI</b> - <b>S</b>istem
                     <b>I</b>nformasi
                     <b>T</b>ugas
                     <b>A</b>khir
+                    <b>M</b>anajemen
+                    <b>I</b>nformatika
+                    {{-- POLINEMA PSDKU Kota Kediri --}}
                 </p>
             </span>
             <!-- App Search-->
@@ -227,7 +230,9 @@
                 <button type="button" class="btn header-item bg-soft-light border-start border-end"
                     id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="mdi mdi-account-circle mdi-24px align-middle me-1"></i>
-                    <span class="d-none d-xl-inline-block ms-1 fw-medium">{{ Auth::user()->name }}</span>
+                    <span class="d-none d-xl-inline-block ms-1 fw-medium">{{ Str::words(Auth::user()->name, 2, '') }}
+                        |
+                        {{ ucfirst(Auth::user()->role) }}</span>
                     <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">

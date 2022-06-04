@@ -219,11 +219,13 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/konsultasi-proposal', [KonsulProposalController::class, 'index'])->name('bimbingan-proposal.index');
         Route::post('/konsultasi-proposal/store', [KonsulProposalController::class, 'store'])->name('bimbingan-proposal.store');
         Route::post('/komen/proposal/store', [KonsulProposalController::class, 'storeKomen'])->name('bimbingan-proposal.storeKomen');
+        Route::get('/kartu-bimbingan-proposal', [KonsulProposalController::class, 'cetakPdf'])->name('kartu-proposal.cetak');
 
         /* Konsul Laporan */
         Route::get('/konsultasi-laporan', [KonsulLaporanController::class, 'index'])->name('bimbingan-laporan.index');
         Route::post('/konsultasi-laporan/store', [KonsulLaporanController::class, 'store'])->name('bimbingan-laporan.store');
         Route::post('/komen/laporan/store', [KonsulLaporanController::class, 'storeKomen'])->name('bimbingan-laporan.storeKomen');
+        Route::get('/kartu-bimbingan-laporan', [KonsulLaporanController::class, 'cetakPdf'])->name('kartu-laporan.cetak');
 
         /* Konsul Program */
         Route::get('/konsultasi-program', [KonsulProgramController::class, 'index'])->name('bimbingan-program.index');

@@ -23,7 +23,7 @@ class MahasiswaController extends Controller
     public function index(Request $request)
     {
         /* Ambil data tahun_ajaran */
-        $tahun_id = TahunAjaran::all()->sortByDesc('tahun_ajaran');
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Ambil data tabel mahasiswa */
         if ($request->ajax()){
@@ -93,10 +93,12 @@ class MahasiswaController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
             /* Insert ke tabel User */
             $pengguna = new User;
             $pengguna->username = $request->nim_add;
-            $pengguna->tahun_ajaran_id = $request->tahun_ajaran_id_add;
+            $pengguna->tahun_ajaran_id = $tahun_id->id;
             $pengguna->name = $request->nama_mhs_add;
             $pengguna->role = "mahasiswa";
             $pengguna->password = Hash::make($request->nim_add);
@@ -106,7 +108,7 @@ class MahasiswaController extends Controller
             $data = new MahasiswaModel;
             $data->users_id = $pengguna->id;
             $data->nim = $request->nim_add;
-            $data->tahun_ajaran_id = $request->tahun_ajaran_id_add;
+            $data->tahun_ajaran_id = $tahun_id->tahun_ajaran;
             $data->nama_mahasiswa = $request->nama_mhs_add;
             $data->alamat = $request->alamat_add;
             $data->email = $request->email_add;
@@ -210,7 +212,6 @@ class MahasiswaController extends Controller
 
             /* Update tabel mahasiswa */
             $data->nim = $request->nim_edit;
-            $data->tahun_ajaran_id = $request->tahun_ajaran_id_edit;
             $data->nama_mahasiswa = $request->nama_mhs_edit;
             $data->alamat = $request->alamat_edit;
             $data->email = $request->email_edit;

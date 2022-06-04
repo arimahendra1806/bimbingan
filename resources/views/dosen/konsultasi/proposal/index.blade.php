@@ -122,6 +122,7 @@
                                     <label for="komen" class="col-form-label text-secondary">Ketikan Komentar :</label>
                                     <form class="row gx-3 gy-2 align-items-center" id="KomenStore">
                                         @csrf
+                                        <input class="form-control me-auto" type="hidden" id="kb" name="kb">
                                         <div class="hstack gap-3">
                                             <input class="form-control me-auto" type="text"
                                                 placeholder="Ketik pesan anda disini.." id="komentar" name="komentar">
@@ -224,6 +225,7 @@
 
             /* Function detail daftar mhs */
             function detail(kode) {
+                $('#kb').val(kode);
                 $.get('peninjauan-konsultasi-proposal/' + kode, function(data) {
                     $('#kd').val(data.detail.kd);
                     $('#nama_show').val(data.detail.nama);
@@ -300,9 +302,7 @@
                         targets: [0],
                         data: function(data, type, dataToSet) {
                             return "<div class='text-wrap width-200'><b>" + data.nama +
-                                "</b>&nbsp;&nbsp;" + data.waktu_komentar
-                                .toLocaleString() +
-                                "<br>" + data.komentar + "</div>"
+                                "</b>&nbsp;&nbsp;" + data.waktu + "<br>" + data.komentar + "</div>"
                         }
                     }
                 ],

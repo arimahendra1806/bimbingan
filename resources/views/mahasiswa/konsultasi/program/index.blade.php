@@ -212,9 +212,7 @@
                         targets: [0],
                         data: function(data, type, dataToSet) {
                             return "<div class='text-wrap width-200'><b>" + data.nama +
-                                "</b>&nbsp;&nbsp;" + data.waktu_komentar
-                                .toLocaleString() +
-                                "<br>" + data.komentar + "</div>"
+                                "</b>&nbsp;&nbsp;" + data.waktu + "<br>" + data.komentar + "</div>"
                         }
                     }
                 ],
