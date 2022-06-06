@@ -41,29 +41,6 @@ class PartialController extends Controller
         return response()->json();
     }
 
-    public function RiwayatKonsul(Request $request, $jenis)
-    {
-        /* Ambil data mahasiswa login */
-        $user = User::with('mahasiswa.dospem.bimbingan')->find(Auth::user()->id);
-
-        /* Ambil data tabel riwayat bimbingan */
-        if ($request->ajax()){
-            $data = RiwayatBimbinganModel::where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
-                ->where('bimbingan_jenis', $jenis)
-                ->get();
-            return DataTables::of($data)->addIndexColumn()
-                ->addColumn('waktu', function($model){
-                    $waktu = \Carbon\Carbon::parse($model->waktu_bimbingan)->isoFormat('D MMMM Y / hh:mm:ss');
-                    return $waktu;
-                })
-                ->rawColumns(['waktu'])
-                ->toJson();
-        }
-
-        /* return json */
-        return response()->json();
-    }
-
     public function JadwalZoom(Request $request)
     {
         /* Ambil data tahun_ajaran */

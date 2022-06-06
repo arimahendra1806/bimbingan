@@ -107,27 +107,36 @@ class PengajuanJudulController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            /* Ambil data tahun_ajaran */
-            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+            /* Ambil data mahasiswa login */
+            $user = User::with('mahasiswa')->find(Auth::user()->id);
 
-            /* Insert ke tabel link_zoom */
-            $data = new PengajuanJudulModel;
-            $data->mahasiswa_id = $mhs_id;
-            $data->tahun_ajaran_id = $tahun_id->id;
-            $data->judul = $request->judul_add;
-            $data->studi_kasus = $request->studi_kasus_add;
-            $data->pengerjaan = $request->pengerjaan_add;
+            $get_kondisi = PengajuanJudulModel::where('mahasiswa_id', $user->mahasiswa->id)->first();
+            if ($get_kondisi) {
+                $data = "Data Anda sudah ada!";
+                return response()->json(['status' => 1, 'data' => $data]);
+            } else {
+                /* Ambil data tahun_ajaran */
+                $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-            /* Jika request sama dengan tidak ada, maka berikut */
-            if($request->id_anggota_add != "Tidak Ada"){
-                $data->id_anggota = $request->id_anggota_add;
+                /* Insert ke tabel link_zoom */
+                $data = new PengajuanJudulModel;
+                $data->mahasiswa_id = $mhs_id;
+                $data->tahun_ajaran_id = $tahun_id->id;
+                $data->judul = $request->judul_add;
+                $data->studi_kasus = $request->studi_kasus_add;
+                $data->pengerjaan = $request->pengerjaan_add;
+
+                /* Jika request sama dengan tidak ada, maka berikut */
+                if($request->id_anggota_add != "Tidak Ada"){
+                    $data->id_anggota = $request->id_anggota_add;
+                }
+
+                $data->status = "Diproses";
+                $data->save();
+
+                /* Return json berhasil */
+                return response()->json(['status' => 2, 'msg' => "Berhasil Menambahkan Data!"]);
             }
-
-            $data->status = "Diproses";
-            $data->save();
-
-            /* Return json berhasil */
-            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
         }
     }
 
@@ -210,21 +219,27 @@ class PengajuanJudulController extends Controller
         } else {
             /* Update tabel pengajuan judul */
             $data = PengajuanJudulModel::where('id', $pengajuan_judul)->first();
-            $data->judul = $request->judul_edit;
-            $data->studi_kasus = $request->studi_kasus_edit;
-            $data->pengerjaan = $request->pengerjaan_edit;
 
-            /* Jika request sama dengan tidak ada, maka berikut */
-            if($request->id_anggota_edit != "Tidak Ada"){
-                $data->id_anggota = $request->id_anggota_edit;
+            if ($data->status == "Selesai") {
+                $data = "Anda tidak dapat mengganti judul karena konsultasi sudah selesai.";
+                return response()->json(['status' => 1, 'data' => $data]);
             } else {
-                $data->id_anggota = 0;
+                $data->judul = $request->judul_edit;
+                $data->studi_kasus = $request->studi_kasus_edit;
+                $data->pengerjaan = $request->pengerjaan_edit;
+
+                /* Jika request sama dengan tidak ada, maka berikut */
+                if($request->id_anggota_edit != "Tidak Ada"){
+                    $data->id_anggota = $request->id_anggota_edit;
+                } else {
+                    $data->id_anggota = 0;
+                }
+
+                $data->save();
+
+                /* Return json berhasil */
+                return response()->json(['status' => 2, 'msg' => "Berhasil Memperbarui Data!"]);
             }
-
-            $data->save();
-
-            /* Return json berhasil */
-            return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
         }
     }
 

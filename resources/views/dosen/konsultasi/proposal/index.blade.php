@@ -15,6 +15,13 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-12">
+                                <label for="deskripsi" class="col-form-label">Deskripsi Konsultasi dari
+                                    Mahasiswa:</label>
+                                <textarea class="form-control" name="deskripsi" id="deskripsi" style="width: 100%" rows="3" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-md-12">
                                 <label for="progres" class="col-form-label">Status Peninjauan: <b
                                         class="error">*Pilih bab yang akan Anda setujui, sisanya akan
                                         berstatus revisi</b></label>
@@ -427,6 +434,7 @@
                 $.get('peninjauan-konsultasi-proposal/show/' + this_id, function(data) {
                     $('#ModalEdit').modal('show');
                     $('#kd').val(data.data.bimbingan_kode);
+                    $('#deskripsi').val(data.data.keterangan);
                     $('#progres').val(data.status).trigger('change');
                     $('#keterangan').val(data.data.tanggapan);
                     if (data.data.status == "Selesai") {

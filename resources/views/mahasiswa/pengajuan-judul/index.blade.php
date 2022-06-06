@@ -385,6 +385,14 @@
                             $.each(data.error, function(prefix, val) {
                                 $('span.' + prefix + '_error').text(val[0]);
                             });
+                        } else if (data.status == 1) {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Ajukan Sekarang";
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops, Muncul Kesalahan !!',
+                                text: data.data
+                            });
                         } else {
                             form.addSave.disabled = false;
                             form.addSave.value = "Ajukan Sekarang";
@@ -439,6 +447,14 @@
                             form.editSave.value = "Simpan";
                             $.each(data.error, function(prefix, val) {
                                 $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else if (data.status == 1) {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops, Muncul Kesalahan !!',
+                                text: data.data
                             });
                         } else {
                             form.editSave.disabled = false;

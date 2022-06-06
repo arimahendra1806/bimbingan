@@ -15,6 +15,13 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-12">
+                                <label for="deskripsi" class="col-form-label">Deskripsi Konsultasi dari
+                                    Mahasiswa:</label>
+                                <textarea class="form-control" name="deskripsi" id="deskripsi" style="width: 100%" rows="3" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-md-12">
                                 <label for="progres" class="col-form-label">Status Peninjauan: </label>
                                 <select class="js-example-responsive form-control" style="width: 100%" id="progres"
                                     name="progres">
@@ -407,6 +414,7 @@
                 $.get('peninjauan-konsultasi-judul/show/' + this_id, function(data) {
                     $('#ModalEdit').modal('show');
                     $('#kd').val(data.bimbingan_kode);
+                    $('#deskripsi').val(data.keterangan);
                     $('#progres').val(data.status).trigger('change');
                     $('#keterangan').val(data.tanggapan);
                 });

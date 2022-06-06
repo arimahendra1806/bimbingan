@@ -126,7 +126,7 @@ class DsnKonsulProgramController extends Controller
                         }
                     } else {
                         $btn = '<a class="btn btn-success" id="btnEdit" data-toggle="tooltip" title="Perbarui Data" data-id="'.$model->id.'"><i class="fas fa-edit"></i></a>
-                        <a class="btn btn-secondary" id="btnTinjau" data-toggle="tooltip" title="Pertinjau Video" data-id="'.$model->link_video.'"><i class="fab fa-youtube-square"></i></a>';
+                        <a class="btn btn-secondary" id="btnTinjau" data-toggle="tooltip" title="Pertinjau Video" data-id="'.$model->bimbingan->link_video.'"><i class="fab fa-youtube-square"></i></a>';
                         return $btn;
                     }
                 })

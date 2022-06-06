@@ -145,7 +145,7 @@ class KonsulJudulController extends Controller
             $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $bimbingan->kode_peninjauan)->first();
 
             if ($get_status && $get_status->status == "Selesai"){
-                $data = "Konsultasi judul sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
+                $data = "Konsultasi ditutup, dikarenakan konsultasi sudah selesai!";
                 return response()->json(['status' => 1, 'data' => $data]);
             } else {
                 /* Kondisi jika tanggapan */
@@ -305,7 +305,7 @@ class KonsulJudulController extends Controller
 
             /* Ambil data data tahun_ajaran */
             if ($get_status && $get_status->status == "Selesai"){
-                $data = "Diskusi ditutup, silahkan lanjut untuk konsultasi berikutnya!";
+                $data = "Diskusi ditutup, konsultasi sudah selesai!";
                 return response()->json(['status' => 1, 'data' => $data]);
             } else {
                 /* Insert ke tabel komentar */

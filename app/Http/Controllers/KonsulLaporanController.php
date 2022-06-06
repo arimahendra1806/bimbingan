@@ -134,63 +134,75 @@ class KonsulLaporanController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            /* Ambil data mahasiswa login */
-            $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
-                $q->where('jenis_bimbingan', 'Laporan');
-            }],'mahasiswa.dospem.dosen')->find(Auth::user()->id);
+            $get_kondisi = User::with(['mahasiswa.dospem.bimbingan' => function($q){
+                $q->where('jenis_bimbingan', 'Proposal');
+            }])->find(Auth::user()->id);
+            $kd_tinjau = $get_kondisi->mahasiswa->dospem->bimbingan;
 
-            $bimbingan = $user->mahasiswa->dospem->bimbingan;
-
-            /* Kondisi jika status selesai */
-            $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $bimbingan->kode_peninjauan)->first();
-
-            /* Kondisi jika status disetujui */
-            if ($get_status && $get_status->status == "Selesai"){
-                $data = "Konsultasi laporan sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
+            /* Kondisi jika konsultasi proposal belum selesai */
+            $cek_kondisi = RiwayatBimbinganModel::where('peninjauan_kode', $kd_tinjau->kode_peninjauan)->first();
+            if (!$cek_kondisi || $cek_kondisi->status != "Selesai") {
+                $data = "Konsultasi proposal Anda belum selesai, silahkan lanjut untuk konsultasi proposal hingga berstatus selesai revisi pengujian!";
                 return response()->json(['status' => 1, 'data' => $data]);
             } else {
-                /* Kondisi jika tanggapan */
-                if ($get_status && !$get_status->tanggapan) {
-                    $data = "Anda baru saja melakukan konsultasi, mohon tunggu tanggapan dari Dosen Pembimbing Anda!";
+                /* Ambil data mahasiswa login */
+                $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
+                    $q->where('jenis_bimbingan', 'Laporan');
+                }],'mahasiswa.dospem.dosen')->find(Auth::user()->id);
+
+                $bimbingan = $user->mahasiswa->dospem->bimbingan;
+
+                /* Kondisi jika status selesai */
+                $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $bimbingan->kode_peninjauan)->first();
+
+                /* Kondisi jika status disetujui */
+                if ($get_status && $get_status->status == "Selesai"){
+                    $data = "Konsultasi ditutup, dikarenakan konsultasi sudah selesai!";
                     return response()->json(['status' => 1, 'data' => $data]);
-                } elseif (!$get_status || $get_status->tanggapan) {
-                    /* Ambil data data tahun_ajaran */
-                    $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+                } else {
+                    /* Kondisi jika tanggapan */
+                    if ($get_status && !$get_status->tanggapan) {
+                        $data = "Anda baru saja melakukan konsultasi, mohon tunggu tanggapan dari Dosen Pembimbing Anda!";
+                        return response()->json(['status' => 1, 'data' => $data]);
+                    } elseif (!$get_status || $get_status->tanggapan) {
+                        /* Ambil data data tahun_ajaran */
+                        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-                    /* Simpan file bimbingan */
-                    $file = $request->file('file_upload_add');
-                    $filename = time()."_".$file->getClientOriginalName();
-                    $file->move(public_path('dokumen/konsultasi/laporan'), $filename);
-                    /* Hapus file bimbingan sebelumnya */
-                    File::delete('dokumen/konsultasi/laporan/'.$bimbingan->file_upload);
+                        /* Simpan file bimbingan */
+                        $file = $request->file('file_upload_add');
+                        $filename = time()."_".$file->getClientOriginalName();
+                        $file->move(public_path('dokumen/konsultasi/laporan'), $filename);
+                        /* Hapus file bimbingan sebelumnya */
+                        File::delete('dokumen/konsultasi/laporan/'.$bimbingan->file_upload);
 
-                     /* Update data table bimbingan */
-                     $bimbingan->kode_peninjauan = $bimbingan->kode_bimbingan.time();
-                     $bimbingan->tahun_ajaran_id = $tahun_id->id;
-                     $bimbingan->file_upload = $filename;
-                     $bimbingan->status_konsultasi = "Aktif";
-                     $bimbingan->status_pesan = "0";
-                     $bimbingan->save();
+                        /* Update data table bimbingan */
+                        $bimbingan->kode_peninjauan = $bimbingan->kode_bimbingan.time();
+                        $bimbingan->tahun_ajaran_id = $tahun_id->id;
+                        $bimbingan->file_upload = $filename;
+                        $bimbingan->status_konsultasi = "Aktif";
+                        $bimbingan->status_pesan = "0";
+                        $bimbingan->save();
 
-                     /* Insert ke table riwayat */
-                     $data2 = new RiwayatBimbinganModel;
-                     $data2->bimbingan_kode = $bimbingan->kode_bimbingan;
-                     $data2->peninjauan_kode = $bimbingan->kode_peninjauan;
-                     $data2->bimbingan_jenis = $bimbingan->jenis_bimbingan;
-                     $data2->keterangan = $request->keterangan_add;
-                     $data2->save();
+                        /* Insert ke table riwayat */
+                        $data2 = new RiwayatBimbinganModel;
+                        $data2->bimbingan_kode = $bimbingan->kode_bimbingan;
+                        $data2->peninjauan_kode = $bimbingan->kode_peninjauan;
+                        $data2->bimbingan_jenis = $bimbingan->jenis_bimbingan;
+                        $data2->keterangan = $request->keterangan_add;
+                        $data2->save();
 
-                    // /* Notifikasi email */
-                    // $subjek = 'Konsultasi Laporan Terbaru';
-                    // $details = [
-                    //     'title' => 'Konsultasi Laporan dari Mahasiswa Bimbingan Anda',
-                    //     'body' => 'Anda menerima konsultasi laporan terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
-                    // ];
+                        // /* Notifikasi email */
+                        // $subjek = 'Konsultasi Laporan Terbaru';
+                        // $details = [
+                        //     'title' => 'Konsultasi Laporan dari Mahasiswa Bimbingan Anda',
+                        //     'body' => 'Anda menerima konsultasi laporan terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
+                        // ];
 
-                    // Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
+                        // Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
 
-                    /* Return json berhasil */
-                    return response()->json(['status' => 2, 'msg' => "Berhasil Melakukan Konsultasi!", 'data' => ['file_upload' => $bimbingan->file_upload, 'status_konsultasi' => $bimbingan->status_konsultasi]]);
+                        /* Return json berhasil */
+                        return response()->json(['status' => 2, 'msg' => "Berhasil Melakukan Konsultasi!", 'data' => ['file_upload' => $bimbingan->file_upload, 'status_konsultasi' => $bimbingan->status_konsultasi]]);
+                    }
                 }
             }
         }
@@ -306,7 +318,7 @@ class KonsulLaporanController extends Controller
 
             /* Ambil data data tahun_ajaran */
             if ($get_status && $get_status->status == "Selesai"){
-                $data = "Diskusi ditutup, silahkan lanjut untuk konsultasi berikutnya!";
+                $data = "Diskusi ditutup, konsultasi sudah selesai!";
                 return response()->json(['status' => 1, 'data' => $data]);
             } else {
                 /* Insert ke tabel komentar */

@@ -15,6 +15,13 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-12">
+                                <label for="deskripsi" class="col-form-label">Deskripsi Konsultasi dari
+                                    Mahasiswa:</label>
+                                <textarea class="form-control" name="deskripsi" id="deskripsi" style="width: 100%" rows="3" readonly></textarea>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-md-12">
                                 <label for="progres" class="col-form-label">Status Peninjauan: </label>
                                 <select class="js-example-responsive form-control" style="width: 100%" id="progres"
                                     name="progres">
@@ -219,7 +226,8 @@
         $(document).ready(function() {
             var selectRowId = "";
             var lightboxvideo = GLightbox({
-                selector: ".image-popup-video-map"
+                selector: "",
+                closeOnOutsideClick: false,
             });
 
             /* Ajax Token */
@@ -256,13 +264,14 @@
             }
 
             /* Function detail link video */
-            function linkVideo() {
-                var getLink = document.getElementById('linkShow').value;
+            function linkVideo(link) {
+                var getLink = link;
                 getLink = getLink.replace('https://', '//');
 
                 lightboxvideo.setElements([{
                     href: getLink
                 }]);
+                lightboxvideo.open();
             }
 
             /* Get data table daftar mhs */
@@ -424,6 +433,7 @@
                 $.get('peninjauan-konsultasi-program/show/' + this_id, function(data) {
                     $('#ModalEdit').modal('show');
                     $('#kd').val(data.bimbingan_kode);
+                    $('#deskripsi').val(data.keterangan);
                     $('#progres').val(data.status).trigger('change');
                     $('#keterangan').val(data.tanggapan);
                 });
@@ -446,10 +456,11 @@
                 });
             });
 
-            // /* Button Show File */
-            // $("#btnShow").click(function() {
-            //     linkVideo();
-            // });
+            /* Button Tinjau Video */
+            $('body').on('click', '#btnTinjau', function() {
+                var this_id = $(this).data('id');
+                linkVideo(this_id);
+            });
 
             /* Button Refresh Komen*/
             $("#btnRefresh").click(function() {
