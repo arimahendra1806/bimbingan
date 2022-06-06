@@ -1,20 +1,100 @@
 @extends('layouts.minia.header')
 
 @section('content')
-    {{-- Modal Show --}}
-    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- Modal Edit --}}
+    <div class="modal fade" id="ModalEdit" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">File Konsultasi</h5>
+                    <h5 class="modal-title">Perbarui Data Konsultasi Laporan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="FormEdit">
+                    <input type="hidden" name="kd" id="kd">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row mb-1">
+                            <div class="col-md-12">
+                                <label for="progres" class="col-form-label">Status Peninjauan: <b
+                                        class="error">*Pilih bab yang akan Anda setujui, sisanya akan
+                                        berstatus revisi</b></label>
+                                <select class="js-example-responsive form-control" style="width: 100%" id="progres"
+                                    name="progres[]" multiple="multiple">
+                                    <option value="Revisi">Revisi Semua</option>
+                                    <option value="laporan_bab1">Bab 1</option>
+                                    <option value="laporan_bab2">Bab 2</option>
+                                    <option value="laporan_bab3">Bab 3</option>
+                                    <option value="laporan_bab4">Bab 4</option>
+                                    <option value="laporan_bab5">Bab 5</option>
+                                    <option value="laporan_bab6">Bab 6</option>
+                                </select>
+                                <span class="text-danger error-text progres_error"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="keterangan" class="col-form-label">Tanggapan Peninjauan:</label><br>
+                                <textarea class="form-control" name="keterangan" id="keterangan" style="width: 100%" rows="3"></textarea>
+                                <span class="text-danger error-text keterangan_error"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="status_cek" name="status_cek">
+                                    <label class="form-check-label" for="status_cek">
+                                        Centang jika ingin konsultasi berstatus "selesai tahap revisi pengujian"
+                                    </label>
+                                </div>
+                            </div>
+                        </div><br>
+                        <p style="font-size: 9pt">
+                            note : <br>
+                            jika ingin konsultasi berstatus "siap untuk diuji", pastikan keenam bab sudah terpilih!<br>
+                            jika ingin konsultasi berstatus "selesai tahap revisi pengujian", pastikan keenam bab sudah
+                            terpilih dan pastikan opsi tercentang!
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <input type="submit" class="btn btn-primary" name="editSave" value="Simpan">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{-- END Modal Edit --}}
+
+    {{-- Modal Show --}}
+    <div class="modal fade" id="ModalShow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail Data Konsultasi Laporan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <a class="btn btn-info waves-effect waves-light w-100" type="button" id="fileDownload" download="">Unduh
-                        File</a>
-                    <div class="mb-1">
-                        <iframe style="width:100%; height:530px;" frameborder="0" id="fileView"></iframe>
+                    <div class="row mb-1">
+                        <div class="col-md-12">
+                            <label for="status_show" class="col-form-label">Status Peninjauan dari Anda:</label>
+                            <input type="text" class="form-control no-outline" id="status_show" name="status_show" readonly>
+                        </div>
                     </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="keterangan_show" class="col-form-label">Deskripsi Konsultasi dari Mahasiswa:</label>
+                            <textarea class="form-control" name="keterangan_show" id="keterangan_show" style="width: 100%" rows="3"
+                                readonly></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="tanggapan_show" class="col-form-label">Tanggapan Anda:</label>
+                            <textarea class="form-control" name="tanggapan_show" id="tanggapan_show" style="width: 100%" rows="3"
+                                readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -50,73 +130,30 @@
                     </div>
                     <div class="card-body">
                         <div class="text-center" id="pertama">
-                            <h5>Silahkan pilih nama <b>Mahasiswa</b> pada <b>daftar konsultasi Mahasiswa</b> untuk
+                            <h5>Silahkan pilih nama <b>Mahasiswa</b> pada <b>daftar konsultasi Laporan</b> untuk
                                 <b>melakukan peninjauan</b>!
                             </h5>
                         </div>
                         <div class="hide" id="kedua">
-                            <div class="row mb-1">
-                                <div class="col-md-6">
-                                    <label for="nama_show" class="col-form-label">Nama Mahasiswa: </label>
-                                    <input type="text" class="form-control no-outline" id="nama_show" name="nama_show"
-                                        readonly>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="tanggal_show" class="col-form-label">Tanggal Konsultasi: </label>
-                                    <input type="text" class="form-control no-outline" id="tanggal_show" name="tanggal_show"
-                                        readonly>
-                                </div>
-                            </div>
-                            <div class="row mb-1">
+                            <div class="row mb-3 mt-0">
                                 <div class="col-md-12">
                                     <label for="judul_show" class="col-form-label">Judul Tugas Akhir:</label><br>
                                     <textarea class="form-control" name="judul_show" id="judul_show" style="width: 100%" rows="2" readonly></textarea>
                                 </div>
                             </div>
-                            <div class="row mb-1">
-                                <div class="col-md-12">
-                                    <label for="fileShow" class="col-form-label">File Konsultasi:</label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
-                                            readonly>
-                                        <a href="javascript:void(0)" class="btn btn-info waves-effect waves-light"
-                                            type="button" data-toggle="tooltip" title="Pertinjau File" id="btnShow">
-                                            <i class="far fa-file-pdf"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <form id="Store">
-                                    @csrf
-                                    <input type="hidden" name="kd" id="kd">
-                                    <div class="col-md-12 mb-1">
-                                        <label for="progres" class="col-form-label">Status Konsultasi: <b
-                                                class="error">*Pilih bab yang akan Anda setujui, sisanya akan
-                                                berstatus revisi</b></label>
-                                        <select class="js-example-responsive form-control" style="width: 100%" id="progres"
-                                            name="progres[]" multiple="multiple">
-                                            <option value="Revisi">Revisi Semua</option>
-                                            <option value="laporan_bab1">Bab 1</option>
-                                            <option value="laporan_bab2">Bab 2</option>
-                                            <option value="laporan_bab3">Bab 3</option>
-                                            <option value="laporan_bab4">Bab 4</option>
-                                            <option value="laporan_bab5">Bab 5</option>
-                                            <option value="laporan_bab6">Bab 6</option>
-                                        </select>
-                                        <span class="text-danger error-text progres_error"></span>
-                                    </div>
-                                    <div class="col-md-12 mb-3">
-                                        <label for="keterangan" class="col-form-label">Keterangan:</label><br>
-                                        <textarea class="form-control" name="keterangan" id="keterangan" style="width: 100%" rows="3"></textarea>
-                                        <span class="text-danger error-text keterangan_error"></span>
-                                    </div>
-                                    <div class="col-md-12 d-flex justify-content-end">
-                                        <input type="submit" class="btn btn-primary" name="addSave"
-                                            value="Perbarui Peninjauan">
-                                    </div>
-                                </form>
-                            </div>
+                            <table class="table table-bordered dt-responsive nowrap w-100 mb-3" id="RiwayatTabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Waktu Konsultasi</th>
+                                        <th>Status Peninjauan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
                             <hr>
                             <h4 class="card-title text-secondary"><i class="far fa-comments"> Kolom Diskusi</i></h4>
                             <div class="row">
@@ -161,7 +198,7 @@
                             <i class="fas fa-comment-dots text-danger"></i> : Belum Dilihat |
                             <i class="fas fa-comment-dots text-warning"></i> : Sudah Dilihat |
                             <i class="fas fa-comment-dots text-success"></i> : Sudah Dibalas |
-                            <i class="fas fa-comment-dots text-primary"></i> : Telah Disetujui
+                            <i class="fas fa-comment-dots text-primary"></i> : Telah Selesai Pengujian
                         </p>
                         <div class="table-responsive mt-2">
                             <table class="table nowrap w-100 borderless" style="cursor:pointer" id="Tabels">
@@ -227,15 +264,9 @@
 
             /* Function detail daftar mhs */
             function detail(kode) {
-                $('#kb').val(kode);
                 $.get('peninjauan-konsultasi-laporan/' + kode, function(data) {
-                    $('#kd').val(data.detail.kd);
-                    $('#nama_show').val(data.detail.nama);
-                    $('#tanggal_show').val(data.detail.tanggal);
                     $('#judul_show').val(data.detail.judul);
-                    $('#fileShow').val(data.detail.file);
-                    $('#progres').val(data.status).trigger('change');
-                    $('#keterangan').val(data.detail.keterangan);
+                    $('#kb').val(data.detail.kb);
                 });
             }
 
@@ -253,7 +284,7 @@
                         } else if (data.status_pesan == 1) {
                             return '<i class="fas fa-comment-dots text-warning"> &nbsp;&nbsp;</i>' +
                                 data.pembimbing.mahasiswa.nama_mahasiswa;
-                        } else if (data.status_konsultasi == "Disetujui") {
+                        } else if (data.tinjau.status == "Selesai") {
                             return '<i class="fas fa-comment-dots text-primary"> &nbsp;&nbsp;</i>' +
                                 data.pembimbing.mahasiswa.nama_mahasiswa;
                         } else {
@@ -287,6 +318,47 @@
                 }
             });
 
+            /* Get data table */
+            var tableRiwayat = $('#RiwayatTabels').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: 'peninjauan-konsultasi-laporan/riwayat/0',
+                autoWidth: false,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'waktu',
+                        name: 'waktu'
+                    },
+                    {
+                        data: 'stats',
+                        name: 'status'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    }
+                ],
+                columnDefs: [{
+                        searchable: false,
+                        orderable: false,
+                        targets: [0, 3]
+                    },
+                    {
+                        width: '1%',
+                        targets: [0, 3]
+                    }
+                ],
+                order: [
+                    [1, 'desc']
+                ],
+                oLanguage: {
+                    sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+                }
+            });
+
             /* Get data table komen */
             var tableKomen = $('#KomenTabels').DataTable({
                 processing: true,
@@ -303,7 +375,7 @@
                     {
                         targets: [0],
                         data: function(data, type, dataToSet) {
-                            return "<div class='text-wrap width-200'><b>" + data.nama +
+                            return "<div class='text-wrap width-200'><b>" + data.nama.name +
                                 "</b>&nbsp;&nbsp;" + data.waktu + "<br>" + data.komentar + "</div>"
                         }
                     }
@@ -336,6 +408,7 @@
                     });
                     detail(this_id);
                     tableKomen.ajax.url("peninjauan-konsultasi-laporan/komen/" + this_id).load();
+                    tableRiwayat.ajax.url("peninjauan-konsultasi-laporan/riwayat/" + this_id).load();
                     kedua();
                 } else {
                     $("#" + selectRowId).removeClass('selected');
@@ -348,13 +421,37 @@
                 $('[data-toggle="tooltip"]').tooltip();
             });
 
-            /* Button Show File*/
-            $("#btnShow").click(function() {
-                $('#Modal').modal('show');
-                $('iframe').attr("src", "{{ asset('dokumen/konsultasi/laporan') }}" + "/" + document
-                    .getElementById('fileShow').value);
-                $('#fileDownload').attr("href", "{{ asset('dokumen/konsultasi/laporan') }}" + "/" +
-                    document.getElementById('fileShow').value);
+            /* Button Edit */
+            $('body').on('click', '#btnEdit', function() {
+                $(document).find('span.error-text').text('');
+                $('#FormEdit').trigger('reset');
+                var this_id = $(this).data('id');
+                $.get('peninjauan-konsultasi-laporan/show/' + this_id, function(data) {
+                    $('#ModalEdit').modal('show');
+                    $('#kd').val(data.data.bimbingan_kode);
+                    $('#progres').val(data.status).trigger('change');
+                    $('#keterangan').val(data.data.tanggapan);
+                    if (data.data.status == "Selesai") {
+                        $('#status_cek').prop('checked', true);
+                    }
+                });
+            });
+
+            /* Button Show */
+            $('body').on('click', '#btnShow', function() {
+                var this_id = $(this).data('id');
+                $.get('peninjauan-konsultasi-laporan/show/' + this_id, function(data) {
+                    $('#ModalShow').modal('show');
+                    if (data.data.status == "Disetujui") {
+                        $('#status_show').val("Disetujui untuk pengujian");
+                    } else if (data.data.status == "Selesai") {
+                        $('#status_show').val("Selesai revisi pengujian");
+                    } else {
+                        $('#status_show').val(data.data.status);
+                    }
+                    $('#keterangan_show').val(data.data.keterangan);
+                    $('#tanggapan_show').val(data.data.tanggapan);
+                });
             });
 
             /* Button Refresh Komen*/
@@ -363,10 +460,10 @@
             });
 
             /* Ajax Store Konsul */
-            $("#Store").submit(function(e) {
+            $("#FormEdit").submit(function(e) {
                 var form = this;
-                form.addSave.disabled = true;
-                form.addSave.value = "Sedang memproses...";
+                form.editSave.disabled = true;
+                form.editSave.value = "Sedang memproses...";
 
                 e.preventDefault();
 
@@ -384,17 +481,19 @@
                     },
                     success: function(data) {
                         if (data.status == 0) {
-                            form.addSave.disabled = false;
-                            form.addSave.value = "Perbarui Peninjauan";
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Perbarui Peninjauan";
                             $.each(data.error, function(prefix, val) {
                                 $('span.' + prefix + '_error').text(val[0]);
                             });
                         } else {
-                            form.addSave.disabled = false;
-                            form.addSave.value = "Perbarui Peninjauan";
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Perbarui Peninjauan";
+                            tableRiwayat.ajax.reload();
                             table.ajax.reload(function() {
                                 $("#" + selectRowId).addClass('selected');
                             })
+                            $("#ModalEdit").modal('hide');
                             Swal.fire({
                                 title: data.msg,
                                 icon: "success",
@@ -404,8 +503,8 @@
                         }
                     },
                     error: function(response) {
-                        form.addSave.disabled = false;
-                        form.addSave.value = "Perbarui Peninjauan";
+                        form.editSave.disabled = false;
+                        form.editSave.value = "Perbarui Peninjauan";
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops, Muncul Kesalahan !!'
@@ -469,7 +568,10 @@
 
             /* Select2 */
             $("#progres").select2({
+                dropdownParent: $('#ModalEdit'),
                 placeholder: "Cari berdasarkan status ...",
+                allowClear: true,
+                minimumResultsForSearch: -1
             });
         });
     </script>

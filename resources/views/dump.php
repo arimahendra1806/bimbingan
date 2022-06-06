@@ -201,3 +201,226 @@ $guru->restore(); -->
         }
 
         $data->kode_pembimbing = $kp; -->
+
+
+
+        <!-- Card Konsultasi -->
+        <!-- <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Konsultasi Judul</h4>
+                        <p class="card-title-desc">
+                            Lengkapi form berikut untuk melakukan <b>konsultasi</b>, silahkan upload file hasil pengerjaan
+                            kalian.
+                        </p>
+                    </div>
+                    <div class="card-body">
+                        <div class="container">
+                            <h4 class="card-title text-danger"><i class="fas fa-exclamation-triangle"></i> | Peringatan</h4>
+                            <p>
+                                Pastikan Anda <b>sudah membaca</b> materi dari <b>Dosen Pembimbing</b>, sebelum melakukan
+                                <b>konsultasi</b>.
+                            </p>
+                            <hr>
+                            <div class="row mb-1">
+                                <div class="col-md-4">
+                                    <label for="kode_bimbingan" class="col-form-label">Kode Bimbingan: <b
+                                            class="info">*Otomatis Terisi</b></label>
+                                    <input type="text" class="form-control" id="kode_bimbingan" name="kode_bimbingan"
+                                        value="{{ $detail['kode_bimbingan'] }}" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="tahun_ajaran_id" class="col-form-label">Tahun Ajaran: <b
+                                            class="info">*Otomatis Terisi</b></label>
+                                    <input type="text" class="form-control" id="tahun_ajaran_id" name="tahun_ajaran_id"
+                                        value="{{ $tahun_id->tahun_ajaran }}" readonly>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="status_konsultasi" class="col-form-label">Status: <b
+                                            class="info">*Otomatis Terisi</b></label>
+                                    <input type="text" class="form-control" id="status_konsultasi"
+                                        name="status_konsultasi" value="{{ $detail['status_konsultasi'] }}" readonly>
+                                </div>
+                            </div>
+                            <div class="row mb-1">
+                                <div class="col-md-12">
+                                    <label for="keterangan" class="col-form-label">Keterangan Konsultasi Sebelumnya: <b
+                                            class="info">*Otomatis Terisi</b></label><br>
+                                    <textarea class="form-control" name="keterangan" id="keterangan" style="width: 100%" rows="3" aria-valuetext=""
+                                        readonly>{{ $detail['keterangan'] }}</textarea>
+                                </div>
+                            </div>
+                            <form id="Store" enctype="multipart/form-data" files="true">
+                                @csrf
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="file_upload" class="col-form-label">File Upload: <b
+                                                class="error">*Pastikan format PDF | Max 2MB</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
+                                                value="{{ $detail['file'] }}" style="display: none" readonly>
+                                            <a href="javascript:void(0)" class="btn btn-info waves-effect waves-light"
+                                                type="button" data-toggle="tooltip" title="Pertinjau File" id="btnShow">
+                                                <i class="far fa-file-pdf"></i>
+                                            </a>
+                                        </div>
+                                        <input type="file" class="form-control" id="file_upload" name="file_upload">
+                                        <span class="text-danger error-text file_upload_error"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-12 d-flex justify-content-end">
+                                        <input type="submit" class="btn btn-primary" name="addSave"
+                                            value="Konsultasi Sekarang">
+                                    </div>
+                                </div>
+                            </form>
+                            <hr>
+                            <h4 class="card-title text-secondary"><i class="far fa-comments"> Kolom Diskusi</i></h4>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label for="komen" class="col-form-label text-secondary">Ketikan Komentar :</label>
+                                    <form class="row gx-3 gy-2 align-items-center" id="KomenStore">
+                                        @csrf
+                                        <div class="hstack gap-3">
+                                            <input class="form-control me-auto" type="text"
+                                                placeholder="Ketik pesan anda disini.." id="komentar" name="komentar">
+                                            <span class="text-danger error-text komentar_error"></span>
+                                            <input type="submit" class="btn btn-outline-primary" name="komenSave"
+                                                value="Kirim">
+                                            <div class="vr"></div>
+                                            <button type="reset" class="btn btn-outline-danger">Reset</button>
+                                            <a type="button" class="btn btn-outline-success" data-toggle="tooltip"
+                                                title="Refresh Komentar" id="btnRefresh"><i class="fas fa-sync-alt"></i></a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-md-12">
+                                    <table class="table dt-responsive nowrap w-100 borderless" id="KomenTabels">
+                                        <thead style="display: none;">
+                                            <tr>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+
+        <!-- {{-- <h4 class="card-title text-danger"><i class="fas fa-exclamation-triangle"></i> | Peringatan
+                        </h4>
+                        <p>
+                            Pastikan Anda <b>sudah membaca</b> materi dari <b>Dosen Pembimbing</b>, sebelum melakukan
+                            <b>konsultasi</b>.
+                        </p>
+                        <hr>
+                        <div class="row mb-1">
+                            <div class="col-md-4">
+                                <label for="kode_bimbingan" class="col-form-label">Kode Bimbingan: <b
+                                        class="info">*Otomatis Terisi</b></label>
+                                <input type="text" class="form-control" id="kode_bimbingan" name="kode_bimbingan"
+                                    value="{{ $detail['kode_bimbingan'] }}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="tahun_ajaran_id" class="col-form-label">Tahun Ajaran: <b
+                                        class="info">*Otomatis Terisi</b></label>
+                                <input type="text" class="form-control" id="tahun_ajaran_id" name="tahun_ajaran_id"
+                                    value="{{ $tahun_id->tahun_ajaran }}" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="status_konsultasi" class="col-form-label">Status: <b
+                                        class="info">*Otomatis Terisi</b></label>
+                                <input type="text" class="form-control" id="status_konsultasi" name="status_konsultasi"
+                                    value="{{ $detail['status_konsultasi'] }}" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-1">
+                            <div class="col-md-12">
+                                <label for="keterangan" class="col-form-label">Keterangan Konsultasi Sebelumnya: <b
+                                        class="info">*Otomatis Terisi</b></label><br>
+                                <textarea class="form-control" name="keterangan" id="keterangan" style="width: 100%" rows="3" aria-valuetext=""
+                                    readonly>{{ $detail['keterangan'] }}</textarea>
+                            </div>
+                        </div>
+                        <form id="Store">
+                            @csrf
+                            <div class="row mb-3">
+                                <div class="col-md-12">
+                                    <label for="link_upload" class="col-form-label">Link Video: <b
+                                            class="error">*Pastikan upload di Youtube</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control no-outline" id="linkShow" name="linkShow"
+                                            value="{{ $detail['link'] }}" style="display: none" readonly>
+                                        <a class="btn btn-info waves-effect waves-light image-popup-video-map"
+                                            type="button" data-toggle="tooltip" title="Pertinjau Video" id="btnShow">
+                                            <i class="fab fa-youtube-square"></i>
+                                        </a>
+                                    </div>
+                                    <input type="text" class="form-control" id="link_upload" name="link_upload">
+                                    <span class="text-danger error-text link_upload_error"></span>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-12 d-flex justify-content-end">
+                                    <input type="submit" class="btn btn-primary" name="addSave"
+                                        value="Simpan">
+                                </div>
+                            </div>
+                        </form> --}} -->
+
+
+        <!-- var lightboxvideo = GLightbox({
+            selector: ".image-popup-video-map"
+        }); -->
+
+
+        <!-- /* Function detail link video */
+            function linkVideo() {
+                // var getLink = document.getElementById('linkShow').value;
+                // getLink = getLink.replace('https://', '//');
+
+                // lightboxvideo.setElements([{
+                //     href: getLink
+                // }]);
+            } -->
+
+
+            <!-- <div class="row mb-1">
+                                <div class="col-md-12">
+                                    <label for="linkShow" class="col-form-label">Video Konsultasi Program:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control no-outline" id="linkShow" name="linkShow"
+                                            readonly>
+                                        <a class="btn btn-info waves-effect waves-light image-popup-video-map" type="button"
+                                            data-toggle="tooltip" title="Pertinjau Video" id="btnShow">
+                                            <i class="fab fa-youtube-square"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <form id="Store">
+                                    @csrf
+                                    <input type="hidden" name="kd" id="kd">
+                                    <div class="col-md-12 mb-3">
+                                        <label for="keterangan" class="col-form-label">Keterangan:</label><br>
+                                        <textarea class="form-control" name="keterangan" id="keterangan" style="width: 100%" rows="3"></textarea>
+                                        <span class="text-danger error-text keterangan_error"></span>
+                                    </div>
+                                    <div class="col-md-12 d-flex justify-content-end">
+                                        <input type="submit" class="btn btn-primary" name="addSave"
+                                            value="Perbarui Peninjauan">
+                                    </div>
+                                </form>
+                            </div> -->

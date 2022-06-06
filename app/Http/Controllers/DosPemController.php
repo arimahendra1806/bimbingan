@@ -129,7 +129,7 @@ class DosPemController extends Controller
                     $data2->pembimbing_kode = $data->kode_pembimbing;
                     $data2->tahun_ajaran_id = $tahun_id->id;
                     $data2->jenis_bimbingan = $jenis[$i];
-                    $data2->status_konsultasi = "Belum Konsultasi";
+                    $data2->status_konsultasi = "Belum Aktif";
                     $data2->status_pesan = "0";
                     $data2->save();
                 }

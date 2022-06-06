@@ -19,6 +19,7 @@ class LinkZoom extends Migration
             $table->integer('tahun_ajaran_id');
             $table->string('id_meeting')->nullable();
             $table->string('passcode')->nullable();
+            $table->integer('host_key')->nullable();
             $table->string('link_zoom')->nullable();
             $table->timestamps();
             $table->softDeletes();

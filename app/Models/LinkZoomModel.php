@@ -16,7 +16,7 @@ class LinkZoomModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "link_zoom";
-    protected $fillable = ["id","dosen_id","tahun_ajaran_id","id_meeting","passcode","link_zoom"];
+    protected $fillable = ["id","dosen_id","tahun_ajaran_id","id_meeting","passcode","host_key","link_zoom"];
 
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];

@@ -17,7 +17,7 @@ class InformasiModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "informasi";
-    protected $fillable = ["id", "users_id", "tahun_ajaran_id", "kepada_role", "kepada", "judul", "subyek", "pesan", "jenis"];
+    protected $fillable = ["id", "users_id", "tahun_ajaran_id", "kepada_role", "kepada", "judul", "subyek", "pesan", "file_upload", "jenis"];
 
     protected $cascadeDeletes = ['notifikasi'];
     protected $dates = ['deleted_at'];

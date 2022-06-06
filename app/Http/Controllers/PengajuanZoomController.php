@@ -17,23 +17,32 @@ class PengajuanZoomController extends Controller
         /* Ambil data mahasiswa login */
         $user = User::with('mahasiswa.dospem')->find(Auth::user()->id);
 
+        $status_dospem = $user->mahasiswa->dospem;
+
         /* Ambil data tabel pengajuan */
-        if ($request->ajax()){
-            $data = PengajuanZoomModel::where('pembimbing_kode', $user->mahasiswa->dospem->kode_pembimbing)
-                ->latest()->get()->load('tahun');
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function($model){
-                    $btn = '<a class="btn btn-info" id="btnShow" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>
-                    <a class="btn btn-success" id="btnEdit" data-toggle="tooltip" title="Perbarui Data" data-id="'.$model->id.'"><i class="fas fa-edit"></i></a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->toJson();
+        if ($status_dospem) {
+            if ($request->ajax()){
+                $data = PengajuanZoomModel::where('pembimbing_kode', $user->mahasiswa->dospem->kode_pembimbing)
+                    ->latest()->get()->load('tahun');
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($model){
+                        $btn = '<a class="btn btn-info" id="btnShow" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>
+                        <a class="btn btn-success" id="btnEdit" data-toggle="tooltip" title="Perbarui Data" data-id="'.$model->id.'"><i class="fas fa-edit"></i></a>';
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->toJson();
+            }
         }
 
-        /* Return menuju view */
-        return view('mahasiswa.pengajuan-zoom.index');
+        if ($status_dospem) {
+            /* Return menuju view */
+            return view('mahasiswa.pengajuan-zoom.index');
+        } else {
+            /* Return menuju view */
+            return view('mahasiswa.pengajuan-zoom.alihkan');
+        }
     }
 
     public function store(Request $request)
@@ -160,26 +169,35 @@ class PengajuanZoomController extends Controller
             $q->where('tahun_ajaran_id', $tahun_id);
         }])->find(Auth::user()->id);
 
-        /* Ambil data array kode pembimbing */
-        $arr_in = $user->dosen->dospem->pluck('kode_pembimbing')->toArray();
+        $status_dospem = $user->dosen->dospem;
 
-        /* Ambil data tabel pengajuan */
-        if ($request->ajax()){
-            $data = PengajuanZoomModel::whereIn('pembimbing_kode', $arr_in)->latest()
-                ->get()->load('tahun','pembimbing.mahasiswa');
-            return DataTables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action', function($model){
-                    $btn = '<a class="btn btn-info" id="btnShow" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>
-                    <a class="btn btn-success" id="btnEdit" data-toggle="tooltip" title="Perbarui Data" data-id="'.$model->id.'"><i class="fas fa-edit"></i></a>';
-                    return $btn;
-                })
-                ->rawColumns(['action'])
-                ->toJson();
+        /* Ambil data array kode pembimbing */
+        if ($status_dospem){
+            $arr_in = $user->dosen->dospem->pluck('kode_pembimbing')->toArray();
+
+            /* Ambil data tabel pengajuan */
+            if ($request->ajax()){
+                $data = PengajuanZoomModel::whereIn('pembimbing_kode', $arr_in)->latest()
+                    ->get()->load('tahun','pembimbing.mahasiswa');
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('action', function($model){
+                        $btn = '<a class="btn btn-info" id="btnShow" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>
+                        <a class="btn btn-success" id="btnEdit" data-toggle="tooltip" title="Perbarui Data" data-id="'.$model->id.'"><i class="fas fa-edit"></i></a>';
+                        return $btn;
+                    })
+                    ->rawColumns(['action'])
+                    ->toJson();
+            }
         }
 
-        /* Return menuju view */
-        return view('dosen.peninjauan-jadwal-zoom.index');
+        if ($status_dospem){
+            /* Return menuju view */
+            return view('dosen.peninjauan-jadwal-zoom.index');
+        } else {
+            /* Return menuju view */
+            return view('dosen.peninjauan-jadwal-zoom.dialihkan');
+        }
     }
 
     public function showDsn($peninjauan_zoom)

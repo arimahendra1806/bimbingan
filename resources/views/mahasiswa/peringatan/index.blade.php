@@ -33,11 +33,16 @@
                                 readonly></textarea>
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12">
                             <label for="pesan_detail" class="col-form-label">Isi Peringatan:</label>
                             <textarea class="form-control" name="pesan_detail" id="pesan_detail" style="width: 100%" rows="3"></textarea>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="file_upload" class="col-form-label">Lampiran File:</label>
+                        <input type="text" class="form-control no-outline" id="file_upload" name="file_upload" readonly>
+                        <iframe style="width:100%; height:400px;" id="iprame" frameborder="0"></iframe>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -198,6 +203,17 @@
                     $('#judul_detail').val(data.informasi.judul);
                     $('#subyek_detail').val(data.informasi.subyek);
                     $('#pesan_detail').val(data.informasi.pesan);
+
+                    if (data.informasi.file_upload) {
+                        $('#file_upload').val(data.informasi.file_upload);
+                        $('iframe').attr("src", "{{ asset('dokumen/peringatan') }}" + "/" +
+                            data.informasi.file_upload);
+                        $('#iprame').show();
+                    } else {
+                        $('#file_upload').val('Belum Upload');
+                        $('#iprame').hide();
+                    }
+
                 }).then(function() {
                     loaderNotif();
                     roleTable.ajax.reload();

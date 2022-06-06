@@ -69,6 +69,7 @@ class LinkZoomController extends Controller
             'tahun_ajaran_id_add' => ['required'],
             'id_meeting_add' => ['required'],
             'passcode_add' => ['required'],
+            'host_key_add' => ['required'],
             'link_add' => ['required']
         ];
 
@@ -78,9 +79,10 @@ class LinkZoomController extends Controller
         /* Nama kolom validasi */
         $attributes = [
             'dosen_add' => 'Nama Dosen',
-            'tahun_ajaran_id_add' => 'ID Tahun Ajaran',
+            'tahun_ajaran_id_add' => 'Tahun Ajaran',
             'id_meeting_add' => 'ID Meeting',
             'passcode_add' => 'Passcode',
+            'host_key_add' => 'Host Key',
             'link_add' => 'Link Zoom'
         ];
 
@@ -100,6 +102,7 @@ class LinkZoomController extends Controller
             $data->tahun_ajaran_id = $tahun_id->id;
             $data->id_meeting = $request->id_meeting_add;
             $data->passcode = $request->passcode_add;
+            $data->host_key = $request->host_key_add;
             $data->link_zoom = $request->link_add;
             $data->save();
 
@@ -162,6 +165,7 @@ class LinkZoomController extends Controller
                 'tahun_ajaran_id_edit' => ['required'],
                 'id_meeting_edit' => ['required'],
                 'passcode_edit' => ['required'],
+                'host_key_edit' => ['required'],
                 'link_edit' => ['required']
             ];
         }
@@ -172,9 +176,10 @@ class LinkZoomController extends Controller
         /* Nama kolom validasi */
         $attributes = [
             'dosen_edit' => 'Username',
-            'tahun_ajaran_id_edit' => 'ID Tahun Ajaran',
+            'tahun_ajaran_id_edit' => 'Tahun Ajaran',
             'id_meeting_edit' => 'ID Meeting',
             'passcode_edit' => 'Passcode',
+            'host_key_edit' => 'Host Key',
             'link_edit' => 'Link Zoom'
         ];
 
@@ -191,6 +196,7 @@ class LinkZoomController extends Controller
             $data->tahun_ajaran_id = $request->tahun_ajaran_id_edit;
             $data->id_meeting = $request->id_meeting_edit;
             $data->passcode = $request->passcode_edit;
+            $data->host_key = $request->host_key_edit;
             $data->link_zoom = $request->link_edit;
             $data->save();
 

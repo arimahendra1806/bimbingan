@@ -12,7 +12,7 @@ use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
 use App\Models\DosPemModel;
 use App\Mail\MailController;
-use DataTables, Validator, Auth;
+use DataTables, Validator, Auth, File;
 
 
 class PengumumanController extends Controller
@@ -165,16 +165,33 @@ class PengumumanController extends Controller
 
     public function store(Request $request)
     {
-        /* Peraturan validasi  */
-        $rules = [
-            'tahun_ajaran_add' => ['required'],
-            'jenis_add' => ['required'],
-            'kepada_role_add' => ['required'],
-            'kepada_add' => ['required'],
-            'judul_add' => ['required','max:20'],
-            'subyek_add' => ['required','max:30'],
-            'pesan_add' => ['required']
-        ];
+        /* Ambil data request file materi */
+        $init = $request->file_upload_add;
+
+        if(!$init){
+            /* Peraturan validasi  */
+            $rules = [
+                'tahun_ajaran_add' => ['required'],
+                'jenis_add' => ['required'],
+                'kepada_role_add' => ['required'],
+                'kepada_add' => ['required'],
+                'judul_add' => ['required','max:20'],
+                'subyek_add' => ['required','max:30'],
+                'pesan_add' => ['required']
+            ];
+        } else {
+            /* Peraturan validasi  */
+            $rules = [
+                'tahun_ajaran_add' => ['required'],
+                'jenis_add' => ['required'],
+                'kepada_role_add' => ['required'],
+                'kepada_add' => ['required'],
+                'judul_add' => ['required','max:20'],
+                'subyek_add' => ['required','max:30'],
+                'pesan_add' => ['required'],
+                'file_upload_add' => ['required','file','max:2048','mimes:pdf']
+            ];
+        }
 
         /* Pesan validasi */
         $messages = [];
@@ -187,7 +204,8 @@ class PengumumanController extends Controller
             'kepada_add' => 'Kepada',
             'judul_add' => 'Judul Pengumuman',
             'subyek_add' => 'Subyek Pengumuman',
-            'pesan_add' => 'Pesan Pengumuman'
+            'pesan_add' => 'Pesan Pengumuman',
+            'file_upload_add' => 'Lampiran File'
         ];
 
         /* Validasi input */
@@ -212,6 +230,16 @@ class PengumumanController extends Controller
             $data->subyek = $request->subyek_add;
             $data->pesan = $request->pesan_add;
             $data->jenis = "Pengumuman";
+
+            /* Jika request terdapat file */
+            if ($request->hasFile('file_upload_add')){
+                $file = $request->file('file_upload_add');
+                $filename = time()."_".$file->getClientOriginalName();
+                $file->move(public_path('dokumen/pengumuman'), $filename);
+
+                $data->file_upload = $filename;
+            }
+
             $data->save();
 
             /* Inisiasi variabel setelah insert */
@@ -239,16 +267,33 @@ class PengumumanController extends Controller
 
     public function update(Request $request, $pengumuman)
     {
-        /* Peraturan validasi  */
-        $rules = [
-            'tahun_ajaran_edit' => ['required'],
-            'jenis_edit' => ['required'],
-            'kepada_role_edit' => ['required'],
-            'kepada_edit' => ['required'],
-            'judul_edit' => ['required','max:20'],
-            'subyek_edit' => ['required','max:30'],
-            'pesan_edit' => ['required']
-        ];
+        /* Ambil data request file materi */
+        $init = $request->file_upload_edit;
+
+        if(!$init){
+            /* Peraturan validasi  */
+            $rules = [
+                'tahun_ajaran_edit' => ['required'],
+                'jenis_edit' => ['required'],
+                'kepada_role_edit' => ['required'],
+                'kepada_edit' => ['required'],
+                'judul_edit' => ['required','max:20'],
+                'subyek_edit' => ['required','max:30'],
+                'pesan_edit' => ['required']
+            ];
+        } else {
+            /* Peraturan validasi  */
+            $rules = [
+                'tahun_ajaran_edit' => ['required'],
+                'jenis_edit' => ['required'],
+                'kepada_role_edit' => ['required'],
+                'kepada_edit' => ['required'],
+                'judul_edit' => ['required','max:20'],
+                'subyek_edit' => ['required','max:30'],
+                'pesan_edit' => ['required'],
+                'file_upload_edit' => ['required','file','max:2048','mimes:pdf']
+            ];
+        }
 
         /* Pesan validasi */
         $messages = [];
@@ -261,7 +306,8 @@ class PengumumanController extends Controller
             'kepada_edit' => 'Kepada',
             'judul_edit' => 'Judul Pengumuman',
             'subyek_edit' => 'Subyek Pengumuman',
-            'pesan_edit' => 'Pesan Pengumuman'
+            'pesan_edit' => 'Pesan Pengumuman',
+            'file_upload_edit' => 'Lampiran File'
         ];
 
         /* Validasi input */
@@ -290,6 +336,20 @@ class PengumumanController extends Controller
             $data->subyek = $request->subyek_edit;
             $data->pesan = $request->pesan_edit;
             $data->jenis = "Pengumuman";
+
+            /* Jika request terdapat file */
+            if ($request->hasFile('file_upload_edit')){
+                $file = $request->file('file_upload_edit');
+                $filename = time()."_".$file->getClientOriginalName();
+                $file->move(public_path('dokumen/pengumuman'), $filename);
+
+                /* Hapus data file sebelumnya */
+                $path = public_path() . '/dokumen/pengumuman/' . $data->file_upload;
+                File::delete($path);
+
+                $data->file_upload = $filename;
+            }
+
             $data->save();
 
             /* Inisiasi variabel setelah insert */
@@ -308,6 +368,10 @@ class PengumumanController extends Controller
     {
         /* Hapus data informasi sesuai parameter */
         $data = InformasiModel::find($pengumuman);
+
+        /* Hapus data file public */
+        $path = public_path() . '/dokumen/pengumuman/' . $data->file_upload;
+        File::delete($path);
 
         /* Hapus data informasi */
         $data->forceDelete();

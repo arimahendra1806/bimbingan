@@ -13,14 +13,9 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-1">
-                            <label for="tahun_ajaran_id_add" class="col-form-label">ID Tahun Ajaran:</label>
-                            <select class="js-example-responsive form-control" style="width: 100%" id="tahun_ajaran_id_add"
-                                name="tahun_ajaran_id_add">
-                                <option value=""></option>
-                                @foreach ($tahun_id as $tahun)
-                                    <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
-                                @endforeach
-                            </select>
+                            <label for="tahun_ajaran_id_add" class="col-form-label">Tahun Ajaran:</label>
+                            <input type="text" class="form-control" id="tahun_ajaran_id_add" name="tahun_ajaran_id_add"
+                                value="{{ $th_aktif->tahun_ajaran }}" readonly>
                             <span class="text-danger error-text tahun_ajaran_id_add_error"></span>
                         </div>
                         <div class="mb-1">
@@ -30,7 +25,7 @@
                             <span class="text-danger error-text file_materi_add_error"></span>
                         </div>
                         <div class="mb-1">
-                            <label for="jenis_materi_add" class="col-form-label">Jenis Materi:</label><br>
+                            <label for="jenis_materi_add" class="col-form-label">Jenis Materi Konsultasi:</label><br>
                             <select class="js-example-responsive form-control" style="width: 100%" id="jenis_materi_add"
                                 name="jenis_materi_add">
                                 <option value=""></option>
@@ -70,7 +65,7 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-1">
-                            <label for="tahun_ajaran_id_edit" class="col-form-label">ID Tahun Ajaran:</label>
+                            <label for="tahun_ajaran_id_edit" class="col-form-label">Tahun Ajaran:</label>
                             <select class="js-example-responsive form-control" style="width: 100%" id="tahun_ajaran_id_edit"
                                 name="tahun_ajaran_id_edit">
                                 <option value=""></option>
@@ -88,7 +83,7 @@
                             <span class="text-danger error-text file_materi_edit_error"></span>
                         </div>
                         <div class="mb-1">
-                            <label for="jenis_materi_edit" class="col-form-label">Jenis Materi:</label><br>
+                            <label for="jenis_materi_edit" class="col-form-label">Jenis Materi Konsultasi:</label><br>
                             <select class="js-example-responsive form-control" style="width: 100%" id="jenis_materi_edit"
                                 name="jenis_materi_edit">
                                 <option value=""></option>
@@ -126,7 +121,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-1">
-                        <label for="tahun_ajaran_id_show" class="col-form-label">ID Tahun Ajaran:</label>
+                        <label for="tahun_ajaran_id_show" class="col-form-label">Tahun Ajaran:</label>
                         <input type="text" class="form-control no-outline" id="tahun_ajaran_id_show"
                             name="tahun_ajaran_id_show" readonly>
                     </div>
@@ -137,7 +132,7 @@
                         <iframe style="width:100%; height:400px;" frameborder="0"></iframe>
                     </div>
                     <div class="mb-1">
-                        <label for="jenis_materi_show" class="col-form-label">Jenis Materi:</label>
+                        <label for="jenis_materi_show" class="col-form-label">Jenis Materi Konsultasi:</label>
                         <input type="text" class="form-control no-outline" id="jenis_materi_show" name="jenis_materi_show"
                             readonly>
                     </div>
@@ -197,7 +192,7 @@
                                         <th>No</th>
                                         <th>Tahun Ajaran</th>
                                         <th>File Materi</th>
-                                        <th>Jenis Materi</th>
+                                        <th>Jenis Materi Konsultasi</th>
                                         <th>Keterangan</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -288,7 +283,6 @@
                 $('#MateriDosenFormAdd').trigger('reset');
                 $(document).find('span.error-text').text('');
                 $('#MateriDosenModalAdd').modal('show');
-                $('#tahun_ajaran_id_add').val("").trigger('change');
             });
 
             /* Button Edit */
@@ -452,18 +446,12 @@
                 });
             });
 
-            /* Select2 Tahun Ajaran Add */
-            $("#tahun_ajaran_id_add").select2({
-                dropdownParent: $('#MateriDosenModalAdd'),
-                placeholder: "Cari berdasarkan tahun ...",
-                allowClear: true
-            });
-
             /* Select2 Jenis Materi Add */
             $("#jenis_materi_add").select2({
                 dropdownParent: $('#MateriDosenModalAdd'),
                 placeholder: "Cari berdasarkan jenis ...",
-                allowClear: true
+                allowClear: true,
+                minimumResultsForSearch: -1
             });
 
             /* Select2 Tahun Ajaran Edit */
@@ -477,7 +465,8 @@
             $("#jenis_materi_edit").select2({
                 dropdownParent: $('#MateriDosenModalEdit'),
                 placeholder: "Cari berdasarkan jenis ...",
-                allowClear: true
+                allowClear: true,
+                minimumResultsForSearch: -1
             });
         });
     </script>

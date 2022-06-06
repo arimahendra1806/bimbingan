@@ -75,7 +75,7 @@
                             <label for="anggota_show" class="col-form-label" id="anggota_label_show">Detail Mahasiswa
                                 Yang Bergabung: <b class="info">*Daftar mahasiswa yang bergabung dengan jadwal
                                     zoom ini</b></label>
-                            <textarea class="form-control" name="anggota_show" id="anggota_show" style="width: 100%" rows="3" readonly></textarea>
+                            <textarea class="form-control" name="anggota_show" id="anggota_show" style="width: 100%" rows="4" readonly></textarea>
                         </div>
                     </div>
                 </div>
@@ -241,6 +241,8 @@
                         $('#anggota_show').show();
                         $('#zoom_show').val("ID Meeting:  " + data.data.pembimbing.zoom.id_meeting +
                             "\nPassode:  " + data.data.pembimbing.zoom.passcode +
+                            "\nHost Key:  " +
+                            data.data.pembimbing.zoom.host_key +
                             "\nLink Zoom:  " +
                             data.data.pembimbing.zoom.link_zoom);
                         $('#anggota_show').val(data.anggota.join(', '));

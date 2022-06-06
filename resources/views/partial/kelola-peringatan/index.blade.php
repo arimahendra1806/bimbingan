@@ -70,11 +70,20 @@
                                 <span class="text-danger error-text subyek_add_error"></span>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="pesan_add" class="col-form-label">Isi Peringatan:</label>
                                 <textarea class="form-control" name="pesan_add" id="pesan_add" style="width: 100%" rows="3"></textarea>
                                 <span class="text-danger error-text pesan_add_error"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="file_upload_add" class="col-form-label">Lampiran File: <b
+                                        class="info">*Kosongkan jika tidak upload</b> &nbsp;
+                                    <b class="error">*Pastikan File PDF | Max 2Mb</b></label>
+                                <input type="file" class="form-control" id="file_upload_add" name="file_upload_add">
+                                <span class="text-danger error-text file_upload_add_error"></span>
                             </div>
                         </div>
                     </div>
@@ -158,11 +167,21 @@
                                 <span class="text-danger error-text subyek_edit_error"></span>
                             </div>
                         </div>
-                        <div class="row mb-3">
+                        <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="pesan_edit" class="col-form-label">Isi Peringatan:</label>
                                 <textarea class="form-control" name="pesan_edit" id="pesan_edit" style="width: 100%" rows="3"></textarea>
                                 <span class="text-danger error-text pesan_edit_error"></span>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label for="file_upload_edit" class="col-form-label">Lampiran File: <b
+                                        class="info">*Kosongkan jika tidak update</b> &nbsp;
+                                    <b class="error">*Pastikan File PDF | Max 2Mb</b></label>
+                                <input type="text" class="form-control no-outline" id="fileShow" name="fileShow" readonly>
+                                <input type="file" class="form-control" id="file_upload_edit" name="file_upload_edit">
+                                <span class="text-danger error-text file_upload_edit_error"></span>
                             </div>
                         </div>
                     </div>
@@ -218,11 +237,17 @@
                             <textarea class="form-control" name="subyek_show" id="subyek_show" style="width: 100%" rows="2" readonly></textarea>
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12">
                             <label for="pesan_show" class="col-form-label">Isi Peringatan:</label>
                             <textarea class="form-control" name="pesan_show" id="pesan_show" style="width: 100%" rows="3"></textarea>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="file_upload_show" class="col-form-label">Lampiran File:</label>
+                        <input type="text" class="form-control no-outline" id="file_upload_show" name="file_upload_show"
+                            readonly>
+                        <iframe style="width:100%; height:400px;" id="iprame" frameborder="0"></iframe>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -266,11 +291,16 @@
                                 readonly></textarea>
                         </div>
                     </div>
-                    <div class="row mb-3">
+                    <div class="row mb-1">
                         <div class="col-md-12">
                             <label for="pesan_detail" class="col-form-label">Isi Peringatan:</label>
                             <textarea class="form-control" name="pesan_detail" id="pesan_detail" style="width: 100%" rows="3"></textarea>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="file_upload" class="col-form-label">Lampiran File:</label>
+                        <input type="text" class="form-control no-outline" id="file_upload" name="file_upload" readonly>
+                        <iframe style="width:100%; height:400px;" id="iprame_detail" frameborder="0"></iframe>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -279,7 +309,7 @@
             </div>
         </div>
     </div>
-    {{-- END Modal Show --}}
+    {{-- END Modal Detail --}}
 
 
     <div class="container-fluid">
@@ -303,14 +333,15 @@
                 <div class="col-12">
                     <div class="card bg-transparent border-warning">
                         <div class="card-header bg-transparent border-warning">
-                            <div class="row">
+                            <div class="row align-items-center">
                                 <div class="col-md-6">
                                     <h4 class="card-title text-warning"><i class="fas fa-exclamation-triangle"></i> |
                                         Peringatan untuk <b>Anda</b></h4>
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-end">
-                                    <a class="d-block text-warning" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseExample" aria-expanded="false"
+                                    <a class="d-block text-warning btn-lg"
+                                        style="border-radius: 50%; background-color: #ebede3;" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false"
                                         aria-controls="collapseExample">
                                         <i class="min fas fa-angle-double-down pull-right"></i>
                                     </a>
@@ -549,6 +580,7 @@
             /* Button Edit */
             $('body').on('click', '#btnEdit', function() {
                 $(document).find('span.error-text').text('');
+                $('#file_upload_edit').val("");
                 var this_id = $(this).data('id');
                 $.get('kelola-peringatan/' + this_id, function(data) {
                     $('#ModalEdit').modal('show');
@@ -581,6 +613,12 @@
                     $('#judul_edit').val(data.judul);
                     $('#subyek_edit').val(data.subyek);
                     $('#pesan_edit').val(data.pesan);
+
+                    if (data.file_upload) {
+                        $('#fileShow').val(data.file_upload);
+                    } else {
+                        $('#fileShow').val("Belum Upload");
+                    }
                 });
             });
 
@@ -601,6 +639,16 @@
                     $('#judul_show').val(data.judul);
                     $('#subyek_show').val(data.subyek);
                     $('#pesan_show').val(data.pesan);
+
+                    if (data.file_upload) {
+                        $('#file_upload_show').val(data.file_upload);
+                        $('#iprame').attr("src", "{{ asset('dokumen/peringatan') }}" + "/" +
+                            data.file_upload);
+                        $('#iprame').show();
+                    } else {
+                        $('#file_upload_show').val('Belum Upload');
+                        $('#iprame').hide();
+                    }
                 });
             });
 
@@ -645,6 +693,18 @@
                     $('#judul_detail').val(data.informasi.judul);
                     $('#subyek_detail').val(data.informasi.subyek);
                     $('#pesan_detail').val(data.informasi.pesan);
+
+                    if (data.informasi.file_upload) {
+                        $('#file_upload').val(data.informasi.file_upload);
+                        $('#iprame_detail').attr("src", "{{ asset('dokumen/peringatan') }}" +
+                            "/" +
+                            data.informasi.file_upload);
+                        $('#iprame_detail').show();
+                    } else {
+                        $('#file_upload').val('Belum Upload');
+                        $('#iprame_detail').hide();
+                    }
+
                 }).then(function() {
                     loaderNotif();
                     roleTable.ajax.reload();

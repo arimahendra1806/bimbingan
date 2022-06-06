@@ -1,47 +1,6 @@
 @extends('layouts.minia.header')
 
 @section('content')
-    {{-- Modal Export --}}
-    <div class="modal fade" id="Modal" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Ekspor Daftar Judul Mahasiswa</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form id="ExportForm">
-                    @csrf
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="tahun_ajaran" class="col-form-label">Tahun Ajaran:</label>
-                            <select class="js-example-responsive form-control" style="width: 100%" id="tahun_ajaran"
-                                name="tahun_ajaran">
-                                <option value=""></option>
-                                @foreach ($tahun_id as $tahun)
-                                    <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
-                                @endforeach
-                            </select>
-                            <span class="text-danger error-text tahun_ajaran_error"></span>
-                        </div>
-                        <div class="progress" style="height: 20px;">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0"
-                                aria-valuemax="100" style="width: 0%">
-                                0%
-                            </div>
-                        </div>
-                        <a class="btn btn-success btn-sm waves-effect waves-light mt-1 mb-1" style="width: 100%"
-                            id="btnDownload">Click To Download</a>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <input type="submit" class="btn btn-primary" name="eksporSave" value="Generate Link Sekarang">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    {{-- END Modal Export --}}
-
     <div class="container-fluid">
         <!-- start page title -->
         <div class="row">
@@ -69,11 +28,24 @@
                         </p>
                     </div>
                     <div class="card-body">
+                        <input type="hidden" name="th_aktif" id="th_aktif" value="{{ $th_aktif->id }}">
                         <div class="d-flex justify-content-end">
-                            <a href="javascript:void(0)" class="btn btn-primary btn-md waves-effect waves-light mb-1"
-                                data-toggle="tooltip" title="Ekspor Data" id="btnExport">
-                                <i class="fas fa-file-export"></i>
-                            </a>
+                            <div class="row mb-3">
+                                <label for="" class="mt-0">Pilih Tahun Expor Daftar Judul : </label>
+                                <div class="hstack gap-2">
+                                    <select class="js-example-responsive form-control" style="width: 100%" id="tahun_ajaran"
+                                        name="tahun_ajaran">
+                                        <option value=""></option>
+                                        @foreach ($tahun_id as $tahun)
+                                            <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
+                                        @endforeach
+                                    </select>
+                                    <a href="javascript:void(0)" class="btn btn-primary btn-md waves-effect waves-light"
+                                        data-toggle="tooltip" title="Ekspor Data" id="btnExpor">
+                                        <i class="fas fa-file-export"></i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
@@ -172,98 +144,24 @@
                 $('[data-toggle="tooltip"]').tooltip();
             });
 
-            /* Button Export */
-            $("#btnExport").click(function() {
-                $('#ExportForm').trigger('reset');
-                $('#Modal').modal('show');
-                $('#tahun_ajaran').val('').trigger('change');
-                $('.progress-bar').text('0%');
-                $('.progress-bar').css('width', '0%');
-                document.getElementById('btnDownload').style.display = "none";
-            });
+            /* select tahun_ajaran aktif */
+            $("#tahun_ajaran").val(document.getElementById("th_aktif").value).trigger('change');
 
-            /* Ajax Export */
-            $("#ExportForm").submit(function(e) {
-                // disable button
-                var form = this;
-                form.eksporSave.disabled = true;
-                form.eksporSave.value = "Sedang memproses...";
+            $("#btnExpor").click(function() {
+                var params = document.getElementById("tahun_ajaran").value;
+                location.href = "export/judul/" + params;
 
-                e.preventDefault();
-
-                var formData = new FormData(this);
-
-                $.ajax({
-                    // tampilan progress
-                    xhr: function() {
-                        var xhr = new window.XMLHttpRequest();
-                        xhr.upload.addEventListener("progress", function(evt) {
-                            if (evt.lengthComputable) {
-                                var percentComplete = (evt.loaded / evt.total) * 100;
-                                $('.progress-bar').text(percentComplete + '%');
-                                $('.progress-bar').css('width', percentComplete + '%');
-                            }
-                        }, false);
-                        return xhr;
-                    },
-                    url: "{{ route('judul-mahasiswa.exportKoor') }}",
-                    type: "POST",
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function() {
-                        $(document).find('span.error-text').text('');
-                    },
-                    success: function(data) {
-                        if (data.status == 0) {
-                            form.eksporSave.disabled = false;
-                            form.eksporSave.value = "Generate Link Sekarang";
-                            $('.progress-bar').text('0%');
-                            $('.progress-bar').css('width', '0%');
-                            $.each(data.error, function(prefix, val) {
-                                $('span.' + prefix + '_error').text(val[0]);
-                            });
-                        } else {
-                            form.eksporSave.disabled = false;
-                            form.eksporSave.value = "Generate Link Sekarang";
-                            $('.progress-bar').text('Generated');
-                            $('.progress-bar').css('width', '100%');
-                            document.getElementById('btnDownload').style.display = "block";
-                            $('#btnDownload').prop("href", data.link);
-                        }
-                    },
-                    error: function(response) {
-                        form.eksporSave.disabled = false;
-                        form.eksporSave.value = "Generate Link Sekarang";
-                        $('.progress-bar').text('0%');
-                        $('.progress-bar').css('width', '0%');
-                        document.getElementById('btnDownload').style.display = "none";
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops, Muncul Kesalahan !!'
-                        });
-                    }
-                });
-            });
-
-            /* Event Timeout btnDownload */
-            $("#btnDownload").click(function() {
                 setTimeout(function() {
                     Swal.fire({
                         title: "Ekspor Daftar Judul Berhasil!",
                         icon: "success",
-                    }).then(function() {
-                        $("#Modal").modal('hide');
-                    });
-                }, 100);
+                    })
+                }, 300);
             });
 
             /* Select2 Tahun Ajaran Add */
             $("#tahun_ajaran").select2({
-                dropdownParent: $('#Modal'),
                 placeholder: "Cari berdasarkan tahun ...",
-                allowClear: true
             });
         });
     </script>

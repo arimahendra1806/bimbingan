@@ -186,14 +186,15 @@
                 <div class="col-12">
                     <div class="card bg-transparent border-warning">
                         <div class="card-header bg-transparent border-warning">
-                            <div class="row">
+                            <div class="row align-items-center">
                                 <div class="col-md-6">
                                     <h4 class="card-title text-warning"><i class="fas fa-exclamation-triangle"></i> |
                                         Informasi</h4>
                                 </div>
                                 <div class="col-md-6 d-flex justify-content-end">
-                                    <a class="d-block text-warning" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseExample" aria-expanded="false"
+                                    <a class="d-block text-warning btn-lg"
+                                        style="border-radius: 50%; background-color: #ebede3;" type="button"
+                                        data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false"
                                         aria-controls="collapseExample">
                                         <i class="min fas fa-angle-double-down pull-right"></i>
                                     </a>

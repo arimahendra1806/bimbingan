@@ -18,7 +18,7 @@ class BimbinganModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "bimbingan";
-    protected $fillable = ["id","kode_bimbingan","pembimbing_kode","tahun_ajaran_id","file_upload","link_video","jenis_bimbingan","status_konsultasi","tanggal_konsultasi","keterangan_konsultasi","status_pesan"];
+    protected $fillable = ["id","kode_bimbingan","pembimbing_kode","kode_peninjauan","tahun_ajaran_id","file_upload","link_video","jenis_bimbingan","status_konsultasi","status_pesan"];
 
     protected $cascadeDeletes = ['komentar','progres','riwayat'];
     protected $dates = ['deleted_at'];
@@ -39,6 +39,11 @@ class BimbinganModel extends Model
     public function riwayat()
     {
         return $this->belongsTo(RiwayatBimbinganModel::class,'kode_bimbingan','bimbingan_kode');
+    }
+
+    public function tinjau()
+    {
+        return $this->belongsTo(RiwayatBimbinganModel::class,'kode_peninjauan','peninjauan_kode');
     }
 
     /* inisiasi dosen_pembimbing */

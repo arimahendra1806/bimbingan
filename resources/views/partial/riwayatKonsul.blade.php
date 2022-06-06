@@ -33,6 +33,40 @@
                             <tr></tr>
                         </tbody>
                     </table>
+                    <hr>
+                    <h4 class="card-title text-secondary"><i class="far fa-comments"> Kolom Diskusi</i></h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="komen" class="col-form-label text-secondary">Ketikan Komentar :</label>
+                            <form class="row gx-3 gy-2 align-items-center" id="KomenStore">
+                                @csrf
+                                <div class="hstack gap-3">
+                                    <input class="form-control me-auto" type="text"
+                                        placeholder="Ketik pesan anda disini.." id="komentar" name="komentar">
+                                    <span class="text-danger error-text komentar_error"></span>
+                                    <input type="submit" class="btn btn-outline-primary" name="komenSave" value="Kirim">
+                                    <div class="vr"></div>
+                                    <button type="reset" class="btn btn-outline-danger">Reset</button>
+                                    <a type="button" class="btn btn-outline-success" data-toggle="tooltip"
+                                        title="Refresh Komentar" id="btnRefresh"><i class="fas fa-sync-alt"></i></a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-12">
+                            <table class="table dt-responsive nowrap w-100 borderless" id="KomenTabels">
+                                <thead style="display: none;">
+                                    <tr>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

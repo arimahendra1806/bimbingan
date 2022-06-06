@@ -22,6 +22,7 @@ class Informasi extends Migration
             $table->string('judul')->nullable();
             $table->string('subyek')->nullable();
             $table->string('pesan')->nullable();
+            $table->string('file_upload')->nullable();
             $table->string('jenis', 20)->nullable();
             $table->timestamps();
             $table->softDeletes();

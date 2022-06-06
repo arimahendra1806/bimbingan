@@ -111,7 +111,7 @@ class PartialController extends Controller
         $jmlAnggota = PengajuanZoomAnggotaModel::where('anggota_zoom_kode', $kode)->count('id');
 
         /* Kondisi jika jmlAnggota lebih atau sama dgn 5 */
-        if($jmlAnggota >= 5){
+        if($jmlAnggota >= 10){
             /* Return json gagal */
             return response()->json(['status' => 1, 'msg' => "Anda tidak dapat bergabung! Karena kuota sudah terpenuhi!"]);
         } else {

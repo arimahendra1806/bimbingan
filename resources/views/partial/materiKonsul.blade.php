@@ -3,13 +3,14 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-md-6">
                         <h4 class="card-title">Materi Konsultasi</h4>
                     </div>
                     <div class="col-md-6 d-flex justify-content-end">
-                        <a class="d-block text-primary" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <a class="d-block text-primary btn-lg" style="border-radius: 50%; background-color: #ebede3;"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+                            aria-expanded="false" aria-controls="collapseExample">
                             <i class="max fas fa-angle-double-up pull-right"></i>
                         </a>
                     </div>

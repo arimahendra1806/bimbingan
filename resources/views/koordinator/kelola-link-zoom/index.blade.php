@@ -32,17 +32,23 @@
                             </div>
                         </div>
                         <div class="row mb-1">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="id_meeting_add" class="col-form-label">ID Meeting:</label>
                                 <input type="text" class="form-control" id="id_meeting_add" name="id_meeting_add"
                                     placeholder="e.g: 1922 1922 1922">
                                 <span class="text-danger error-text id_meeting_add_error"></span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="passcode_add" class="col-form-label">Passcode:</label>
                                 <input type="text" class="form-control" id="passcode_add" name="passcode_add"
                                     placeholder="e.g: 4b6casJS">
                                 <span class="text-danger error-text passcode_add_error"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="host_key_add" class="col-form-label">Host Key: </label>
+                                <input type="text" class="form-control" id="host_key_add" name="host_key_add"
+                                    placeholder="e.g: 112233">
+                                <span class="text-danger error-text host_key_add_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -100,15 +106,20 @@
                             </div>
                         </div>
                         <div class="row mb-1">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="id_meeting_edit" class="col-form-label">ID Meeting: </label>
                                 <input type="text" class="form-control" id="id_meeting_edit" name="id_meeting_edit">
                                 <span class="text-danger error-text id_meeting_edit_error"></span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label for="passcode_edit" class="col-form-label">Passcode: </label>
                                 <input type="text" class="form-control" id="passcode_edit" name="passcode_edit">
                                 <span class="text-danger error-text passcode_edit_error"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="host_key_edit" class="col-form-label">Host Key: </label>
+                                <input type="text" class="form-control" id="host_key_edit" name="host_key_edit">
+                                <span class="text-danger error-text host_key_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -150,16 +161,22 @@
                         </div>
                     </div>
                     <div class="row mb-1">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="id_meeting_show" class="col-form-label">ID Meeting: </label>
                             <input type="text" class="form-control no-outline" id="id_meeting_show" name="id_meeting_show"
                                 readonly>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="passcode_show" class="col-form-label">Passcode: </label>
                             <input type="text" class="form-control no-outline" id="passcode_show" name="passcode_show"
                                 readonly>
                         </div>
+                        <div class="col-md-4">
+                            <label for="host_key_show" class="col-form-label">Host Key: </label>
+                            <input type="text" class="form-control no-outline" id="host_key_show" name="host_key_show"
+                                readonly>
+                        </div>
+
                     </div>
                     <div class="row mb-1">
                         <div class="col-md-12">
@@ -374,6 +391,7 @@
                     $('#dosen_edit').val(data.dosen_id).trigger('change');
                     $('#id_meeting_edit').val(data.id_meeting);
                     $('#passcode_edit').val(data.passcode);
+                    $('#host_key_edit').val(data.host_key);
                     $('#link_edit').val(data.link_zoom);
                 });
             });
@@ -391,6 +409,7 @@
                     }
                     $('#id_meeting_show').val(data.id_meeting);
                     $('#passcode_show').val(data.passcode);
+                    $('#host_key_show').val(data.host_key);
                     $('#link_show').val(data.link_zoom);
                 });
             });

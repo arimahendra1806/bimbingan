@@ -37,7 +37,8 @@ class LinkZoomImport implements ToModel, WithStartRow
             'tahun_ajaran_id' => $tahun->id,
             'id_meeting' => $row[2],
             'passcode' => $row[3],
-            'link_zoom' => $row[4],
+            'host_key' => $row[4],
+            'link_zoom' => $row[5],
        ]);
     }
 }

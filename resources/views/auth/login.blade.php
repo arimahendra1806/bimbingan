@@ -83,7 +83,7 @@
                                             <div class="input-group auth-pass-inputgroup">
                                                 <input type="password"
                                                     class="form-control @error('password') is-invalid @enderror"
-                                                    placeholder="Enter password" aria-label="Password"
+                                                    placeholder="Masukkan kata sandi Anda" aria-label="Password"
                                                     aria-describedby="password-addon" name="password" required
                                                     autocomplete="current-password">
                                                 <button class="btn btn-light shadow-none ms-0" type="button"

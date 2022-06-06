@@ -24,36 +24,97 @@ class KonsulProgramController extends Controller
             $q->where('jenis_bimbingan', 'Program');
         }])->find(Auth::user()->id);
 
-        /* Ambil data array */
-        $detail = [
-            'kode_bimbingan' => $user->mahasiswa->dospem->bimbingan->kode_bimbingan,
-            'status_konsultasi' => $user->mahasiswa->dospem->bimbingan->status_konsultasi,
-            'keterangan' => $user->mahasiswa->dospem->bimbingan->keterangan_konsultasi,
-            'link' => $user->mahasiswa->dospem->bimbingan->link_video
-        ];
+        $status_dospem = $user->mahasiswa->dospem;
 
-        /* Ambil data table Komentar */
+        /* Ambil data array */
+        if ($status_dospem) {
+            /* Tampilan Info */
+            $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $user->mahasiswa->dospem->bimbingan->kode_peninjauan)->first();
+
+            if ($get_status) {
+                $status = $get_status->status;
+            } else {
+                $status = "Belum";
+            }
+
+            $detail = [
+                'status_konsultasi' => $status,
+            ];
+
+            /* Ambil data table Komentar */
+            if ($request->ajax()){
+                $data = KomentarModel::latest()->where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
+                    ->where('bimbingan_jenis', 'Program')->get()->load('nama');
+                return DataTables::of($data)
+                    ->addColumn('waktu', function($model){
+                        $waktu = Carbon::parse($model->waktu_komentar)->isoFormat(' | D MMMM Y - HH:mm:ss');
+                        return $waktu;
+                    })
+                    ->rawColumns(['waktu'])
+                    ->toJson();
+            }
+        }
+
+        if ($status_dospem) {
+            /* Return menuju view */
+            return view('mahasiswa.konsultasi.program.index', compact('tahun_id','detail'));
+        } else {
+            /* Return menuju view */
+            return view('mahasiswa.konsultasi.program.alihkan');
+        }
+    }
+
+    public function riwayat(Request $request)
+    {
+        /* Ambil data mahasiswa login */
+        $user = User::with('mahasiswa.dospem.bimbingan')->find(Auth::user()->id);
+
+        /* Ambil data tabel riwayat bimbingan */
         if ($request->ajax()){
-            $data = KomentarModel::latest()->where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
-                ->where('bimbingan_jenis', 'Program')->get();
-            return DataTables::of($data)
+            $data = RiwayatBimbinganModel::where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
+                ->where('bimbingan_jenis', "Program")
+                ->get();
+            return DataTables::of($data)->addIndexColumn()
+                ->addColumn('stats', function($model){
+                    if ($model->status){
+                        if ($model->status == "Disetujui"){
+                            return "Disetujui untuk pengujian";
+                        } elseif ($model->status == "Selesai") {
+                            return "Selesai revisi pengujian";
+                        } else {
+                            return $model->status;
+                        }
+                    } else {
+                        return "Belum ada tanggapan";
+                    }
+                })
                 ->addColumn('waktu', function($model){
-                    $waktu = Carbon::parse($model->waktu_komentar)->isoFormat('(D MMMM Y - hh:mm:ss)');
+                    $waktu = \Carbon\Carbon::parse($model->waktu_bimbingan)->isoFormat('D MMMM Y / HH:mm:ss');
                     return $waktu;
                 })
-                ->rawColumns(['waktu'])
+                ->addColumn('action', function($model){
+                    if($model->tanggapan){
+                        $btn = '<a class="btn btn-info" id="btnShow" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>';
+                        return $btn;
+                    } else {
+                        $btn = '<a class="btn btn-success" id="btnEdit" data-toggle="tooltip" title="Perbarui Data" data-id="'.$model->id.'"><i class="fas fa-edit"></i></a>';
+                        return $btn;
+                    }
+                })
+                ->rawColumns(['waktu','stats','action'])
                 ->toJson();
         }
 
-        /* Return menuju view */
-        return view('mahasiswa.konsultasi.program.index', compact('tahun_id','detail'));
+        /* return json */
+        return response()->json();
     }
 
     public function store(Request $request)
     {
         /* Peraturan validasi  */
         $rules = [
-            'link_upload' => ['required']
+            'link_video_add' => ['required'],
+            'keterangan_add' => ['required']
         ];
 
         /* Pesan validasi */
@@ -61,7 +122,8 @@ class KonsulProgramController extends Controller
 
         /* Nama kolom validasi */
         $attributes = [
-            'link_upload' => 'Link Video Konsultasi'
+            'link_video_add' => 'Link Video Konsultasi',
+            'keterangan_add' => 'Deskripsi Konsultasi',
         ];
 
         /* Validasi input */
@@ -76,48 +138,109 @@ class KonsulProgramController extends Controller
             $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
                 $q->where('jenis_bimbingan', 'Program');
             }],'mahasiswa.dospem.dosen')->find(Auth::user()->id);
+
             $bimbingan = $user->mahasiswa->dospem->bimbingan;
 
-            /* Kondisi jika status disetujui */
-            // if($bimbingan->status_konsultasi == "Disetujui"){
-            //     $data = "Konsultasi program sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
-            //     return response()->json(['status' => 1, 'data' => $data]);
-            // } else {
-                /* Ambil data data tahun_ajaran */
-                $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+            /* Kondisi jika status selesai */
+            $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $bimbingan->kode_peninjauan)->first();
 
-                /* Simpan file bimbingan */
-                // $file = $request->file('file_upload');
-                // $filename = time()."_".$file->getClientOriginalName();
-                // $file->move(public_path('dokumen/konsultasi/program'), $filename);
-                /* Hapus file bimbingan sebelumnya */
-                // File::delete('dokumen/konsultasi/program/'.$request->fileShow);
+            if ($get_status && $get_status->status == "Selesai"){
+                $data = "Konsultasi program sudah selesai, silahkan lanjut untuk konsultasi berikutnya!";
+                return response()->json(['status' => 1, 'data' => $data]);
+            } else {
+                /* Kondisi jika tanggapan */
+                if ($get_status && !$get_status->tanggapan) {
+                    $data = "Anda baru saja melakukan konsultasi, mohon tunggu tanggapan dari Dosen Pembimbing Anda!";
+                    return response()->json(['status' => 1, 'data' => $data]);
+                } elseif (!$get_status || $get_status->tanggapan) {
+                    /* Ambil data data tahun_ajaran */
+                    $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-                /* Update data table bimbingan */
-                $bimbingan->link_video = $request->link_upload;
-                $bimbingan->status_konsultasi = "Belum Disetujui";
-                $bimbingan->tanggal_konsultasi = Carbon::now();
-                $bimbingan->status_pesan = "0";
-                $bimbingan->save();
+                    /* Update data table bimbingan */
+                    $bimbingan->kode_peninjauan = $bimbingan->kode_bimbingan.time();
+                    $bimbingan->tahun_ajaran_id = $tahun_id->id;
+                    $bimbingan->link_video = $request->link_video_add;
+                    $bimbingan->status_konsultasi = "Aktif";
+                    $bimbingan->status_pesan = "0";
+                    $bimbingan->save();
 
-                /* Insert ke table riwayat */
-                $data2 = new RiwayatBimbinganModel;
-                $data2->bimbingan_kode = $bimbingan->kode_bimbingan;
-                $data2->bimbingan_jenis = $bimbingan->jenis_bimbingan;
-                $data2->save();
+                    /* Insert ke table riwayat */
+                    $data2 = new RiwayatBimbinganModel;
+                    $data2->bimbingan_kode = $bimbingan->kode_bimbingan;
+                    $data2->peninjauan_kode = $bimbingan->kode_peninjauan;
+                    $data2->bimbingan_jenis = $bimbingan->jenis_bimbingan;
+                    $data2->keterangan = $request->keterangan_add;
+                    $data2->save();
 
-                // /* Notifikasi email */
-                // $subjek = 'Konsultasi Program Terbaru';
-                // $details = [
-                //     'title' => 'Konsultasi Program dari Mahasiswa Bimbingan Anda',
-                //     'body' => 'Anda menerima konsultasi program terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
-                // ];
+                    // /* Notifikasi email */
+                    // $subjek = 'Konsultasi Program Terbaru';
+                    // $details = [
+                    //     'title' => 'Konsultasi Program dari Mahasiswa Bimbingan Anda',
+                    //     'body' => 'Anda menerima konsultasi program terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
+                    // ];
 
-                // Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
+                    // Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
 
-                /* Return json berhasil */
-                return response()->json(['status' => 2, 'msg' => "Berhasil Melakukan Konsultasi!", 'data' => ['link_upload' => $bimbingan->link_video, 'status_konsultasi' => $bimbingan->status_konsultasi]]);
-            // }
+                    /* Return json berhasil */
+                    return response()->json(['status' => 2, 'msg' => "Berhasil Melakukan Konsultasi!", 'data' => ['link_upload' => $bimbingan->link_video, 'status_konsultasi' => $bimbingan->status_konsultasi]]);
+                }
+            }
+        }
+    }
+
+    public function show($konsultasi_program)
+    {
+        /* Ambil data materi dosen sesuai parameter */
+        $data = RiwayatBimbinganModel::find($konsultasi_program)->load('bimbingan');
+
+        /* Return json data materi tahunan */
+        return response()->json($data);
+    }
+
+    public function update(Request $request, $konsultasi_program)
+    {
+        /* Peraturan validasi  */
+        $rules = [
+            'link_video_edit' => ['required'],
+            'keterangan_edit' => ['required']
+        ];
+
+        /* Pesan validasi */
+        $messages = [];
+
+        /* Nama kolom validasi */
+        $attributes = [
+            'link_video_edit' => 'Link Video Konsultasi',
+            'keterangan_edit' => 'Deskripsi Konsultasi',
+        ];
+
+        /* Validasi input */
+        $validator = Validator::make($request->all(), $rules, $messages, $attributes);
+
+        /* Kondisi jika validasi gagal */
+        if(!$validator->passes()){
+            /* Return json gagal */
+            return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
+        } else {
+            /* Ambil data mahasiswa login */
+            $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
+                $q->where('jenis_bimbingan', 'Program');
+            }],'mahasiswa.dospem.dosen')->find(Auth::user()->id);
+
+            $bimbingan = $user->mahasiswa->dospem->bimbingan;
+
+            /* Ubah Link & status pesan */
+            $bimbingan->link_video = $request->link_video_edit;
+            $bimbingan->status_pesan = "0";
+            $bimbingan->save();
+
+            /* Ubah Keterangan */
+            $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $bimbingan->kode_peninjauan)->first();
+            $get_status->keterangan = $request->keterangan_edit;
+            $get_status->save();
+
+            /* Return json berhasil */
+            return response()->json(['status' => 2, 'msg' => "Berhasil Memperbarui Data!"]);
         }
     }
 
@@ -149,16 +272,21 @@ class KonsulProgramController extends Controller
                 $q->where('jenis_bimbingan', 'Program');
             }],'mahasiswa.dospem.dosen')->find(Auth::user()->id);
 
-            // /* Ambil data data tahun_ajaran */
-            // if($user->mahasiswa->dospem->bimbingan->status_konsultasi == "Disetujui"){
-            //     $data = "Diskusi ditutup, silahkan lanjut untuk konsultasi berikutnya!";
-            //     return response()->json(['status' => 1, 'data' => $data]);
-            // } else {
+            $bimbingan = $user->mahasiswa->dospem->bimbingan;
+
+            /* Kondisi jika status selesai */
+            $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $bimbingan->kode_peninjauan)->first();
+
+            /* Ambil data data tahun_ajaran */
+            if ($get_status && $get_status->status == "Selesai"){
+                $data = "Diskusi ditutup, silahkan lanjut untuk konsultasi berikutnya!";
+                return response()->json(['status' => 1, 'data' => $data]);
+            } else {
                 /* Insert ke tabel komentar */
                 $data = new KomentarModel;
                 $data->bimbingan_kode = $user->mahasiswa->dospem->bimbingan->kode_bimbingan;
                 $data->bimbingan_jenis = $user->mahasiswa->dospem->bimbingan->jenis_bimbingan;
-                $data->nama = $user->mahasiswa->nama_mahasiswa;
+                $data->users_id = $user->id;
                 $data->komentar = $request->komentar;
                 $data->save();
 
@@ -173,7 +301,7 @@ class KonsulProgramController extends Controller
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);
-            // }
+            }
         }
     }
 }

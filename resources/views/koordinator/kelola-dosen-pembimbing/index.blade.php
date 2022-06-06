@@ -73,13 +73,15 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <div class="row">
+                        <div class="row align-items-center">
                             <div class="col-md-6">
                                 <h4 class="card-title">Tambah Data Dosen Pembimbing</h4>
                             </div>
                             <div class="col-md-6 d-flex justify-content-end">
-                                <a class="d-block text-primary" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                <a class="d-block text-primary btn-lg"
+                                    style="border-radius: 50%; background-color: #ebede3;" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false"
+                                    aria-controls="collapseExample">
                                     <i class="max fas fa-angle-double-up pull-right"></i>
                                 </a>
                             </div>
@@ -163,7 +165,6 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Tahun Ajaran</th>
-                                        <th>Kode Pembimbing</th>
                                         <th>Nama Dosen</th>
                                         <th>Nama Mahasiswa</th>
                                         <th>Aksi</th>
@@ -285,10 +286,6 @@
                         name: 'tahun.tahun_ajaran'
                     },
                     {
-                        data: 'kode_pembimbing',
-                        name: 'kode_pembimbing'
-                    },
-                    {
                         data: 'dosen.nama_dosen',
                         name: 'dosen.nama_dosen'
                     },
@@ -304,11 +301,11 @@
                 columnDefs: [{
                         searchable: false,
                         orderable: false,
-                        targets: [0, 5]
+                        targets: [0, 4]
                     },
                     {
                         width: '1%',
-                        targets: [0, 5]
+                        targets: [0, 4]
                     }
                 ],
                 order: [
@@ -330,7 +327,6 @@
                 $.get('kelola-dosen-pembimbing/' + this_id, function(data) {
                     $('#ModalEdit').modal('show');
                     $('#pembimbing_id_edit').val(data.id);
-                    $('#kode_edit').val(data.kode_pembimbing);
                     $('#dosen_edit').val(data.dosen_id).trigger('change');
                     $('#mhs_edit').val(data.mahasiswa_id).trigger('change');
                 });

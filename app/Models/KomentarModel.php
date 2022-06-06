@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
+use App\Models\User;
 
 class KomentarModel extends Model
 {
@@ -14,8 +15,14 @@ class KomentarModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "komentar";
-    protected $fillable = ["id","bimbingan_kode","bimbingan_jenis","nama","komentar","waktu_komentar"];
+    protected $fillable = ["id","bimbingan_kode","bimbingan_jenis","users_id","komentar","waktu_komentar"];
 
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
+
+    /* bimbingan */
+    public function nama()
+    {
+        return $this->belongsTo(User::class,'users_id','id');
+    }
 }

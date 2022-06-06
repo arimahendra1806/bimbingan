@@ -257,6 +257,10 @@
                         $('#zoom_show').val("ID Meeting:  " + data.pembimbing.zoom.id_meeting +
                             "\nPassode:  " + data.pembimbing.zoom.passcode + "\nLink Zoom:  " +
                             data.pembimbing.zoom.link_zoom);
+                    } else {
+                        $('#zoom_label_show').hide();
+                        $('#zoom_show').hide();
+                        $('#zoom_show').val("");
                     }
                 });
             });

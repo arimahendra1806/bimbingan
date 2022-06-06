@@ -19,6 +19,7 @@ class MateriDosenController extends Controller
     {
         /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::all()->sortByDesc('tahun_ajaran');
+        $th_aktif = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Ambil data tabel materi dosen */
         if ($request->ajax()){
@@ -36,7 +37,7 @@ class MateriDosenController extends Controller
         }
 
         /* Return menuju view */
-        return view('dosen.kelola-materi-dosen.index', compact('tahun_id'));
+        return view('dosen.kelola-materi-dosen.index', compact('tahun_id', 'th_aktif'));
     }
 
     /**
@@ -70,7 +71,7 @@ class MateriDosenController extends Controller
 
         /* Nama kolom validasi */
         $attributes = [
-            'tahun_ajaran_id_add' => 'ID Tahun Ajaran',
+            'tahun_ajaran_id_add' => 'Tahun Ajaran',
             'file_materi_add' => 'File Materi',
             'jenis_materi_add' => 'Jenis Materi',
             'keterangan_add' => 'Keterangan'
@@ -86,11 +87,12 @@ class MateriDosenController extends Controller
         } else {
             /* Ambil data dosen login */
             $user = User::with('dosen')->find(Auth::user()->id);
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
             /* Insert materi dosen */
             $data = new DosPemMateriModel;
             $data->dosen_id = $user->dosen->id;
-            $data->tahun_ajaran_id = $request->tahun_ajaran_id_add;
+            $data->tahun_ajaran_id = $tahun_id->id;
 
             /* Jika request terdapat file */
             if ($request->hasFile('file_materi_add')){
@@ -170,7 +172,7 @@ class MateriDosenController extends Controller
 
         /* Nama kolom validasi */
         $attributes = [
-            'tahun_ajaran_id_edit' => 'ID Tahun Ajaran',
+            'tahun_ajaran_id_edit' => 'Tahun Ajaran',
             'file_materi_edit' => 'File Materi',
             'jenis_materi_edit' => 'Jenis Materi',
             'keterangan_edit' => 'Keterangan'

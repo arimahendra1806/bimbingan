@@ -38,13 +38,14 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-md-6">
                         <h4 class="card-title">Gabung Jadwal Zoom</h4>
                     </div>
                     <div class="col-md-6 d-flex justify-content-end">
-                        <a class="d-block text-primary" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        <a class="d-block text-primary btn-lg" style="border-radius: 50%; background-color: #ebede3;"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample"
+                            aria-expanded="false" aria-controls="collapseExample">
                             <i class="max fas fa-angle-double-up pull-right"></i>
                         </a>
                     </div>
@@ -83,13 +84,14 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                <div class="row">
+                <div class="row align-items-center">
                     <div class="col-md-6">
                         <h4 class="card-title">Riwayat Gabung Jadwal Zoom</h4>
                     </div>
                     <div class="col-md-6 d-flex justify-content-end">
-                        <a class="d-block text-primary" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseRiwayat" aria-expanded="false" aria-controls="collapseRiwayat">
+                        <a class="d-block text-primary btn-lg" style="border-radius: 50%; background-color: #ebede3;"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseRiwayat"
+                            aria-expanded="false" aria-controls="collapseRiwayat">
                             <i class="max fas fa-angle-double-up pull-right"></i>
                         </a>
                     </div>
@@ -128,7 +130,7 @@
     <style>
         .cards tbody tr {
             float: left;
-            width: 36rem;
+            width: 30.5rem;
             margin: 0.5rem;
             border: 0.0625rem solid rgba(0, 0, 0, .125);
             border-radius: .25rem;
@@ -189,7 +191,7 @@
                             " telah diterima. Silahkan Mahasiswa lain bisa ikut bergabung" +
                             "</div></div><div class='col-md-3 d-flex justify-content-end'>" +
                             "<div class='text-wrap width-50'>" +
-                            data.total + "/5" + "&nbsp&nbsp" + data.action + "</div></div></div>"
+                            data.total + "/10" + "&nbsp&nbsp" + data.action + "</div></div></div>"
                     }
                 },
                 {
@@ -322,8 +324,18 @@
                     $('#zoom_riwayat').val("ID Meeting:  " + data.jadwal.pembimbing.zoom.id_meeting +
                         "\nPassode:  " + data.jadwal.pembimbing.zoom.passcode + "\nLink Zoom:  " +
                         data.jadwal.pembimbing.zoom.link_zoom);
+                } else {
+                    $('#zoom_label_riwayat').hide();
+                    $('#zoom_riwayat').hide();
+                    $('#zoom_riwayat').val("");
                 }
             });
+        });
+
+        /* Hide input */
+        $(function() {
+            $('#zoom_label_riwayat').hide();
+            $('#zoom_riwayat').hide();
         });
     </script>
 @endsection
