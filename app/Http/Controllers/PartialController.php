@@ -10,6 +10,12 @@ use App\Models\User;
 use App\Models\DosPemModel;
 use App\Models\PengajuanZoomModel;
 use App\Models\PengajuanZoomAnggotaModel;
+use App\Models\DosenModel;
+use App\Models\MahasiswaModel;
+use App\Models\PengajuanJudulModel;
+use App\Models\ProgresBimbinganModel;
+use App\Models\KomentarModel;
+use Carbon\Carbon;
 use DataTables, Auth;
 
 class PartialController extends Controller
@@ -146,5 +152,122 @@ class PartialController extends Controller
 
         /* Return json data anggota */
         return response()->json($data);
+    }
+
+    public function chartPie(Request $request)
+    {
+        /* Inisiasi array series pieJmlDsnMhs */
+        $pieJmlDsnMhs = array();
+        /* Ambil data tahun_ajaran */
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+        $dosen = DosenModel::all()->count('id');
+        array_push($pieJmlDsnMhs, $dosen);
+        $mahasiswa = MahasiswaModel::where('tahun_ajaran_id', $tahun_id->id)->count('id');
+        array_push($pieJmlDsnMhs, $mahasiswa);
+
+        /* Inisiasi array series pieJmlPengajuanJudul */
+        $pieJmlPengajuanJudul = array();
+        $mengajukan = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->count('id');
+        array_push($pieJmlPengajuanJudul, $mengajukan);
+        $get_mhs = $mahasiswa;
+        $blm_mengajukan = ($get_mhs - $mengajukan);
+        array_push($pieJmlPengajuanJudul, $blm_mengajukan);
+
+        /* Inisiasi array series jmlJuduldisetujui */
+        $jmlJuduldisetujui = array();
+        $disetujui = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->where('status', '!=', 'Diproses')->count('id');
+        array_push($jmlJuduldisetujui, $disetujui);
+        array_push($jmlJuduldisetujui, $mengajukan);
+
+        return response()->json(['pieJmlDsnMhs' => $pieJmlDsnMhs, 'pieJmlPengajuanJudul' => $pieJmlPengajuanJudul, 'jmlJuduldisetujui' => $jmlJuduldisetujui]);
+    }
+
+    public function chartColumn(Request $request)
+    {
+        /* Ambil data tahun_ajaran */
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
+        $selesai = array();
+        $get_judul_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('judul', '!=', '0')->count('id');
+        array_push($selesai, $get_judul_sl);
+        $get_proposal_bab1_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab1', '!=', '0')->count('id');
+        array_push($selesai, $get_proposal_bab1_sl);
+        $get_proposal_bab2_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab2', '!=', '0')->count('id');
+        array_push($selesai, $get_proposal_bab2_sl);
+        $get_proposal_bab3_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab3', '!=', '0')->count('id');
+        array_push($selesai, $get_proposal_bab3_sl);
+        $get_proposal_bab4_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab4', '!=', '0')->count('id');
+        array_push($selesai, $get_proposal_bab4_sl);
+        $get_laporan_bab1_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab1', '!=', '0')->count('id');
+        array_push($selesai, $get_laporan_bab1_sl);
+        $get_laporan_bab2_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab2', '!=', '0')->count('id');
+        array_push($selesai, $get_laporan_bab2_sl);
+        $get_laporan_bab3_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab3', '!=', '0')->count('id');
+        array_push($selesai, $get_laporan_bab3_sl);
+        $get_laporan_bab4_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab4', '!=', '0')->count('id');
+        array_push($selesai, $get_laporan_bab4_sl);
+        $get_laporan_bab5_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab5', '!=', '0')->count('id');
+        array_push($selesai, $get_laporan_bab5_sl);
+        $get_laporan_bab6_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab6', '!=', '0')->count('id');
+        array_push($selesai, $get_laporan_bab6_sl);
+        $get_program_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('program', '!=', '0')->count('id');
+        array_push($selesai, $get_program_sl);
+
+        $belum = array();
+        $get_judul_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('judul', '0')->count('id');
+        array_push($belum, $get_judul_bl);
+        $get_proposal_bab1_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab1', '0')->count('id');
+        array_push($belum, $get_proposal_bab1_bl);
+        $get_proposal_bab2_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab2', '0')->count('id');
+        array_push($belum, $get_proposal_bab2_bl);
+        $get_proposal_bab3_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab3', '0')->count('id');
+        array_push($belum, $get_proposal_bab3_bl);
+        $get_proposal_bab4_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab4', '0')->count('id');
+        array_push($belum, $get_proposal_bab4_bl);
+        $get_laporan_bab1_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab1', '0')->count('id');
+        array_push($belum, $get_laporan_bab1_bl);
+        $get_laporan_bab2_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab2', '0')->count('id');
+        array_push($belum, $get_laporan_bab2_bl);
+        $get_laporan_bab3_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab3', '0')->count('id');
+        array_push($belum, $get_laporan_bab3_bl);
+        $get_laporan_bab4_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab4', '0')->count('id');
+        array_push($belum, $get_laporan_bab4_bl);
+        $get_laporan_bab5_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab5', '0')->count('id');
+        array_push($belum, $get_laporan_bab5_bl);
+        $get_laporan_bab6_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab6', '0')->count('id');
+        array_push($belum, $get_laporan_bab6_bl);
+        $get_program_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('program', '0')->count('id');
+        array_push($belum, $get_program_bl);
+
+        return response()->json(['selesai' => $selesai, 'belum' => $belum]);
+    }
+
+    public function chartLine(Request $request)
+    {
+        $nm_bulan = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Des');
+        $vl_bulan = array('1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12');
+        $now = Carbon::now();
+
+        $get_jml = (12 - $now->month);
+
+        for ($i=0; $i < $get_jml; $i++) {
+            array_pop($nm_bulan);
+            array_pop($vl_bulan);
+        }
+
+        $data_konsultasi = array();
+        $data_komentar = array();
+
+        foreach ($vl_bulan as $key => $value) {
+            $get_bulan_konsul = RiwayatBimbinganModel::whereYear('waktu_bimbingan', $now->year)->whereMonth('waktu_bimbingan', $value)->count('id');
+            array_push($data_konsultasi, $get_bulan_konsul);
+        }
+
+        foreach ($vl_bulan as $key => $value) {
+            $get_bulan_komen = KomentarModel::whereYear('waktu_komentar', $now->year)->whereMonth('waktu_komentar', $value)->count('id');
+            array_push($data_komentar, $get_bulan_komen);
+        }
+
+        return response()->json(['nm_bulan' => $nm_bulan, 'data_konsultasi' => $data_konsultasi, 'data_komentar' => $data_komentar]);
     }
 }

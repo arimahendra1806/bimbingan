@@ -18,29 +18,33 @@
         </div>
         <!-- end page title -->
 
-        <!-- Card Jadwal Zoom -->
-        {{-- @isset($no_kp) --}}
-        {{-- @include('partial.jadwalZoom') --}}
-        {{-- @endisset --}}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Selamat Datang {{ Auth::user()->name }}</h4>
+                        <p class="card-title-desc">Status Anda adalah Mahasiswa, silahkan gunakan aplikasi SITAMI sesuai
+                            kebutuhan!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
+        <!-- Card Pie -->
+        @include('partial.chartPie')
 
-        <h1>Mhs</h1>
-        <a href="/logout">KELUAR</a>
+        <!-- Card Column -->
+        @include('partial.chartColumn')
+
+        <!-- Card Line -->
+        @include('partial.chartLine')
     </div>
 @endsection
 
 @section('js')
-    <script>
-        $(document).ready(function() {
-            /* Ajax Token */
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-        });
-    </script>
-    {{-- @isset($no_kp) --}}
-    {{-- @yield('JadwalZoomJs') --}}
-    {{-- @endisset --}}
+    <script src="{{ asset('vendor/minia') }}/assets/libs/apexcharts/apexcharts.min.js"></script>
+    @yield('chartPieJs')
+    @yield('chartColumnJs')
+    @yield('chartLineJs')
 @endsection

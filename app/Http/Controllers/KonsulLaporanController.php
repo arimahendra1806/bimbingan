@@ -47,7 +47,7 @@ class KonsulLaporanController extends Controller
                     ->where('bimbingan_jenis', 'Laporan')->get()->load('nama');
                 return DataTables::of($data)
                     ->addColumn('waktu', function($model){
-                        $waktu = Carbon::parse($model->waktu_komentar)->isoFormat(' | D MMMM Y - HH:mm:ss)');
+                        $waktu = Carbon::parse($model->waktu_komentar)->isoFormat(' | D MMMM Y - HH:mm:ss');
                         return $waktu;
                     })
                     ->rawColumns(['waktu'])

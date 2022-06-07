@@ -72,6 +72,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/topbar/notif/informasi/read/all', [TopbarController::class, 'readAll'])->name('topbar-notif.readAll');
     Route::get('/profil', [ProfilController::class, 'index'])->name('profile.index');
     Route::post('/profil', [ProfilController::class, 'update'])->name('profile.update');
+    Route::get('/partial/chartPie', [PartialController::class, 'chartPie'])->name('partial.chartPie');
+    Route::get('/partial/chartColumn', [PartialController::class, 'chartColumn'])->name('partial.chartColumn');
+    Route::get('/partial/chartLine', [PartialController::class, 'chartLine'])->name('partial.chartLine');
 
     /* Koordinator */
     Route::group(['middleware' => 'CheckRole:koordinator'], function(){
@@ -270,7 +273,6 @@ Route::group(['middleware' => 'auth'], function(){
 
         /* Mhs Partial */
         Route::get('/materi/{jenis}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
-        // Route::get('/riwayat/{jenis}', [PartialController::class, 'RiwayatKonsul'])->name('partial.RiwayatKonsul');
         Route::get('/jadwal-zoom', [PartialController::class, 'JadwalZoom'])->name('partial.JadwalZoom');
         Route::post('/jadwal-zoom/{kode}', [PartialController::class, 'JadwalZoomStore'])->name('partial.JadwalZoomStore');
         Route::get('/riwayat-jadwal-zoom', [PartialController::class, 'RiwayatJadwalZoom'])->name('partial.RiwayatJadwalZoom');
