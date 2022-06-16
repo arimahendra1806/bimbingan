@@ -177,7 +177,8 @@ class PartialController extends Controller
         $jmlJuduldisetujui = array();
         $disetujui = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->where('status', '!=', 'Diproses')->count('id');
         array_push($jmlJuduldisetujui, $disetujui);
-        array_push($jmlJuduldisetujui, $mengajukan);
+        $blm_disetujui = PengajuanJudulModel::where('tahun_ajaran_id', $tahun_id->id)->where('status', 'Diproses')->count('id');
+        array_push($jmlJuduldisetujui, $blm_disetujui);
 
         return response()->json(['pieJmlDsnMhs' => $pieJmlDsnMhs, 'pieJmlPengajuanJudul' => $pieJmlPengajuanJudul, 'jmlJuduldisetujui' => $jmlJuduldisetujui]);
     }

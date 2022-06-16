@@ -22,15 +22,13 @@ class DsnKonsulProgramController extends Controller
         $tahun_id = TahunAjaran::where('status', 'Aktif')->value('id');
 
         /* Ambil data dosen login */
-        $user = User::with(['dosen.dospem' => function($q) use ($tahun_id){
-            $q->where('tahun_ajaran_id', $tahun_id);
-        }])->find(Auth::user()->id);
+        $user = User::with('dosen')->find(Auth::user()->id);
 
-        $status_dospem = $user->dosen->dospem;
+        $get_status = DosPemModel::where('dosen_id', $user->dosen->id)->where('tahun_ajaran_id', $tahun_id)->get();
 
         /* Ambil data array kode pembimbing */
-        if ($status_dospem) {
-            $arr_in = $user->dosen->dospem->pluck('kode_pembimbing')->toArray();
+        if (!$get_status->isEmpty()) {
+            $arr_in = $get_status->pluck('kode_pembimbing')->toArray();
 
             /* Ambil data table daftar mahasiswa */
             if($request->ajax()){
@@ -42,7 +40,7 @@ class DsnKonsulProgramController extends Controller
             }
         }
 
-        if ($status_dospem) {
+        if (!$get_status->isEmpty()) {
             /* Return menuju view */
             return view('dosen.konsultasi.program.index');
         } else {
