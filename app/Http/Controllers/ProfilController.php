@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
+use App\Models\AdminModel;
 use Auth, Validator;
 
 class ProfilController extends Controller
@@ -14,7 +15,7 @@ class ProfilController extends Controller
     public function index()
     {
         /* Ambil data mahasiswa login */
-        $data = User::with('dosen','mahasiswa')->find(Auth::user()->id);
+        $data = User::with('dosen','mahasiswa','admin')->find(Auth::user()->id);
 
         return view('profile.index', compact('data'));
     }
@@ -27,7 +28,7 @@ class ProfilController extends Controller
             $rules = [
                 'nama' => ['required'],
                 'email' => ['required','email'],
-                'telepon' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/'],
+                'telepon' => ['required','numeric','digits_between:10,12','regex:/^[1-9]{1}/'],
                 'password' => ['required','min:8'],
                 'confirm' => ['required','min:8']
             ];
@@ -36,7 +37,7 @@ class ProfilController extends Controller
             $rules = [
                 'nama' => ['required'],
                 'email' => ['required','email'],
-                'telepon' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/'],
+                'telepon' => ['required','numeric','digits_between:10,12','regex:/^[1-9]{1}/'],
             ];
         }
 
@@ -71,26 +72,31 @@ class ProfilController extends Controller
             }
 
             /* Update ke tabel User */
-            $data = User::with('dosen','mahasiswa')->where('id', Auth::user()->id)->first();
+            $data = User::with('dosen','mahasiswa','admin')->where('id', Auth::user()->id)->first();
 
-            if($data->role == "koordinator" || $data->role == "kaprodi" || $data->role == "dosen") {
-                $data->dosen->nama_dosen = $request->nama;
-                $data->dosen->email = $request->email;
-                $data->dosen->no_telepon = $request->telepon;
+            $renama = $request->nama;
+            $reemail = $request->email;
+            $retelepon = $request->telepon;
+
+            if($data->dosen) {
+                $data->dosen->nama_dosen = $renama;
+                $data->dosen->email = $reemail;
+                $data->dosen->no_telepon = $retelepon;
                 $data->dosen->save();
+            }
 
-                $renama = $data->dosen->nama_dosen;
-                $reemail = $data->dosen->email;
-                $retelepon = $data->dosen->no_telepon;
-            } elseif($data->role == "mahasiswa") {
-                $data->mahasiswa->nama_mahasiswa = $request->nama;
-                $data->mahasiswa->email = $request->email;
-                $data->mahasiswa->no_telepon = $request->telepon;
+            if($data->mahasiswa) {
+                $data->mahasiswa->nama_mahasiswa = $renama;
+                $data->mahasiswa->email = $reemail;
+                $data->mahasiswa->no_telepon = $retelepon;
                 $data->mahasiswa->save();
+            }
 
-                $renama = $data->mahasiswa->nama_mahasiswa;
-                $reemail = $data->mahasiswa->email;
-                $retelepon = $data->mahasiswa->no_telepon;
+            if($data->admin) {
+                $data->admin->nama_admin = $renama;
+                $data->admin->email = $reemail;
+                $data->admin->no_telepon = $retelepon;
+                $data->admin->save();
             }
 
             if ($request->filled('password')) {

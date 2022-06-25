@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\AdminModel;
 use App\Models\TahunAjaran;
-use App\Models\MahasiswaModel;
 use App\Models\User;
-use App\Imports\MahasiswaImport;
-use App\Models\InformasiModel;
-use App\Models\NotifikasiModel;
+use App\Imports\AdminImport;
 use DataTables, Validator;
 
-class MahasiswaController extends Controller
+
+class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,12 +21,9 @@ class MahasiswaController extends Controller
      */
     public function index(Request $request)
     {
-        /* Ambil data tahun_ajaran */
-        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
-
-        /* Ambil data tabel mahasiswa */
+        /* Ambil data tabel admin */
         if ($request->ajax()){
-            $data = MahasiswaModel::latest()->get()->load('tahun');
+            $data = AdminModel::latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($model){
@@ -41,7 +37,7 @@ class MahasiswaController extends Controller
         }
 
         /* Return menuju view */
-        return view('koordinator.kelola-mahasiswa.index', compact('tahun_id'));
+        return view('koordinator.kelola-admin.index');
     }
 
     /**
@@ -64,12 +60,11 @@ class MahasiswaController extends Controller
     {
         /* Peraturan validasi  */
         $rules = [
-            'nim_add' => ['required','numeric','unique:mahasiswa,nim'],
-            'tahun_ajaran_id_add' => ['required'],
-            'nama_mhs_add' => ['required'],
+            'nip_add' => ['required','numeric','unique:admin,nip'],
+            'nama_admin_add' => ['required'],
             'alamat_add' => ['required'],
             'email_add' => ['required','email'],
-            'no_telepon_add' => ['required','numeric','digits_between:10,12','regex:/^[1-9]{1}/']
+            'no_telepon_add' => ['required','string','numeric','digits_between:10,12','regex:/^[1-9]{1}/']
         ];
 
         /* Pesan validasi */
@@ -77,9 +72,8 @@ class MahasiswaController extends Controller
 
         /* Nama kolom validasi */
         $attributes = [
-            'nim_add' => 'NIM',
-            'tahun_ajaran_id_add' => 'ID Tahun Ajaran',
-            'nama_mhs_add' => 'Nama Mahasiswa',
+            'nip_add' => 'NIP',
+            'nama_admin_add' => 'Nama Admin',
             'alamat_add' => 'Alamat',
             'email_add' => 'Email',
             'no_telepon_add' => 'Nomor Telepon'
@@ -93,23 +87,23 @@ class MahasiswaController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+            /* Ambil data tahun_ajaran */
+            $tahun = TahunAjaran::where('status', 'Aktif')->first();
 
             /* Insert ke tabel User */
             $pengguna = new User;
-            $pengguna->username = $request->nim_add;
-            $pengguna->tahun_ajaran_id = $tahun_id->id;
-            $pengguna->name = $request->nama_mhs_add;
-            $pengguna->role = "mahasiswa";
-            $pengguna->password = Hash::make($request->nim_add);
+            $pengguna->username = $request->nip_add;
+            $pengguna->tahun_ajaran_id = $tahun->id;
+            $pengguna->name = $request->nama_admin_add;
+            $pengguna->role = "admin";
+            $pengguna->password = Hash::make($request->nip_add);
             $pengguna->save();
 
-            /* Insert ke tabel mahasiswa */
-            $data = new MahasiswaModel;
+            /* Insert ke tabel Admin */
+            $data = new AdminModel;
             $data->users_id = $pengguna->id;
-            $data->nim = $request->nim_add;
-            $data->tahun_ajaran_id = $tahun_id->tahun_ajaran;
-            $data->nama_mahasiswa = $request->nama_mhs_add;
+            $data->nip = $request->nip_add;
+            $data->nama_admin = $request->nama_admin_add;
             $data->alamat = $request->alamat_add;
             $data->email = $request->email_add;
             $data->no_telepon = $request->no_telepon_add;
@@ -126,12 +120,12 @@ class MahasiswaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($kelola_mahasiswa)
+    public function show($kelola_admin)
     {
-        /* Ambil data Mahasiswa sesuai parameter */
-        $data = MahasiswaModel::find($kelola_mahasiswa)->load('tahun');
+        /* Ambil data Admin sesuai parameter */
+        $data = AdminModel::find($kelola_admin);
 
-        /* Return json data Mahasiswa */
+        /* Return json data Admin */
         return response()->json($data);
     }
 
@@ -153,17 +147,16 @@ class MahasiswaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $kelola_mahasiswa)
+    public function update(Request $request, $kelola_admin)
     {
-        /* Ambil data mahasiswa sesuai parameter */
-        $data = MahasiswaModel::with('user')->where('id', $kelola_mahasiswa)->first();
+        /* Ambil data admin sesuai parameter */
+        $data = AdminModel::with('user')->where('id', $kelola_admin)->first();
 
-        /* Kondisi data nim tidak sama, maka validasi berikut */
-        if($data->nim == $request->nim_edit) {
+        /* Kondisi data nip tidak sama, maka validasi berikut */
+        if($data->nip == $request->nip_edit) {
             /* Peraturan validasi  */
             $rules = [
-                'tahun_ajaran_id_edit' => ['required'],
-                'nama_mhs_edit' => ['required'],
+                'nama_admin_edit' => ['required'],
                 'alamat_edit' => ['required'],
                 'email_edit' => ['required','email'],
                 'no_telepon_edit' => ['required','numeric','digits_between:10,12','regex:/^[1-9]{1}/']
@@ -171,9 +164,8 @@ class MahasiswaController extends Controller
         } else {
             /* Peraturan validasi  */
             $rules = [
-                'nim_edit' => ['required','numeric','unique:mahasiswa,nim'],
-                'tahun_ajaran_id_edit' => ['required'],
-                'nama_mhs_edit' => ['required'],
+                'nip_edit' => ['required','numeric','unique:admin,nip'],
+                'nama_admin_edit' => ['required'],
                 'alamat_edit' => ['required'],
                 'email_edit' => ['required','email'],
                 'no_telepon_edit' => ['required','numeric','digits_between:10,12','regex:/^[1-9]{1}/']
@@ -185,9 +177,8 @@ class MahasiswaController extends Controller
 
         /* Nama kolom validasi */
         $attributes = [
-            'nim_edit' => 'NIM',
-            'tahun_ajaran_id_edit' => 'ID Tahun Ajaran',
-            'nama_mhs_edit' => 'Nama Mahasiswa',
+            'nip_edit' => 'NIP',
+            'nama_admin_edit' => 'Nama Admin',
             'alamat_edit' => 'Alamat',
             'email_edit' => 'Email',
             'no_telepon_edit' => 'Nomor Telepon'
@@ -204,15 +195,15 @@ class MahasiswaController extends Controller
             /* Update tabel user */
             if ($data->user)
             {
-                $data->user->username = $request->nim_edit;
-                $data->user->name = $request->nama_mhs_edit;
-                $data->user->password = Hash::make($request->nim_edit);
+                $data->user->username = $request->nip_edit;
+                $data->user->name = $request->nama_admin_edit;
+                $data->user->password = Hash::make($request->nip_edit);
                 $data->user->save();
             }
 
-            /* Update tabel mahasiswa */
-            $data->nim = $request->nim_edit;
-            $data->nama_mahasiswa = $request->nama_mhs_edit;
+            /* Update tabel admin */
+            $data->nip = $request->nip_edit;
+            $data->nama_admin = $request->nama_admin_edit;
             $data->alamat = $request->alamat_edit;
             $data->email = $request->email_edit;
             $data->no_telepon = $request->no_telepon_edit;
@@ -229,12 +220,12 @@ class MahasiswaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($kelola_mahasiswa)
+    public function destroy($kelola_admin)
     {
-        /* Ambil data mahasiswa sesuai parameter */
-        $data = MahasiswaModel::find($kelola_mahasiswa);
+        /* Ambil data admin sesuai parameter */
+        $data = AdminModel::find($kelola_admin);
 
-        /* Hapus data mahasiswa */
+        /* Hapus data admin */
         $data->forceDelete();
 
         /* Return json berhasil */
@@ -264,9 +255,9 @@ class MahasiswaController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            /* Impor data mahasiswa*/
+            /* Impor data admin*/
             $file = $request->file('file_import');
-            Excel::import(new MahasiswaImport, $file);
+            Excel::import(new AdminImport, $file);
 
             /* Return json berhasil */
             return response()->json(['msg' => "Berhasil Mengimpor Data!"]);
@@ -275,12 +266,9 @@ class MahasiswaController extends Controller
 
     public function indexKaprodi(Request $request)
     {
-        /* Ambil data tahun_ajaran */
-        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
-
-        /* Ambil data tabel mahasiswa */
+        /* Ambil data tabel dosen */
         if ($request->ajax()){
-            $data = MahasiswaModel::where('tahun_ajaran_id', $tahun_id->id)->latest()->get()->load('tahun');
+            $data = AdminModel::latest()->get();
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($model){
@@ -292,6 +280,6 @@ class MahasiswaController extends Controller
         }
 
         /* Return menuju view */
-        return view('kaprodi.data-mahasiswa.index');
+        return view('kaprodi.data-admin.index');
     }
 }

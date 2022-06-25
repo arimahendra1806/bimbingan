@@ -33,8 +33,17 @@
                             <div class="row mb-2">
                                 <div class="col-md-4">
                                     <label for="nama" class="col-form-label">Nama Anda:</label>
-                                    <input type="text" class="form-control" value="{{ $data->name }}" id="nama"
-                                        name="nama" placeholder="e.g: Budi">
+                                    @if ((Auth::check() && Auth::user()->role == 'koordinator') || Auth::user()->role == 'kaprodi' || (Auth::check() && Auth::user()->role == 'dosen'))
+                                        <input type="text" class="form-control" value="{{ $data->dosen->nama_dosen }}"
+                                            id="nama" name="nama" placeholder="e.g: Budi">
+                                    @elseif(Auth::check() && Auth::user()->role == 'mahasiswa')
+                                        <input type="text" class="form-control"
+                                            value="{{ $data->mahasiswa->nama_mahasiswa }}" id="nama" name="nama"
+                                            placeholder="e.g: Budi">
+                                    @elseif(Auth::check() && Auth::user()->role == 'admin')
+                                        <input type="text" class="form-control" value="{{ $data->admin->nama_admin }}"
+                                            id="nama" name="nama" placeholder="e.g: Budi">
+                                    @endif
                                     <span class="text-danger error-text nama_error"></span>
                                 </div>
                                 <div class="col-md-4">
@@ -44,6 +53,9 @@
                                             id="email" name="email" placeholder="e.g: Budi@gmail.com">
                                     @elseif(Auth::check() && Auth::user()->role == 'mahasiswa')
                                         <input type="email" class="form-control" value="{{ $data->mahasiswa->email }}"
+                                            id="email" name="email" placeholder="e.g: Budi@gmail.com">
+                                    @elseif(Auth::check() && Auth::user()->role == 'admin')
+                                        <input type="email" class="form-control" value="{{ $data->admin->email }}"
                                             id="email" name="email" placeholder="e.g: Budi@gmail.com">
                                     @endif
                                     <span class="text-danger error-text email_error"></span>
@@ -61,7 +73,14 @@
                                         <div class="input-group">
                                             <div class="input-group-text">+62</div>
                                             <input type="text" class="form-control"
-                                                value="{{ $data->dosen->no_telepon }}" id="telepon" name="telepon"
+                                                value="{{ $data->mahasiswa->no_telepon }}" id="telepon" name="telepon"
+                                                placeholder="e.g: 81XXXXXXXX">
+                                        </div>
+                                    @elseif(Auth::check() && Auth::user()->role == 'admin')
+                                        <div class="input-group">
+                                            <div class="input-group-text">+62</div>
+                                            <input type="text" class="form-control"
+                                                value="{{ $data->admin->no_telepon }}" id="telepon" name="telepon"
                                                 placeholder="e.g: 81XXXXXXXX">
                                         </div>
                                     @endif
@@ -70,8 +89,8 @@
                             </div>
                             <div class="row mb-4">
                                 <div class="col-md-6">
-                                    <label for="password" class="col-form-label">Password Baru: <b
-                                            class="info">*Kosongkan Jika Tidak Update</b></label>
+                                    <label for="password" class="col-form-label">Password Baru: <b class="info">*Kosongkan
+                                            Jika Tidak Update</b></label>
                                     <div class="input-group auth-pass-inputgroup">
                                         <input type="password" class="form-control" placeholder="Enter password"
                                             aria-label="Password" aria-describedby="password" name="password">

@@ -9,6 +9,7 @@ use Dyrynda\Database\Support\CascadeSoftDeletes;
 use App\Models\TahunAjaran;
 use App\Models\User;
 use App\Models\NotifikasiModel;
+use App\Models\FileInfomasiModel;
 
 class InformasiModel extends Model
 {
@@ -19,13 +20,19 @@ class InformasiModel extends Model
     protected $table = "informasi";
     protected $fillable = ["id", "users_id", "tahun_ajaran_id", "kepada_role", "kepada", "judul", "subyek", "pesan", "file_upload", "jenis"];
 
-    protected $cascadeDeletes = ['notifikasi'];
+    protected $cascadeDeletes = ['notifikasi','file'];
     protected $dates = ['deleted_at'];
 
     /* notifikasi */
     public function notifikasi()
     {
         return $this->belongsTo(NotifikasiModel::class,'id','informasi_id');
+    }
+
+    /* file */
+    public function file()
+    {
+        return $this->belongsTo(FileInfomasiModel::class,'id','informasi_id');
     }
 
     /* inisiasi tahun */

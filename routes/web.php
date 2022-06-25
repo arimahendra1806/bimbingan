@@ -33,6 +33,8 @@ use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\PeringatanController;
 use App\Http\Controllers\TopbarController;
 use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\VerifikasiPengumpulanController;
 /* End Controller */
 
 /*
@@ -47,7 +49,7 @@ use App\Http\Controllers\ProfilController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth/login');
 });
 
 Auth::routes();
@@ -91,6 +93,14 @@ Route::group(['middleware' => 'auth'], function(){
         ]]);
         Route::post('/kelola-materi-tahunan/{materi_tahunan}', [MateriTahunanController::class, 'update'])->name('kelola-materi-tahunan.update');
         Route::post('/kelola-materi-tahunan/delete/{materi_tahunan}', [MateriTahunanController::class, 'destroy'])->name('kelola-materi-tahunan.destroy');
+
+        /* Kelola Admin */
+        Route::resource('kelola-admin-prodi', AdminController::class, ['except' => [
+            'destroy','update'
+        ]]);
+        Route::post('/kelola-admin-prodi/{kelola_admin}', [AdminController::class, 'update'])->name('kelola-admin-prodi.update');
+        Route::post('/kelola-admin-prodi/delete/{kelola_admin}', [AdminController::class, 'destroy'])->name('kelola-admin-prodi.destroy');
+        Route::post('/import/admin-prodi', [AdminController::class, 'import'])->name('kelola-admin-prodi.import');
 
         /* Kelola Dosen */
         Route::resource('kelola-dosen', DosenController::class, ['except' => [
@@ -139,6 +149,10 @@ Route::group(['middleware' => 'auth'], function(){
 
     /* Kaprodi */
     Route::group(['middleware' => 'CheckRole:kaprodi'], function(){
+        /* Data Admin */
+        Route::get('/daftar-data-admin-prodi', [AdminController::class, 'indexKaprodi'])->name('data-admin.indexKaprodi');
+        Route::get('/daftar-data-admin-prodi/{data_admin}', [AdminController::class, 'show'])->name('data-admin.show');
+
         /* Data Dosen */
         Route::get('/daftar-data-dosen', [DosenController::class, 'indexKaprodi'])->name('data-dosen.indexKaprodi');
         Route::get('/daftar-data-dosen/{data_dosen}', [DosenController::class, 'show'])->name('data-dosen.show');
@@ -270,6 +284,11 @@ Route::group(['middleware' => 'auth'], function(){
             'update'
         ]]);
         Route::post('/pengajuan-zoom/{pengajuan_zoom}', [PengajuanZoomController::class, 'update'])->name('pengajuan-zoom.update');
+
+        /* Kelola Verifikasi */
+        Route::get('/pengumpulan-proposal', [VerifikasiPengumpulanController::class, 'indexPro'])->name('pengumpulan-proposal.indexPro');
+        Route::post('/pengumpulan-proposal', [VerifikasiPengumpulanController::class, 'storePro'])->name('pengumpulan-proposal.storePro');
+
 
         /* Mhs Partial */
         Route::get('/materi/{jenis}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');

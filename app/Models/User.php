@@ -13,6 +13,7 @@ use App\Models\DosenModel;
 use App\Models\InfomasiModel;
 use App\Models\MahasiswaModel;
 use App\Models\NotifikasiModel;
+use App\Models\AdminModel;
 use App\Models\TahunAjaran;
 
 class User extends Authenticatable
@@ -75,6 +76,12 @@ class User extends Authenticatable
     public function mahasiswa()
     {
         return $this->belongsTo(MahasiswaModel::class,'id','users_id');
+    }
+
+    /* admin */
+    public function admin()
+    {
+        return $this->belongsTo(AdminModel::class,'id','users_id');
     }
 
     /* inisiasi tahun */

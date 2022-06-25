@@ -10,6 +10,7 @@ use App\Models\PengajuanJudulModel;
 use App\Models\User;
 use App\Models\DosPemModel;
 use App\Models\TahunAjaran;
+use App\Models\VerifikasiPengumpulanModel;
 
 class MahasiswaModel extends Model
 {
@@ -20,7 +21,7 @@ class MahasiswaModel extends Model
     protected $table = "mahasiswa";
     protected $fillable = ["id", "users_id", "nim", "tahun_ajaran_id", "nama_mahasiswa", "alamat", "email", "no_telepon"];
 
-    protected $cascadeDeletes = ['judul','anggota','user','dospem'];
+    protected $cascadeDeletes = ['judul','anggota','user','dospem','verifikasi'];
     protected $dates = ['deleted_at'];
 
     /* pengajuan_judul */
@@ -39,6 +40,12 @@ class MahasiswaModel extends Model
     public function dospem()
     {
         return $this->belongsTo(DosPemModel::class,'id','mahasiswa_id');
+    }
+
+    /* verifikasi */
+    public function verifikasi()
+    {
+        return $this->belongsTo(VerifikasiPengumpulanModel::class,'id','mahasiswa_id');
     }
 
     /* inisiasi user */

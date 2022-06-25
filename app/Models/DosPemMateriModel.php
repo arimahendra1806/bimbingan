@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use App\Models\DosenModel;
 use App\Models\TahunAjaran;
+use App\Models\FileDosPemMateriModel;
 
 class DosPemMateriModel extends Model
 {
@@ -20,6 +21,12 @@ class DosPemMateriModel extends Model
 
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];
+
+    /* file */
+    public function file()
+    {
+        return $this->belongsTo(FileDosPemMateriModel::class,'id','materi_dospem_id');
+    }
 
     /* inisiasi dosen */
      public function dosen()

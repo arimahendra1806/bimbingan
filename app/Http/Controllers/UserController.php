@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\TahunAjaran;
 use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
+use App\Models\AdminModel;
 use DataTables, Validator;
 
 class UserController extends Controller
@@ -24,10 +25,13 @@ class UserController extends Controller
         $tahun_aktif = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Ambil data dosen */
-        $dosen_id = DosenModel::all()->sortBy('nama_dosen');
+        $dosen_id = DosenModel::where('users_id', '0')->orderBy('nama_dosen', 'DESC')->get();
 
         /* Ambil data mahasiswa */
-        $mhs_id = MahasiswaModel::all()->sortBy('nama_mahasiswa');
+        $mhs_id = MahasiswaModel::where('users_id', '0')->orderBy('nama_mahasiswa', 'DESC')->get();
+
+        /* Ambil data admin */
+        $admin_id = AdminModel::where('users_id', '0')->orderBy('nama_admin', 'DESC')->get();
 
         /* Ambil data tabel user */
         if ($request->ajax()){
@@ -45,7 +49,7 @@ class UserController extends Controller
         }
 
         /* Return menuju view */
-        return view('koordinator.kelola-pengguna.index', compact('tahun_id', 'dosen_id', 'mhs_id', 'tahun_aktif'));
+        return view('koordinator.kelola-pengguna.index', compact('tahun_id', 'dosen_id', 'mhs_id', 'admin_id', 'tahun_aktif'));
     }
 
     /**
@@ -106,21 +110,31 @@ class UserController extends Controller
             $data->password = Hash::make($request->password_pengguna_add);
             $data->save();
 
-            /* Ambil data dosen sesuai parameter */
-            $dsn = DosenModel::where('nidn', $data->username)->first();
-            /* Kondisi jika data dosen kosong */
-            if($dsn){
+            /* Kondisi jika data dosen, kaprodi, koor */
+            if($data->role == "dosen" || $data->role == "kaprodi" || $data->role == "koordinator"){
+                /* Ambil data dosen sesuai parameter */
+                $dsn = DosenModel::where('nidn', $data->username)->first();
                 /* Update data dosen */
                 $dsn->users_id = $data->id;
                 $dsn->save();
-            } else {
+            }
+
+            /* Kondisi jika data mahasiswa */
+            if($data->role == "mahasiswa") {
                 /* Ambil data dosen sesuai parameter */
                 $mhs = MahasiswaModel::where('nim', $data->username)->first();
-                if($mhs){
-                    /* Update data mahasiswa */
-                    $mhs->users_id = $data->id;
-                    $mhs->save();
-                }
+                /* Update data mahasiswa */
+                $mhs->users_id = $data->id;
+                $mhs->save();
+            }
+
+            /* Kondisi jika data admin */
+            if($data->role == "admin") {
+                /* Ambil data dosen sesuai parameter */
+                $mhs = AdminModel::where('nip', $data->username)->first();
+                /* Update data mahasiswa */
+                $mhs->users_id = $data->id;
+                $mhs->save();
             }
 
             /* Return json berhasil */
@@ -253,18 +267,24 @@ class UserController extends Controller
     public function destroy($pengguna)
     {
         /* Ambil data users sesuai parameter */
-        $data = User::find($pengguna);
+        $data = User::with('dosen','mahasiswa','admin')->find($pengguna);
 
         /* Kondisi jika data dosen ada maka update users_id */
         if($data->dosen){
-            $data->dosen->users_id = rand(10,99) . rand(100,999);
+            $data->dosen->users_id = '0';
             $data->dosen->save();
         }
 
         /* Kondisi jika data mahasiswa ada maka update users_id */
         if($data->mahasiswa){
-            $data->mahasiswa->users_id = rand(10,99) . rand(100,999);
+            $data->mahasiswa->users_id = '0';
             $data->mahasiswa->save();
+        }
+
+        /* Kondisi jika data admin ada maka update users_id */
+        if($data->admin){
+            $data->admin->users_id = '0';
+            $data->admin->save();
         }
 
         /* Hapus data users */

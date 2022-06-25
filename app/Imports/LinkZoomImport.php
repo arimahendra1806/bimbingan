@@ -29,7 +29,7 @@ class LinkZoomImport implements ToModel, WithStartRow
         if($kode_dosen){
             $id = $kode_dosen->id;
         } else {
-            $id = rand(10,99).rand(1000,9999);
+            $id = "0";
         }
 
         return new LinkZoomModel([

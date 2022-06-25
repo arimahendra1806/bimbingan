@@ -66,7 +66,7 @@ class DosenController extends Controller
             'nama_dosen_add' => ['required'],
             'alamat_add' => ['required'],
             'email_add' => ['required','email'],
-            'no_telepon_add' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/']
+            'no_telepon_add' => ['required','numeric','digits_between:10,12','regex:/^[1-9]{1}/']
         ];
 
         /* Pesan validasi */
@@ -152,7 +152,7 @@ class DosenController extends Controller
     public function update(Request $request, $kelola_dosen)
     {
         /* Ambil data dosen sesuai parameter */
-        $data = DosenModel::where('id', $kelola_dosen)->first();
+        $data = DosenModel::with('user')->where('id', $kelola_dosen)->first();
 
         /* Kondisi data nidn tidak sama, maka validasi berikut */
         if($data->nidn == $request->nidn_edit) {
@@ -161,7 +161,7 @@ class DosenController extends Controller
                 'nama_dosen_edit' => ['required'],
                 'alamat_edit' => ['required'],
                 'email_edit' => ['required','email'],
-                'no_telepon_edit' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/']
+                'no_telepon_edit' => ['required','numeric','digits_between:10,12','regex:/^[1-9]{1}/']
             ];
         } else {
             /* Peraturan validasi  */
@@ -170,7 +170,7 @@ class DosenController extends Controller
                 'nama_dosen_edit' => ['required'],
                 'alamat_edit' => ['required'],
                 'email_edit' => ['required','email'],
-                'no_telepon_edit' => ['required','string','min:10','max:13','regex:/^[1-9]{1}/']
+                'no_telepon_edit' => ['required','numeric','digits_between:10,12','regex:/^[1-9]{1}/']
             ];
         }
 

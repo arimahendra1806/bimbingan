@@ -2,28 +2,28 @@
 
 @section('content')
     {{-- Modal Add --}}
-    <div class="modal fade" id="DosenModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="ModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Data Dosen</h5>
+                    <h5 class="modal-title">Tambah Data Admin Prodi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="DosenFormAdd">
+                <form id="FormAdd">
                     @csrf
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-6">
-                                <label for="nidn_add" class="col-form-label">NIDN:</label>
-                                <input type="text" class="form-control" id="nidn_add" name="nidn_add"
-                                    placeholder="e.g: 17XXXXXXX">
-                                <span class="text-danger error-text nidn_add_error"></span>
+                                <label for="nip_add" class="col-form-label">NIP:</label>
+                                <input type="text" class="form-control" id="nip_add" name="nip_add"
+                                    placeholder="e.g: 20XXXXXXX">
+                                <span class="text-danger error-text nip_add_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="nama_dosen_add" class="col-form-label">Nama Dosen:</label>
-                                <input type="text" class="form-control" id="nama_dosen_add" name="nama_dosen_add"
+                                <label for="nama_admin_add" class="col-form-label">Nama Admin:</label>
+                                <input type="text" class="form-control" id="nama_admin_add" name="nama_admin_add"
                                     placeholder="e.g: Budi">
-                                <span class="text-danger error-text nama_dosen_add_error"></span>
+                                <span class="text-danger error-text nama_admin_add_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -63,27 +63,27 @@
     {{-- END Modal Add --}}
 
     {{-- Modal Edit --}}
-    <div class="modal fade" id="DosenModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="ModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Perbarui Data Dosen</h5>
+                    <h5 class="modal-title">Perbarui Data Admin Prodi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="DosenFormEdit" class="form-inline">
-                    <input type="hidden" class="form-control" id="dosen_id_edit" name="dosen_id_edit">
+                <form id="FormEdit" class="form-inline">
+                    <input type="hidden" class="form-control" id="admin_id_edit" name="admin_id_edit">
                     @csrf
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-6">
-                                <label for="nidn_edit" class="col-form-label">NIDN:</label>
-                                <input type="text" class="form-control" id="nidn_edit" name="nidn_edit">
-                                <span class="text-danger error-text nidn_edit_error"></span>
+                                <label for="nip_edit" class="col-form-label">NIP:</label>
+                                <input type="text" class="form-control" id="nip_edit" name="nip_edit">
+                                <span class="text-danger error-text nip_edit_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="nama_dosen_edit" class="col-form-label">Nama Dosen:</label>
-                                <input type="text" class="form-control" id="nama_dosen_edit" name="nama_dosen_edit">
-                                <span class="text-danger error-text nama_dosen_edit_error"></span>
+                                <label for="nama_admin_edit" class="col-form-label">Nama Admin:</label>
+                                <input type="text" class="form-control" id="nama_admin_edit" name="nama_admin_edit">
+                                <span class="text-danger error-text nama_admin_edit_error"></span>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -121,24 +121,24 @@
     {{-- END Modal Edit --}}
 
     {{-- Modal Show --}}
-    <div class="modal fade" id="DosenModalShow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="ModalShow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Detail Data Dosen</h5>
+                    <h5 class="modal-title">Detail Data Admin Prodi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row mb-1">
                         <div class="col-md-6">
-                            <label for="nidn_show" class="col-form-label">NIDN:</label>
-                            <input type="text" class="form-control no-outline" id="nidn_show" name="nidn_show"
+                            <label for="nip_show" class="col-form-label">NIP:</label>
+                            <input type="text" class="form-control no-outline" id="nip_show" name="nip_show"
                                 readonly>
                         </div>
                         <div class="col-md-6">
-                            <label for="nama_dosen_show" class="col-form-label">Nama Dosen:</label>
-                            <input type="text" class="form-control no-outline" id="nama_dosen_show"
-                                name="nama_dosen_show" readonly>
+                            <label for="nama_admin_show" class="col-form-label">Nama Admin:</label>
+                            <input type="text" class="form-control no-outline" id="nama_admin_show"
+                                name="nama_admin_show" readonly>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -173,7 +173,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Impor Data Dosen</h5>
+                    <h5 class="modal-title">Impor Data Admin Prodi</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" id="ImportForm" enctype="multipart/form-data" files="true">
@@ -186,8 +186,8 @@
                             <span class="text-danger error-text file_import_error mb-2"></span>
                         </div>
                         <div class="mb-3">
-                            <a href="{{ asset('assets/img') }}/import_dosen_large.png" class="glightbox">
-                                <img src="{{ asset('assets/img') }}/import_dosen_small.png" alt="image"
+                            <a href="{{ asset('assets/img') }}/import_admin_large.png" class="glightbox">
+                                <img src="{{ asset('assets/img') }}/import_admin_small.png" alt="image"
                                     width="100%" />
                             </a>
                         </div>
@@ -213,11 +213,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Kelola Data Dosen</h4>
+                    <h4 class="mb-sm-0 font-size-18">Kelola Data Admin Prodi</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Kelola Data Dosen</li>
+                            <li class="breadcrumb-item active">Kelola Data Admin Prodi</li>
                         </ol>
                     </div>
 
@@ -229,8 +229,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Data Dosen</h4>
-                        <p class="card-title-desc">Anda perlu mengelola <b>Data Dosen</b>
+                        <h4 class="card-title">Data Admin Prodi</h4>
+                        <p class="card-title-desc">Anda perlu mengelola <b>Data Admin Prodi</b>
                             yang <b>Aktif</b>, sehingga mereka bisa menggunakan <b>Sistem Informasi</b>.
                         </p>
                     </div>
@@ -246,12 +246,12 @@
                             </a>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="DosenTabels">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="AdminTabels">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>NIDN</th>
-                                        <th>Nama Dosen</th>
+                                        <th>NIP</th>
+                                        <th>Nama Admin Prodi</th>
                                         <th>Email</th>
                                         <th>Telepon</th>
                                         <th>Aksi</th>
@@ -286,21 +286,21 @@
             });
 
             /* Get data table */
-            var table = $('#DosenTabels').DataTable({
+            var table = $('#AdminTabels').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('kelola-dosen.index') }}",
+                ajax: "{{ route('kelola-admin-prodi.index') }}",
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'nidn',
-                        name: 'nidn'
+                        data: 'nip',
+                        name: 'nip'
                     },
                     {
-                        data: 'nama_dosen',
-                        name: 'nama_dosen'
+                        data: 'nama_admin',
+                        name: 'nama_admin'
                     },
                     {
                         data: 'email',
@@ -346,20 +346,20 @@
 
             /* Button Add */
             $("#btnAdd").click(function() {
-                $('#DosenFormAdd').trigger('reset');
+                $('#FormAdd').trigger('reset');
                 $(document).find('span.error-text').text('');
-                $('#DosenModalAdd').modal('show');
+                $('#ModalAdd').modal('show');
             });
 
             /* Button Edit */
             $('body').on('click', '#btnEdit', function() {
                 $(document).find('span.error-text').text('');
                 var this_id = $(this).data('id');
-                $.get('kelola-dosen/' + this_id, function(data) {
-                    $('#DosenModalEdit').modal('show');
-                    $('#dosen_id_edit').val(data.id);
-                    $('#nidn_edit').val(data.nidn);
-                    $('#nama_dosen_edit').val(data.nama_dosen);
+                $.get('kelola-admin-prodi/' + this_id, function(data) {
+                    $('#ModalEdit').modal('show');
+                    $('#admin_id_edit').val(data.id);
+                    $('#nip_edit').val(data.nip);
+                    $('#nama_admin_edit').val(data.nama_admin);
                     $('#alamat_edit').val(data.alamat);
                     $('#email_edit').val(data.email);
                     $('#no_telepon_edit').val(data.no_telepon);
@@ -369,10 +369,10 @@
             /* Button Show */
             $('body').on('click', '#btnShow', function() {
                 var this_id = $(this).data('id');
-                $.get('kelola-dosen/' + this_id, function(data) {
-                    $('#DosenModalShow').modal('show');
-                    $('#nidn_show').val(data.nidn);
-                    $('#nama_dosen_show').val(data.nama_dosen);
+                $.get('kelola-admin-prodi/' + this_id, function(data) {
+                    $('#ModalShow').modal('show');
+                    $('#nip_show').val(data.nip);
+                    $('#nama_admin_show').val(data.nama_admin);
                     $('#alamat_show').val(data.alamat);
                     $('#email_show').val(data.email);
                     $('#no_telepon_show').val('+62' + data.no_telepon);
@@ -391,7 +391,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url: "kelola-dosen/delete/" + this_id,
+                            url: "kelola-admin-prodi/delete/" + this_id,
                             type: 'post',
                             data: {
                                 "id": this_id,
@@ -420,7 +420,7 @@
             });
 
             /* Ajax Store */
-            $("#DosenFormAdd").submit(function(e) {
+            $("#FormAdd").submit(function(e) {
                 var form = this;
                 form.addSave.disabled = true;
                 form.addSave.value = "Sedang memproses...";
@@ -430,7 +430,7 @@
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "{{ route('kelola-dosen.store') }}",
+                    url: "{{ route('kelola-admin-prodi.store') }}",
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -450,7 +450,7 @@
                             form.addSave.disabled = false;
                             form.addSave.value = "Simpan";
                             table.ajax.reload();
-                            $("#DosenModalAdd").modal('hide');
+                            $("#ModalAdd").modal('hide');
                             Swal.fire({
                                 title: "Berhasil Menambahkan Data!",
                                 icon: "success",
@@ -471,18 +471,18 @@
             });
 
             /* Ajax Update */
-            $("#DosenFormEdit").submit(function(e) {
+            $("#FormEdit").submit(function(e) {
                 var form = this;
                 form.editSave.disabled = true;
                 form.editSave.value = "Sedang memproses...";
 
                 e.preventDefault();
 
-                var this_id = document.getElementById("dosen_id_edit").value;
+                var this_id = document.getElementById("admin_id_edit").value;
                 var formData = new FormData(this);
 
                 $.ajax({
-                    url: "kelola-dosen/" + this_id,
+                    url: "kelola-admin-prodi/" + this_id,
                     type: "POST",
                     data: formData,
                     cache: false,
@@ -502,7 +502,7 @@
                             form.editSave.disabled = false;
                             form.editSave.value = "Simpan";
                             table.ajax.reload();
-                            $("#DosenModalEdit").modal('hide');
+                            $("#ModalEdit").modal('hide');
                             Swal.fire({
                                 title: "Berhasil Memperbarui Data!",
                                 icon: "success",
@@ -544,7 +544,7 @@
                         }, false);
                         return xhr;
                     },
-                    url: "{{ route('kelola-dosen.import') }}",
+                    url: "{{ route('kelola-admin-prodi.import') }}",
                     type: "POST",
                     data: formData,
                     cache: false,

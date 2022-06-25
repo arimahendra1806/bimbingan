@@ -26,12 +26,16 @@
                                         <option value="{{ $mhs->nama_mahasiswa }}" data-iden="{{ $mhs->nim }}">
                                             {{ $mhs->nama_mahasiswa }}</option>
                                     @endforeach
+                                    @foreach ($admin_id as $admin)
+                                        <option value="{{ $admin->nama_admin }}" data-iden="{{ $admin->nip }}">
+                                            {{ $admin->nama_admin }}</option>
+                                    @endforeach
                                 </select>
                                 <span class="text-danger error-text nama_pengguna_add_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="username_add" class="col-form-label">Username: <b
-                                        class="info">*Otomatis Terisi Jika Nama Pengguna Dipilih</b></label>
+                                <label for="username_add" class="col-form-label">Username: <b class="info">*Otomatis
+                                        Terisi Jika Nama Pengguna Dipilih</b></label>
                                 <input type="text" class="form-control" id="username_add" name="username_add"
                                     placeholder="*e.g: NIDN/NIM">
                                 <span class="text-danger error-text username_add_error"></span>
@@ -53,6 +57,7 @@
                                     <option value="kaprodi">Kaprodi</option>
                                     <option value="dosen">Dosen</option>
                                     <option value="mahasiswa">Mahasiswa</option>
+                                    <option value="admin">Admin Prodi</option>
                                 </select>
                                 <span class="text-danger error-text role_pengguna_add_error"></span>
                             </div>
@@ -103,12 +108,16 @@
                                         <option value="{{ $mhs->nama_mahasiswa }}" data-iden="{{ $mhs->nim }}">
                                             {{ $mhs->nama_mahasiswa }}</option>
                                     @endforeach
+                                    @foreach ($admin_id as $admin)
+                                        <option value="{{ $admin->nama_admin }}" data-iden="{{ $admin->nip }}">
+                                            {{ $admin->nama_admin }}</option>
+                                    @endforeach
                                 </select>
                                 <span class="text-danger error-text nama_pengguna_edit_error"></span>
                             </div>
                             <div class="col-md-6">
-                                <label for="username_edit" class="col-form-label">Username: <b
-                                        class="info">*Otomatis Terisi Jika Nama Pengguna Dipilih</b></label>
+                                <label for="username_edit" class="col-form-label">Username: <b class="info">*Otomatis
+                                        Terisi Jika Nama Pengguna Dipilih</b></label>
                                 <input type="text" class="form-control" id="username_edit" name="username_edit"
                                     placeholder="e.g: NIDN/NIM">
                                 <span class="text-danger error-text username_edit_error"></span>
@@ -135,6 +144,7 @@
                                     <option value="kaprodi">Kaprodi</option>
                                     <option value="dosen">Dosen</option>
                                     <option value="mahasiswa">Mahasiswa</option>
+                                    <option value="admin">Admin Prodi</option>
                                 </select>
                                 <span class="text-danger error-text role_pengguna_edit_error"></span>
                             </div>
@@ -160,7 +170,8 @@
     {{-- END Modal Add --}}
 
     {{-- Modal Show --}}
-    <div class="modal fade" id="PenggunaModalShow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="PenggunaModalShow" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -171,8 +182,8 @@
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="username_show" class="col-form-label">Username:</label>
-                            <input type="text" class="form-control no-outline" id="username_show" name="username_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="username_show"
+                                name="username_show" readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="tahun_ajaran_id_show" class="col-form-label">ID Tahun Ajaran:</label>

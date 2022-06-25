@@ -18,6 +18,7 @@ use App\Models\NotifikasiModel;
 use App\Models\PengajuanZoomModel;
 use App\Models\PengajuanJudulModel;
 use App\Models\ProgresBimbinganModel;
+use App\Models\VerifikasiPengumpulanModel;
 
 class TahunAjaran extends Model
 {
@@ -28,7 +29,7 @@ class TahunAjaran extends Model
     protected $table = "tahun_ajaran";
     protected $fillable = ["id", "tahun_ajaran", "status"];
 
-    protected $cascadeDeletes = ['userth','bimbinganth','dospemth','infoth','ketentuanth','linkth','mhsth','materith','zoomth','judulth','progresth'];
+    protected $cascadeDeletes = ['userth','bimbinganth','dospemth','infoth','ketentuanth','linkth','mhsth','materith','zoomth','judulth','progresth','verifikasith'];
     protected $dates = ['deleted_at'];
 
     public function userth()
@@ -84,5 +85,10 @@ class TahunAjaran extends Model
     public function progresth()
     {
         return $this->belongsTo(ProgresBimbinganModel::class,'id','tahun_ajaran_id');
+    }
+
+    public function verifikasith()
+    {
+        return $this->belongsTo(VerifikasiPengumpulanModel::class,'id','tahun_ajaran_id');
     }
 }

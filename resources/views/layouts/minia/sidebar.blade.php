@@ -61,6 +61,11 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li>
+                                <a href="{{ route('kelola-admin-prodi.index') }}">
+                                    <span data-key="t-chat">Data Admin Prodi</span>
+                                </a>
+                            </li>
+                            <li>
                                 <a href="{{ route('kelola-dosen.index') }}">
                                     <span data-key="t-chat">Data Dosen</span>
                                 </a>
@@ -125,6 +130,11 @@
                             <span data-key="t-apps">Data Pengguna</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('data-admin.indexKaprodi') }}">
+                                    <span data-key="t-chat">Data Admin Prodi</span>
+                                </a>
+                            </li>
                             <li>
                                 <a href="{{ route('data-dosen.indexKaprodi') }}">
                                     <span data-key="t-chat">Data Dosen</span>
@@ -278,6 +288,24 @@
                             <i data-feather="monitor"></i>
                             <span data-key="t-dashboard">Pengajuan Jadwal Zoom</span>
                         </a>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="archive"></i>
+                            <span data-key="t-apps">Verifikasi Pengumpulan</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('pengumpulan-proposal.indexPro') }}">
+                                    <span data-key="t-chat">Pengumpulan Proposal</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('peringatan.indexMhs') }}">
+                                    <span data-key="t-chat">Pengumpulan Laporan</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="javascript: void(0);" class="has-arrow">
