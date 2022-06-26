@@ -121,8 +121,6 @@
 
     <script src="{{ asset('vendor/minia') }}/assets/js/app.js"></script>
 
-    @yield('js')
-
     <script>
         function loaderNotif() {
             $('#countNotif').load("{{ route('topbar-notif.informasi') }}");
@@ -130,13 +128,21 @@
             $('#countNotifPeringatan').load("{{ route('topbar-notif.peringatan') }}");
         }
 
-        $(document).ready(function() {
+        function sidebarReady() {
             document.body.setAttribute('data-sidebar-size', 'lg');
+        }
 
+        function modalReady() {
             $('.modal').modal({
                 backdrop: 'static',
                 keyboard: false
             });
+        }
+
+        $(document).ready(function() {
+            sidebarReady();
+
+            modalReady();
 
             loaderNotif();
 
@@ -149,6 +155,8 @@
             });
         });
     </script>
+
+    @yield('js')
 
 </body>
 

@@ -39,6 +39,8 @@ class AuthController extends Controller
                     Auth::logout();
                     return redirect('/login')->with('msg','Akun Anda Kadaluarsa');
                 }
+            } elseif ($role == 'admin'){
+                return redirect()->route('dashboard.home');
             }
     	}
     	else{

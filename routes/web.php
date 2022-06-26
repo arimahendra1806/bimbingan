@@ -289,6 +289,8 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/pengumpulan-proposal', [VerifikasiPengumpulanController::class, 'indexPro'])->name('pengumpulan-proposal.indexPro');
         Route::post('/pengumpulan-proposal', [VerifikasiPengumpulanController::class, 'storePro'])->name('pengumpulan-proposal.storePro');
 
+        Route::get('/pengumpulan-laporan', [VerifikasiPengumpulanController::class, 'indexLap'])->name('pengumpulan-laporan.indexLap');
+        Route::post('/pengumpulan-laporan', [VerifikasiPengumpulanController::class, 'storeLap'])->name('pengumpulan-laporan.storeLap');
 
         /* Mhs Partial */
         Route::get('/materi/{jenis}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
@@ -296,6 +298,16 @@ Route::group(['middleware' => 'auth'], function(){
         Route::post('/jadwal-zoom/{kode}', [PartialController::class, 'JadwalZoomStore'])->name('partial.JadwalZoomStore');
         Route::get('/riwayat-jadwal-zoom', [PartialController::class, 'RiwayatJadwalZoom'])->name('partial.RiwayatJadwalZoom');
         Route::get('/riwayat-jadwal-zoom/{riwayat}', [PartialController::class, 'RiwayatJadwalZoomShow'])->name('partial.RiwayatJadwalZoomShow');
+    });
+
+    /* Admin */
+    Route::group(['middleware' => 'CheckRole:admin'], function(){
+        /* Kelola Verifikasi */
+        Route::get('/verfikasi-pengumpulan-proposal', [VerifikasiPengumpulanController::class, 'indexAdmPro'])->name('pengumpulan-proposal.indexAdmPro');
+        Route::get('/verfikasi-pengumpulan-laporan', [VerifikasiPengumpulanController::class, 'indexAdmLap'])->name('pengumpulan-laporan.indexAdmLap');
+
+        Route::post('/verfikasi-pengumpulan/{id}', [VerifikasiPengumpulanController::class, 'storeAdm'])->name('pengumpulan.storeAdm');
+        Route::get('/show-verifikasi-pengumpulan/{id}', [VerifikasiPengumpulanController::class, 'show'])->name('pengumpulan.show');
     });
 
     /* Mahasiswa && Dosen */
@@ -329,5 +341,11 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/kelola-peringatan/kepada/{peringatan}', [PeringatanController::class, 'kepada'])->name('kelola-peringatan.kepada');
         Route::get('/kelola-peringatan/role/info', [PeringatanController::class, 'roleInfo'])->name('kelola-peringatan.roleInfo');
         Route::get('/kelola-peringatan/role/info/{peringatan}', [PeringatanController::class, 'roleDetail'])->name('kelola-peringatan.roleDetail');
+    });
+
+    /* Koordinator && Kaprodi */
+    Route::group(['middleware' => 'CheckRole:koordinator,kaprodi'], function(){
+        Route::get('/daftar-pengumpulan-proposal', [VerifikasiPengumpulanController::class, 'daftarPro'])->name('daftar-proposal.daftarPro');
+        Route::get('/daftar-pengumpulan-laporan', [VerifikasiPengumpulanController::class, 'daftarLap'])->name('daftar-laporan.daftarLap');
     });
 });

@@ -120,7 +120,8 @@
                                             <label for="tahun_ajaran_id_add" class="col-form-label">Tahun Ajaran: <b
                                                     class="info">*Otomatis Terisi</b></label>
                                             <input type="text" class="form-control" id="tahun_ajaran_id_add"
-                                                name="tahun_ajaran_id_add" value="{{ $tahun_id->tahun_ajaran }}" readonly>
+                                                name="tahun_ajaran_id_add" value="{{ $tahun_id->tahun_ajaran }}"
+                                                readonly>
                                         </div>
                                     </div>
                                     <div class="row mb-1">
@@ -228,7 +229,8 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
+                                <table class="table table-bordered table-striped dt-responsive nowrap w-100"
+                                    id="Tabels">
                                     <thead>
                                         <tr>
                                             <th>No</th>

@@ -6,11 +6,11 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                    <h4 class="mb-sm-0 font-size-18">Pengumpulan Proposal</h4>
+                    <h4 class="mb-sm-0 font-size-18">Pengumpulan Proposal TA</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard.home') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Pengumpulan Proposal</li>
+                            <li class="breadcrumb-item active">Pengumpulan Proposal TA</li>
                         </ol>
                     </div>
 
@@ -22,10 +22,10 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Pengumpulan Proposal</h4>
+                        <h4 class="card-title">Pengumpulan Proposal TA</h4>
                         <p class="card-title-desc">
                             Setelah Anda melakukan <b>pengujian</b> dan <b>sudah melakukan revisi</b>, segera upload
-                            <b>lembar pengumpulan proposal</b> yang mengetahui Pihak Perpustakaan, Pihak Prodi
+                            <b>lembar pengumpulan proposal TA</b> yang mengetahui Pihak Perpustakaan, Pihak Prodi
                             Manajemen Informatika, dan Pihak Akademik.
                         </p>
                     </div>
@@ -35,17 +35,24 @@
                         <form id="FormAdd" enctype="multipart/form-data" files="true">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label for="file_upload" class="col-form-label">Lembar Bukti Pengumpulan: <b
-                                            class="error">*Pastikan Format PDF/JPG/PNG/JPEG | Max 2Mb</b></label>
+                                    <label for="file_upload" class="col-form-label">Lembar Pengumpulan: <b
+                                            class="error">*Pastikan Format JPG/PNG/JPEG | Max 2Mb</b></label>
                                     <input type="file" class="form-control mb-2" id="file_upload" name="file_upload">
                                     <div class="col-lg-12" id="status_upload"></div>
                                     <div class="container">
-                                        <div class="d-sm-flex align-items-center justify-content-center">
-                                            <span>
-                                                <img id="fileView" src="#" alt="your image" width="250px"
-                                                    height="350px" />
-                                            </span>
-                                            <button></button>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span class="d-sm-flex align-items-center justify-content-center">
+                                                    <img id="fileView" src="#" width="250px" height="350px">
+                                                </span>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <span class="d-sm-flex align-items-center justify-content-center">
+                                                    <a class="btn btn-danger" style="width: 250px" id="btnHapus">
+                                                        Hapus File
+                                                    </a>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     <span class="text-danger error-text file_upload_error mb-3"></span>
@@ -78,19 +85,23 @@
                 }
             });
 
+            window.onload = function() {
+                document.body.setAttribute('data-sidebar-size', 'lg');
+            }
+
             function addTampilan() {
-                $('#status_upload').addClass('bg-success text-white mb-3 p-2 rounded-2');
+                $('#status_upload').addClass('bg-secondary text-white mb-3 p-2 rounded-2');
             }
 
             $(function() {
                 $('#status_upload').hide();
                 $('#fileView').hide();
+                $('#btnHapus').hide();
             });
 
             $(function() {
                 var x = $('#cek_status').val();
                 var y = $('#cek_file').val();
-                alert(y);
                 if (x != 0) {
                     $('#status_upload').text(x);
                     $('#status_upload').show();
@@ -107,8 +118,21 @@
                 if (file) {
                     fileView.src = URL.createObjectURL(file);
                     $('#fileView').show();
+                    $('#btnHapus').show();
                 }
             }
+
+            $("#btnHapus").click(function() {
+                var y = $('#cek_file').val();
+                if (y != '0') {
+                    $('#fileView').attr('src', 'dokumen/pengumpulan/proposal/' + y);
+                } else {
+                    $('#fileView').removeAttr('src');
+                    $('#fileView').hide();
+                }
+                $('#btnHapus').hide();
+                $('#FormAdd').trigger('reset');
+            });
 
             /* Ajax Store */
             $("#FormAdd").submit(function(e) {
@@ -149,6 +173,7 @@
                             $('#status_upload').show();
                             $('#fileView').show();
                             $('#FormAdd').trigger('reset');
+                            $('#btnHapus').hide();
                             Swal.fire({
                                 title: data.msg,
                                 icon: "success",

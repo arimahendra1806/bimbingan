@@ -105,6 +105,24 @@
                             <span data-key="t-dashboard">Progres Konsultasi</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="hard-drive"></i>
+                            <span data-key="t-apps">Daftar Pengumpulan</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('daftar-proposal.daftarPro') }}">
+                                    <span data-key="t-chat">Pengumpulan Proposal</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('daftar-laporan.daftarLap') }}">
+                                    <span data-key="t-chat">Pengumpulan Laporan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                 @elseif(Auth::check() && Auth::user()->role == 'kaprodi')
                     <li>
                         <a href="javascript: void(0);" class="has-arrow">
@@ -158,6 +176,24 @@
                             <i data-feather="menu"></i>
                             <span data-key="t-dashboard">Progres Konsultasi</span>
                         </a>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="hard-drive"></i>
+                            <span data-key="t-apps">Daftar Pengumpulan</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('daftar-proposal.daftarPro') }}">
+                                    <span data-key="t-chat">Pengumpulan Proposal</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('daftar-laporan.daftarLap') }}">
+                                    <span data-key="t-chat">Pengumpulan Laporan</span>
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                 @elseif(Auth::check() && Auth::user()->role == 'dosen')
                     <li>
@@ -301,7 +337,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('peringatan.indexMhs') }}">
+                                <a href="{{ route('pengumpulan-laporan.indexLap') }}">
                                     <span data-key="t-chat">Pengumpulan Laporan</span>
                                 </a>
                             </li>
@@ -321,6 +357,43 @@
                             <li>
                                 <a href="{{ route('peringatan.indexMhs') }}">
                                     <span data-key="t-chat">Peringatan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @elseif(Auth::check() && Auth::user()->role == 'admin')
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="bell"></i>
+                            <span data-key="t-apps">Informasi</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('pengumuman.indexMhs') }}">
+                                    <span data-key="t-chat">Pengumuman</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('peringatan.indexMhs') }}">
+                                    <span data-key="t-chat">Peringatan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="check-square"></i>
+                            <span data-key="t-apps">Verifikasi Pengumpulan</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('pengumpulan-proposal.indexAdmPro') }}">
+                                    <span data-key="t-chat">Verifikasi Proposal</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('pengumpulan-laporan.indexAdmLap') }}">
+                                    <span data-key="t-chat">Verifikasi Laporan</span>
                                 </a>
                             </li>
                         </ul>

@@ -16,7 +16,7 @@ class VerifikasiPengumpulan extends Migration
         Schema::create('verifikasi_pengumpulan', function (Blueprint $table) {
             $table->id();
             $table->integer('tahun_ajaran_id');
-            $table->integer('mahasiswa_id')->unique();
+            $table->integer('mahasiswa_id');
             $table->string('jenis', 50);
             $table->string('nama_file');
             $table->string('status', 150);
