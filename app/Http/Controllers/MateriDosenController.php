@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\TahunAjaran;
 use App\Models\DosPemMateriModel;
 use App\Models\User;
+use App\Models\FileDosPemMateriModel;
 use DataTables, Validator, File, Auth;
 
 class MateriDosenController extends Controller
@@ -32,7 +33,11 @@ class MateriDosenController extends Controller
                     <a id="btnDelete" data-id="'.$model->id.'" class="btn btn-danger" data-toggle="tooltip" title="Hapus Data"><i class="fas fa-prescription-bottle"></i></a>';
                     return $btn;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('jml_file', function($model){
+                    $data = FileDosPemMateriModel::where('materi_dospem_id', $model->id)->count('id');
+                    return $data;
+                })
+                ->rawColumns(['action','jml_file'])
                 ->toJson();
         }
 
@@ -61,7 +66,8 @@ class MateriDosenController extends Controller
         /* Peraturan validasi  */
         $rules = [
             'tahun_ajaran_id_add' => ['required'],
-            'file_materi_add' => ['required','file','max:2048','mimes:pdf'],
+            'file_materi_add' => ['required'],
+            'file_materi_add.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
             'jenis_materi_add' => ['required'],
             'keterangan_add' => ['required']
         ];
@@ -73,6 +79,7 @@ class MateriDosenController extends Controller
         $attributes = [
             'tahun_ajaran_id_add' => 'Tahun Ajaran',
             'file_materi_add' => 'File Materi',
+            'file_materi_add.*' => 'File Materi',
             'jenis_materi_add' => 'Jenis Materi',
             'keterangan_add' => 'Keterangan'
         ];
@@ -93,18 +100,23 @@ class MateriDosenController extends Controller
             $data = new DosPemMateriModel;
             $data->dosen_id = $user->dosen->id;
             $data->tahun_ajaran_id = $tahun_id->id;
+            $data->jenis_materi = $request->jenis_materi_add;
+            $data->keterangan = $request->keterangan_add;
+            $data->save();
 
             /* Jika request terdapat file */
             if ($request->hasFile('file_materi_add')){
                 $file = $request->file('file_materi_add');
-                $filename = time()."_".$file->getClientOriginalName();
-                $file->move(public_path('dokumen/pembimbing-materi'), $filename);
+                foreach ($file as $key => $value) {
+                    $filename = time()."_".$value->getClientOriginalName();
+                    $value->move(public_path('dokumen/pembimbing-materi'), $filename);
 
-                $data->file_materi = $filename;
+                    $data2 = new FileDosPemMateriModel;
+                    $data2->materi_dospem_id = $data->id;
+                    $data2->nama_file = $filename;
+                    $data2->save();
+                }
             }
-            $data->jenis_materi = $request->jenis_materi_add;
-            $data->keterangan = $request->keterangan_add;
-            $data->save();
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
@@ -161,7 +173,8 @@ class MateriDosenController extends Controller
             /* Peraturan validasi  */
             $rules = [
                 'tahun_ajaran_id_edit' => ['required'],
-                'file_materi_edit' => ['required','file','max:2048','mimes:pdf'],
+                'file_materi_edit' => ['required'],
+                'file_materi_edit.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
                 'jenis_materi_edit' => ['required'],
                 'keterangan_edit' => ['required']
             ];
@@ -174,6 +187,7 @@ class MateriDosenController extends Controller
         $attributes = [
             'tahun_ajaran_id_edit' => 'Tahun Ajaran',
             'file_materi_edit' => 'File Materi',
+            'file_materi_edit.*' => 'File Materi',
             'jenis_materi_edit' => 'Jenis Materi',
             'keterangan_edit' => 'Keterangan'
         ];
@@ -189,23 +203,23 @@ class MateriDosenController extends Controller
             /* Update materi tahunan */
             $data = DosPemMateriModel::where('id', $materi_dosen)->first();
             $data->tahun_ajaran_id = $request->tahun_ajaran_id_edit;
+            $data->jenis_materi = $request->jenis_materi_edit;
+            $data->keterangan = $request->keterangan_edit;
+            $data->save();
 
             /* Jika request terdapat file */
             if ($request->hasFile('file_materi_edit')){
                 $file = $request->file('file_materi_edit');
-                $filename = time()."_".$file->getClientOriginalName();
-                $file->move(public_path('dokumen/pembimbing-materi'), $filename);
+                foreach ($file as $key => $value) {
+                    $filename = time()."_".$value->getClientOriginalName();
+                    $value->move(public_path('dokumen/pembimbing-materi'), $filename);
 
-                /* Hapus data file sebelumnya */
-                $path = public_path() . '/dokumen/pembimbing-materi/' . $data->file_materi;
-                File::delete($path);
-
-                $data->file_materi = $filename;
+                    $data2 = new FileDosPemMateriModel;
+                    $data2->materi_dospem_id = $data->id;
+                    $data2->nama_file = $filename;
+                    $data2->save();
+                }
             }
-
-            $data->jenis_materi = $request->jenis_materi_edit;
-            $data->keterangan = $request->keterangan_edit;
-            $data->save();
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
@@ -221,16 +235,64 @@ class MateriDosenController extends Controller
     public function destroy($materi_dosen)
     {
         /* Ambil data materi tahunan sesuai parameter */
-        $data = DosPemMateriModel::find($materi_dosen);
+        $data = DosPemMateriModel::with('file')->find($materi_dosen);
 
         /* Hapus data file public */
-        $path = public_path() . '/dokumen/pembimbing-materi/' . $data->file_materi;
-        File::delete($path);
+        $arr_in = $data->file->pluck('nama_file')->toArray();
+        foreach ($arr_in as $key => $value) {
+            $path = public_path() . '/dokumen/pembimbing-materi/' . $value;
+            File::delete($path);
+        }
 
         /* Hapus data materi tahunan */
         $data->forceDelete();
 
         /* Return json berhasil */
         return response()->json(['msg' => "Berhasil Menghapus Data!"]);
+    }
+
+    public function tEdit(Request $request, $id) {
+        if ($request->ajax()){
+            $data = FileDosPemMateriModel::where('materi_dospem_id', $id)->latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($model){
+                    $btn = '<a class="btn btn-secondary" id="tBtnDownload" data-toggle="tooltip" title="Download File" data-id="'.$model->id.'" href="/dokumen/pembimbing-materi/'.$model->nama_file.'" download><i class="fas fa-download"></i></a>
+                    <a class="btn btn-danger" id="tBtnDelete" data-toggle="tooltip" title="Hapus File" data-id="'.$model->id.'"><i class="fas fa-prescription-bottle"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
+    }
+
+    public function tShow(Request $request, $id) {
+        if ($request->ajax()){
+            $data = FileDosPemMateriModel::where('materi_dospem_id', $id)->latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($model){
+                    $btn = '<a class="btn btn-secondary" id="tBtnDownload" data-toggle="tooltip" title="Download File" data-id="'.$model->id.'" href="/dokumen/pembimbing-materi/'.$model->nama_file.'" download><i class="fas fa-download"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
+    }
+
+    public function tDelete($id)
+    {
+        /* Ambil data materi tahunan sesuai parameter */
+        $data = FileDosPemMateriModel::find($id);
+
+        /* Hapus data file public */
+        $path = public_path() . '/dokumen/pembimbing-materi/' . $data->nama_file;
+        File::delete($path);
+
+        /* Hapus data materi tahunan */
+        $data->forceDelete();
+
+        /* Return json berhasil */
+        return response()->json(['msg' => "Berhasil Menghapus File!"]);
     }
 }

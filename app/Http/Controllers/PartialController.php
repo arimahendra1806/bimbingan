@@ -15,6 +15,7 @@ use App\Models\MahasiswaModel;
 use App\Models\PengajuanJudulModel;
 use App\Models\ProgresBimbinganModel;
 use App\Models\KomentarModel;
+use App\Models\FileDosPemMateriModel;
 use Carbon\Carbon;
 use DataTables, Auth;
 
@@ -37,14 +38,41 @@ class PartialController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($model){
-                    $btn = '<a class="btn btn-info" id="btnDownload" data-toggle="tooltip" title="Download Ketentuan" data-id="'.$model->id.'" href="/dokumen/pembimbing-materi/'.$model->file_materi.'" download><i class="fas fa-download"></i></a>';
+                    $btn = '<a class="btn btn-info" id="btnShow" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>';
                     return $btn;
+                })
+                ->addColumn('jml_file', function($model){
+                    $data = FileDosPemMateriModel::where('materi_dospem_id', $model->id)->count('id');
+                    return $data;
                 })
                 ->toJson();
         }
 
         /* return json */
         return response()->json();
+    }
+
+    public function show($id)
+    {
+        /* Ambil data materi dosen sesuai parameter */
+        $data = DosPemMateriModel::find($id)->load('tahun');
+
+        /* Return json data materi tahunan */
+        return response()->json($data);
+    }
+
+    public function tShow(Request $request, $id) {
+        if ($request->ajax()){
+            $data = FileDosPemMateriModel::where('materi_dospem_id', $id)->latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($model){
+                    $btn = '<a class="btn btn-secondary" id="tBtnDownload" data-toggle="tooltip" title="Download File" data-id="'.$model->id.'" href="/dokumen/pembimbing-materi/'.$model->nama_file.'" download><i class="fas fa-download"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
     }
 
     public function JadwalZoom(Request $request)
@@ -187,60 +215,69 @@ class PartialController extends Controller
     {
         /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+        $jml_angkatan = MahasiswaModel::where('tahun_ajaran_id', $tahun_id->id)->count('id');
 
-        $selesai = array();
+        $selesaiA = array();
+        /* Selesai judul & proposal */
         $get_judul_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('judul', '!=', '0')->count('id');
-        array_push($selesai, $get_judul_sl);
+        array_push($selesaiA, $get_judul_sl);
         $get_proposal_bab1_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab1', '!=', '0')->count('id');
-        array_push($selesai, $get_proposal_bab1_sl);
+        array_push($selesaiA, $get_proposal_bab1_sl);
         $get_proposal_bab2_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab2', '!=', '0')->count('id');
-        array_push($selesai, $get_proposal_bab2_sl);
+        array_push($selesaiA, $get_proposal_bab2_sl);
         $get_proposal_bab3_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab3', '!=', '0')->count('id');
-        array_push($selesai, $get_proposal_bab3_sl);
+        array_push($selesaiA, $get_proposal_bab3_sl);
         $get_proposal_bab4_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab4', '!=', '0')->count('id');
-        array_push($selesai, $get_proposal_bab4_sl);
-        $get_laporan_bab1_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab1', '!=', '0')->count('id');
-        array_push($selesai, $get_laporan_bab1_sl);
-        $get_laporan_bab2_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab2', '!=', '0')->count('id');
-        array_push($selesai, $get_laporan_bab2_sl);
-        $get_laporan_bab3_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab3', '!=', '0')->count('id');
-        array_push($selesai, $get_laporan_bab3_sl);
-        $get_laporan_bab4_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab4', '!=', '0')->count('id');
-        array_push($selesai, $get_laporan_bab4_sl);
-        $get_laporan_bab5_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab5', '!=', '0')->count('id');
-        array_push($selesai, $get_laporan_bab5_sl);
-        $get_laporan_bab6_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab6', '!=', '0')->count('id');
-        array_push($selesai, $get_laporan_bab6_sl);
+        array_push($selesaiA, $get_proposal_bab4_sl);
+
+        $selesaiB = array();
+        /* Selesai program & laporan */
         $get_program_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('program', '!=', '0')->count('id');
-        array_push($selesai, $get_program_sl);
+        array_push($selesaiB, $get_program_sl);
+        $get_laporan_bab1_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab1', '!=', '0')->count('id');
+        array_push($selesaiB, $get_laporan_bab1_sl);
+        $get_laporan_bab2_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab2', '!=', '0')->count('id');
+        array_push($selesaiB, $get_laporan_bab2_sl);
+        $get_laporan_bab3_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab3', '!=', '0')->count('id');
+        array_push($selesaiB, $get_laporan_bab3_sl);
+        $get_laporan_bab4_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab4', '!=', '0')->count('id');
+        array_push($selesaiB, $get_laporan_bab4_sl);
+        $get_laporan_bab5_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab5', '!=', '0')->count('id');
+        array_push($selesaiB, $get_laporan_bab5_sl);
+        $get_laporan_bab6_sl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab6', '!=', '0')->count('id');
+        array_push($selesaiB, $get_laporan_bab6_sl);
 
-        $belum = array();
-        $get_judul_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('judul', '0')->count('id');
-        array_push($belum, $get_judul_bl);
-        $get_proposal_bab1_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab1', '0')->count('id');
-        array_push($belum, $get_proposal_bab1_bl);
-        $get_proposal_bab2_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab2', '0')->count('id');
-        array_push($belum, $get_proposal_bab2_bl);
-        $get_proposal_bab3_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab3', '0')->count('id');
-        array_push($belum, $get_proposal_bab3_bl);
-        $get_proposal_bab4_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('proposal_bab4', '0')->count('id');
-        array_push($belum, $get_proposal_bab4_bl);
-        $get_laporan_bab1_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab1', '0')->count('id');
-        array_push($belum, $get_laporan_bab1_bl);
-        $get_laporan_bab2_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab2', '0')->count('id');
-        array_push($belum, $get_laporan_bab2_bl);
-        $get_laporan_bab3_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab3', '0')->count('id');
-        array_push($belum, $get_laporan_bab3_bl);
-        $get_laporan_bab4_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab4', '0')->count('id');
-        array_push($belum, $get_laporan_bab4_bl);
-        $get_laporan_bab5_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab5', '0')->count('id');
-        array_push($belum, $get_laporan_bab5_bl);
-        $get_laporan_bab6_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('laporan_bab6', '0')->count('id');
-        array_push($belum, $get_laporan_bab6_bl);
-        $get_program_bl = ProgresBimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('program', '0')->count('id');
-        array_push($belum, $get_program_bl);
+        $belumA = array();
+        /* Belum judul & proposal */
+        $tot_get_judul_bl = ($jml_angkatan - $get_judul_sl);
+        array_push($belumA, $tot_get_judul_bl);
+        $tot_get_proposal_bab1_bl = ($jml_angkatan - $get_proposal_bab1_sl);
+        array_push($belumA, $tot_get_proposal_bab1_bl);
+        $tot_get_proposal_bab2_bl = ($jml_angkatan - $get_proposal_bab2_sl);
+        array_push($belumA, $tot_get_proposal_bab2_bl);
+        $tot_get_proposal_bab3_bl = ($jml_angkatan - $get_proposal_bab3_sl);
+        array_push($belumA, $tot_get_proposal_bab3_bl);
+        $tot_get_proposal_bab4_bl = ($jml_angkatan - $get_proposal_bab4_sl);
+        array_push($belumA, $tot_get_proposal_bab4_bl);
 
-        return response()->json(['selesai' => $selesai, 'belum' => $belum]);
+        $belumB = array();
+        /* Belum program & laporan */
+        $tot_get_program_bl = ($jml_angkatan - $get_program_sl);
+        array_push($belumB, $tot_get_program_bl);
+        $tot_get_laporan_bab1_bl = ($jml_angkatan - $get_laporan_bab1_sl);
+        array_push($belumB, $tot_get_laporan_bab1_bl);
+        $tot_get_laporan_bab2_bl = ($jml_angkatan - $get_laporan_bab2_sl);
+        array_push($belumB, $tot_get_laporan_bab2_bl);
+        $tot_get_laporan_bab3_bl = ($jml_angkatan - $get_laporan_bab3_sl);
+        array_push($belumB, $tot_get_laporan_bab3_bl);
+        $tot_get_laporan_bab4_bl = ($jml_angkatan - $get_laporan_bab4_sl);
+        array_push($belumB, $tot_get_laporan_bab4_bl);
+        $tot_get_laporan_bab5_bl = ($jml_angkatan - $get_laporan_bab5_sl);
+        array_push($belumB, $tot_get_laporan_bab5_bl);
+        $tot_get_laporan_bab6_bl = ($jml_angkatan - $get_laporan_bab6_sl);
+        array_push($belumB, $tot_get_laporan_bab6_bl);
+
+        return response()->json(['selesaiA' => $selesaiA, 'belumA' => $belumA, 'selesaiB' => $selesaiB, 'belumB' => $belumB]);
     }
 
     public function chartLine(Request $request)

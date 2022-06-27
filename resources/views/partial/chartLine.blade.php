@@ -14,7 +14,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex flex-wrap align-items-center mb-4">
-                    <h6 class="card-title me-2">Trends Interaksi Diskusi Bimbingan Setiap Bulan</h6>
+                    <h6 class="card-title me-2">Trends Interaksi Diskusi Melalui Kolom Komentar Setiap Bulan</h6>
                 </div>
                 <div id="jmlKomentar" class="mb-0 mt-0" style="display: block"></div>
             </div>
@@ -38,7 +38,7 @@
                     }
                 },
                 dataLabels: {
-                    enabled: false
+                    enabled: true
                 },
                 stroke: {
                     curve: 'straight'
@@ -53,7 +53,7 @@
                     categories: kategori,
                 },
                 theme: {
-                    palette: 'palette5' // upto palette10
+                    palette: 'palette6' // upto palette10
                 }
             };
 
@@ -76,7 +76,7 @@
                     }
                 },
                 dataLabels: {
-                    enabled: false
+                    enabled: true
                 },
                 stroke: {
                     curve: 'straight'
@@ -91,7 +91,7 @@
                     categories: kategori,
                 },
                 theme: {
-                    palette: 'palette6' // upto palette10
+                    palette: 'palette7' // upto palette10
                 }
             };
 

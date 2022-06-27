@@ -15,7 +15,7 @@ class FileMateriDospem extends Migration
     {
         Schema::create('file_materi_dospem', function (Blueprint $table) {
             $table->id();
-            $table->integer('materi_dospem_id')->unique();
+            $table->integer('materi_dospem_id');
             $table->string('nama_file', 255);
             $table->timestamps();
             $table->softDeletes();

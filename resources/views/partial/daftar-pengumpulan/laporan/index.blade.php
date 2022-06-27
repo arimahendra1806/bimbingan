@@ -107,7 +107,8 @@
                     }
                 ],
                 order: [
-                    [1, 'desc']
+                    [1, 'desc'],
+                    [3, 'asc']
                 ],
                 oLanguage: {
                     sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"

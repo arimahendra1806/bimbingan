@@ -17,7 +17,7 @@ class DosPemMateriModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "materi_dospem";
-    protected $fillable = ["id","dosen_id","tahun_ajaran_id","file_materi","jenis_materi","keterangan"];
+    protected $fillable = ["id","dosen_id","tahun_ajaran_id","jenis_materi","keterangan"];
 
     protected $cascadeDeletes = [];
     protected $dates = ['deleted_at'];

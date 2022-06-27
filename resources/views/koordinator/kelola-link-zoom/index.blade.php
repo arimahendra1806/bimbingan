@@ -152,7 +152,8 @@
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="dosen_show" class="col-form-label">Nama Dosen: </label>
-                            <input type="text" class="form-control no-outline" id="dosen_show" name="dosen_show" readonly>
+                            <input type="text" class="form-control no-outline" id="dosen_show" name="dosen_show"
+                                readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="tahun_ajaran_id_show" class="col-form-label">ID Tahun Ajaran</label>
@@ -163,18 +164,18 @@
                     <div class="row mb-1">
                         <div class="col-md-4">
                             <label for="id_meeting_show" class="col-form-label">ID Meeting: </label>
-                            <input type="text" class="form-control no-outline" id="id_meeting_show" name="id_meeting_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="id_meeting_show"
+                                name="id_meeting_show" readonly>
                         </div>
                         <div class="col-md-4">
                             <label for="passcode_show" class="col-form-label">Passcode: </label>
-                            <input type="text" class="form-control no-outline" id="passcode_show" name="passcode_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="passcode_show"
+                                name="passcode_show" readonly>
                         </div>
                         <div class="col-md-4">
                             <label for="host_key_show" class="col-form-label">Host Key: </label>
-                            <input type="text" class="form-control no-outline" id="host_key_show" name="host_key_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="host_key_show"
+                                name="host_key_show" readonly>
                         </div>
 
                     </div>
@@ -205,15 +206,15 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="file_import" class="col-form-label">File Impor: <b
-                                    class="error">*Pastikan
+                            <label for="file_import" class="col-form-label">File Impor: <b class="error">*Pastikan
                                     Format CSV/XLSX/XLS</b></label>
                             <input type="file" class="form-control mb-1" id="file_import" name="file_import">
                             <span class="text-danger error-text file_import_error mb-1"></span>
                         </div>
                         <div class="mb-2">
                             <a href="{{ asset('assets/img') }}/import_link_large.png" class="glightbox">
-                                <img src="{{ asset('assets/img') }}/import_link_small.png" alt="image" width="100%" />
+                                <img src="{{ asset('assets/img') }}/import_link_small.png" alt="image"
+                                    width="100%" />
                             </a>
                         </div>
                         <div class="progress" style="height: 20px;">
@@ -360,6 +361,7 @@
                     }
                 ],
                 order: [
+                    [2, 'desc'],
                     [1, 'asc']
                 ],
                 oLanguage: {

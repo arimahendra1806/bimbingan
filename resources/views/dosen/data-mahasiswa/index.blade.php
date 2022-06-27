@@ -25,12 +25,13 @@
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="email_show" class="col-form-label">Email:</label>
-                            <input type="text" class="form-control no-outline" id="email_show" name="email_show" readonly>
+                            <input type="text" class="form-control no-outline" id="email_show" name="email_show"
+                                readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="no_telepon_show" class="col-form-label">Nomor Telepon:</label>
-                            <input type="text" class="form-control no-outline" id="no_telepon_show" name="no_telepon_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="no_telepon_show"
+                                name="no_telepon_show" readonly>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -57,8 +58,8 @@
                     <div class="row mb-1">
                         <div class="col-md-12">
                             <label for="pengerjaan_show" class="col-form-label">Pengerjaan:</label>
-                            <input type="text" class="form-control no-outline" id="pengerjaan_show" name="pengerjaan_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="pengerjaan_show"
+                                name="pengerjaan_show" readonly>
                         </div>
                     </div>
                 </div>
@@ -184,7 +185,9 @@
                         targets: [0, 5]
                     },
                 ],
-                order: [1],
+                order: [
+                    [2, 'asc']
+                ],
                 oLanguage: {
                     sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
                 }

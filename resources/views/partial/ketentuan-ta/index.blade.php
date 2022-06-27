@@ -1,6 +1,50 @@
 @extends('layouts.minia.header')
 
 @section('content')
+    {{-- Modal Show --}}
+    <div class="modal fade" id="MateriTahunanModalShow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detail Data Materi Tahunan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-1">
+                        <label for="tahun_ajaran_id_show" class="col-form-label">Tahun Ajaran:</label>
+                        <input type="text" class="form-control no-outline" id="tahun_ajaran_id_show"
+                            name="tahun_ajaran_id_show" readonly>
+                    </div>
+                    <div>
+                        <label for="file_materi_show" class="col-form-label">File Materi:</label>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="tabelShow">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama File</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mb-1">
+                        <label for="keterangan_show" class="col-form-label">Keterangan:</label><br>
+                        <textarea class="form-control" name="keterangan_show" id="keterangan_show" style="width: 100%" rows="3" readonly></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- END Modal Show --}}
+
     <div class="container-fluid">
         <!-- start page title -->
         <div class="row">
@@ -43,8 +87,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Tahun Ajaran</th>
-                                        <th>File Ketentuan</th>
                                         <th>Keterangan</th>
+                                        <th>Jumlah File Ketentuan</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -61,6 +105,12 @@
 @endsection
 
 @section('js')
+    <style>
+        .tooltip {
+            z-index: 100000000;
+        }
+    </style>
+
     <script>
         $(document).ready(function() {
             /* Ajax Token */
@@ -84,12 +134,12 @@
                         name: 'tahun.tahun_ajaran'
                     },
                     {
-                        data: 'file_materi',
-                        name: 'file_materi'
-                    },
-                    {
                         data: 'keterangan',
                         name: 'keterangan'
+                    },
+                    {
+                        data: 'jml_file',
+                        name: 'jml_file'
                     },
                     {
                         data: 'action',
@@ -103,7 +153,7 @@
                     },
                     {
                         width: '1%',
-                        targets: [0, 4]
+                        targets: [0, 3, 4]
                     },
                 ],
                 order: [
@@ -114,9 +164,60 @@
                 }
             });
 
+            var tShow = $('#tabelShow').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "ketentuan-ta-show/0",
+                autoWidth: false,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'nama_file',
+                        name: 'nama_file'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    }
+                ],
+                columnDefs: [{
+                        searchable: false,
+                        orderable: false,
+                        targets: [0, 2]
+                    },
+                    {
+                        width: '1%',
+                        targets: [0, 2]
+                    }
+                ],
+                order: [
+                    [1, 'desc']
+                ],
+                bPaginate: false,
+                bLengthChange: false,
+                bFilter: false,
+                bInfo: false,
+                oLanguage: {
+                    sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+                }
+            });
+
             /* Button Tooltip */
             $('table').on('draw.dt', function() {
                 $('[data-toggle="tooltip"]').tooltip();
+            });
+
+            /* Button Show */
+            $('body').on('click', '#btnShow', function() {
+                var this_id = $(this).data('id');
+                $.get('ketentuan-ta/' + this_id, function(data) {
+                    $('#MateriTahunanModalShow').modal('show');
+                    $('#tahun_ajaran_id_show').val(data.tahun.tahun_ajaran);
+                    $('#keterangan_show').val(data.keterangan);
+                });
+                tShow.ajax.url("/ketentuan-ta-show/" + this_id).load();
             });
         });
     </script>

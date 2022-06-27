@@ -21,8 +21,8 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="jenis_add" class="col-form-label">Jenis Informasi:</label>
-                                <input type="text" class="form-control" id="jenis_add" name="jenis_add" value="Pengumuman"
-                                    readonly>
+                                <input type="text" class="form-control" id="jenis_add" name="jenis_add"
+                                    value="Pengumuman" readonly>
                                 <span class="text-danger error-text jenis_add_error"></span>
                             </div>
                         </div>
@@ -112,8 +112,8 @@
                         <div class="row mb-1">
                             <div class="col-md-6">
                                 <label for="tahun_ajaran_edit" class="col-form-label">Tahun Ajaran:</label>
-                                <input type="text" class="form-control" id="tahun_ajaran_edit" name="tahun_ajaran_edit"
-                                    readonly>
+                                <input type="text" class="form-control" id="tahun_ajaran_edit"
+                                    name="tahun_ajaran_edit" readonly>
                                 <span class="text-danger error-text tahun_ajaran_edit_error"></span>
                             </div>
                             <div class="col-md-6">
@@ -126,8 +126,8 @@
                         <div class="row mb-1">
                             <div class="col-md-6">
                                 <label for="kepada_role_edit" class="col-form-label">Ditujukan Untuk:</label>
-                                <select class="js-example-responsive form-control" style="width: 100%" id="kepada_role_edit"
-                                    name="kepada_role_edit">
+                                <select class="js-example-responsive form-control" style="width: 100%"
+                                    id="kepada_role_edit" name="kepada_role_edit">
                                     <option value=""></option>
                                     @if (Auth::check() && Auth::user()->role == 'koordinator')
                                         <option value="semua pengguna">Semua Pengguna</option>
@@ -179,8 +179,10 @@
                                 <label for="file_upload_edit" class="col-form-label">Lampiran File: <b
                                         class="info">*Kosongkan jika tidak update</b> &nbsp;
                                     <b class="error">*Pastikan File PDF | Max 2Mb</b></label>
-                                <input type="text" class="form-control no-outline" id="fileShow" name="fileShow" readonly>
-                                <input type="file" class="form-control" id="file_upload_edit" name="file_upload_edit">
+                                <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
+                                    readonly>
+                                <input type="file" class="form-control" id="file_upload_edit"
+                                    name="file_upload_edit">
                                 <span class="text-danger error-text file_upload_edit_error"></span>
                             </div>
                         </div>
@@ -212,7 +214,8 @@
                         </div>
                         <div class="col-md-6">
                             <label for="jenis_show" class="col-form-label">Jenis Informasi:</label>
-                            <input type="text" class="form-control no-outline" id="jenis_show" name="jenis_show" readonly>
+                            <input type="text" class="form-control no-outline" id="jenis_show" name="jenis_show"
+                                readonly>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -245,8 +248,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="file_upload_show" class="col-form-label">Lampiran File:</label>
-                        <input type="text" class="form-control no-outline" id="file_upload_show" name="file_upload_show"
-                            readonly>
+                        <input type="text" class="form-control no-outline" id="file_upload_show"
+                            name="file_upload_show" readonly>
                         <iframe style="width:100%; height:400px;" id="iprame" frameborder="0"></iframe>
                     </div>
                 </div>
@@ -282,13 +285,11 @@
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="judul_detail" class="col-form-label">Judul Pengumuman:</label>
-                            <textarea class="form-control" name="judul_detail" id="judul_detail" style="width: 100%" rows="2"
-                                readonly></textarea>
+                            <textarea class="form-control" name="judul_detail" id="judul_detail" style="width: 100%" rows="2" readonly></textarea>
                         </div>
                         <div class="col-md-6">
                             <label for="subyek_detail" class="col-form-label">Subyek Pengumuman:</label>
-                            <textarea class="form-control" name="subyek_detail" id="subyek_detail" style="width: 100%" rows="2"
-                                readonly></textarea>
+                            <textarea class="form-control" name="subyek_detail" id="subyek_detail" style="width: 100%" rows="2" readonly></textarea>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -299,7 +300,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="file_upload" class="col-form-label">Lampiran File:</label>
-                        <input type="text" class="form-control no-outline" id="file_upload" name="file_upload" readonly>
+                        <input type="text" class="form-control no-outline" id="file_upload" name="file_upload"
+                            readonly>
                         <iframe style="width:100%; height:400px;" id="iprame_detail" frameborder="0"></iframe>
                     </div>
                 </div>

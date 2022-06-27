@@ -51,7 +51,8 @@
                         </div>
                         <div class="col-md-6">
                             <label for="status_show" class="col-form-label">Status Pengajuan:</label>
-                            <input type="text" class="form-control no-outline" id="status_show" name="status_show" readonly>
+                            <input type="text" class="form-control no-outline" id="status_show" name="status_show"
+                                readonly>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -202,7 +203,7 @@
                     }
                 ],
                 order: [
-                    [1, 'desc']
+                    [2, 'desc']
                 ],
                 oLanguage: {
                     sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"

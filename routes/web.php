@@ -93,6 +93,9 @@ Route::group(['middleware' => 'auth'], function(){
         ]]);
         Route::post('/kelola-materi-tahunan/{materi_tahunan}', [MateriTahunanController::class, 'update'])->name('kelola-materi-tahunan.update');
         Route::post('/kelola-materi-tahunan/delete/{materi_tahunan}', [MateriTahunanController::class, 'destroy'])->name('kelola-materi-tahunan.destroy');
+        Route::get('/kelola-materi-tahunan-edit/{id}', [MateriTahunanController::class, 'tEdit'])->name('kelola-materi-tahunan.tEdit');
+        Route::get('/kelola-materi-tahunan-show/{id}', [MateriTahunanController::class, 'tShow'])->name('kelola-materi-tahunan.tShow');
+        Route::post('/kelola-materi-tahunan-delete/{id}', [MateriTahunanController::class, 'tDelete'])->name('kelola-materi-tahunan.tDelete');
 
         /* Kelola Admin */
         Route::resource('kelola-admin-prodi', AdminController::class, ['except' => [
@@ -175,6 +178,9 @@ Route::group(['middleware' => 'auth'], function(){
         ]]);
         Route::post('/materi-dosen/{materi_dosen}', [MateriDosenController::class, 'update'])->name('materi-dosen.update');
         Route::post('/materi-dosen/delete/{materi_dosen}', [MateriDosenController::class, 'destroy'])->name('materi-dosen.destroy');
+        Route::get('/materi-dosen-edit/{id}', [MateriDosenController::class, 'tEdit'])->name('materi-dosen.tEdit');
+        Route::get('/materi-dosen-show/{id}', [MateriDosenController::class, 'tShow'])->name('materi-dosen.tShow');
+        Route::post('/materi-dosen-delete/{id}', [MateriDosenController::class, 'tDelete'])->name('materi-dosen.tDelete');
 
         /* Data Pembimbing */
         Route::get('/data-mahasiswa', [DataPembimbingController::class, 'indexDsn'])->name('data-mahasiswa.indexDsn');
@@ -294,6 +300,8 @@ Route::group(['middleware' => 'auth'], function(){
 
         /* Mhs Partial */
         Route::get('/materi/{jenis}', [PartialController::class, 'MateriKonsul'])->name('partial.MateriKonsul');
+        Route::get('/materi/show/{id}', [PartialController::class, 'show'])->name('partial.show');
+        Route::get('/materi-show/{id}', [PartialController::class, 'tShow'])->name('partial.tShow');
         Route::get('/jadwal-zoom', [PartialController::class, 'JadwalZoom'])->name('partial.JadwalZoom');
         Route::post('/jadwal-zoom/{kode}', [PartialController::class, 'JadwalZoomStore'])->name('partial.JadwalZoomStore');
         Route::get('/riwayat-jadwal-zoom', [PartialController::class, 'RiwayatJadwalZoom'])->name('partial.RiwayatJadwalZoom');
@@ -314,6 +322,8 @@ Route::group(['middleware' => 'auth'], function(){
     Route::group(['middleware' => 'CheckRole:mahasiswa,dosen'], function(){
         /* Ketentuan TA */
         Route::get('/ketentuan-ta', [KetentuanTaController::class, 'index'])->name('ketentuan-ta.index');
+        Route::get('/ketentuan-ta/{id}', [KetentuanTaController::class, 'show'])->name('ketentuan-ta.show');
+        Route::get('/ketentuan-ta-show/{id}', [KetentuanTaController::class, 'tShow'])->name('ketentuan-ta.tShow');
     });
 
     /* Koordinator && Dosen && Kaprodi */

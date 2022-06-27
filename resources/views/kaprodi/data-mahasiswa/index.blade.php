@@ -24,12 +24,13 @@
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="email_show" class="col-form-label">Email:</label>
-                            <input type="text" class="form-control no-outline" id="email_show" name="email_show" readonly>
+                            <input type="text" class="form-control no-outline" id="email_show" name="email_show"
+                                readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="no_telepon_show" class="col-form-label">Nomor Telepon:</label>
-                            <input type="text" class="form-control no-outline" id="no_telepon_show" name="no_telepon_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="no_telepon_show"
+                                name="no_telepon_show" readonly>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -168,7 +169,8 @@
                     }
                 ],
                 order: [
-                    [1, 'asc']
+                    [2, 'desc'],
+                    [3, 'asc']
                 ],
                 oLanguage: {
                     sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"

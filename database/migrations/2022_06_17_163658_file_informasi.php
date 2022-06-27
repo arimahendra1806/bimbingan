@@ -15,7 +15,7 @@ class FileInformasi extends Migration
     {
         Schema::create('file_informasi', function (Blueprint $table) {
             $table->id();
-            $table->integer('informasi_id')->unique();
+            $table->integer('informasi_id');
             $table->string('nama_file', 255);
             $table->timestamps();
             $table->softDeletes();

@@ -13,8 +13,8 @@
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="nama_dosen_show" class="col-form-label">Nama Dosen Pembimbing:</label>
-                            <input type="text" class="form-control no-outline" id="nama_dosen_show" name="nama_dosen_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="nama_dosen_show"
+                                name="nama_dosen_show" readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="nama_mhs_show" class="col-form-label">Nama Mahasiswa:</label>
@@ -155,7 +155,8 @@
                     },
                 ],
                 order: [
-                    [1, 'asc']
+                    [1, 'desc'],
+                    [2, 'asc']
                 ],
                 oLanguage: {
                     sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"

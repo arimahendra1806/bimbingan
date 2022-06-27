@@ -104,7 +104,8 @@
                                 <label for="no_telepon_edit" class="col-form-label">Nomor Telepon:</label>
                                 <div class="input-group">
                                     <div class="input-group-text">+62</div>
-                                    <input type="text" class="form-control" id="no_telepon_edit" name="no_telepon_edit">
+                                    <input type="text" class="form-control" id="no_telepon_edit"
+                                        name="no_telepon_edit">
                                 </div>
                                 <span class="text-danger error-text no_telepon_edit_error"></span>
                             </div>
@@ -147,23 +148,25 @@
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="nim_show" class="col-form-label">NIM:</label>
-                            <input type="text" class="form-control no-outline" id="nim_show" name="nim_show" readonly>
+                            <input type="text" class="form-control no-outline" id="nim_show" name="nim_show"
+                                readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="nama_mhs_show" class="col-form-label">Nama Mahasiswa:</label>
-                            <input type="text" class="form-control no-outline" id="nama_mhs_show" name="nama_mhs_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="nama_mhs_show"
+                                name="nama_mhs_show" readonly>
                         </div>
                     </div>
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="email_show" class="col-form-label">Email:</label>
-                            <input type="text" class="form-control no-outline" id="email_show" name="email_show" readonly>
+                            <input type="text" class="form-control no-outline" id="email_show" name="email_show"
+                                readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="no_telepon_show" class="col-form-label">Nomor Telepon:</label>
-                            <input type="text" class="form-control no-outline" id="no_telepon_show" name="no_telepon_show"
-                                readonly>
+                            <input type="text" class="form-control no-outline" id="no_telepon_show"
+                                name="no_telepon_show" readonly>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -200,14 +203,15 @@
                     @csrf
                     <div class="modal-body">
                         <div class="mb-1">
-                            <label for="file_import" class="col-form-label">File Impor: <b
-                                    class="error">*Pastikan Format CSV/XLSX/XLS</b></label>
+                            <label for="file_import" class="col-form-label">File Impor: <b class="error">*Pastikan
+                                    Format CSV/XLSX/XLS</b></label>
                             <input type="file" class="form-control mb-1" id="file_import" name="file_import">
                             <span class="text-danger error-text file_import_error mb-2"></span>
                         </div>
                         <div class="mb-3">
                             <a href="{{ asset('assets/img') }}/import_mhs_large.png" class="glightbox">
-                                <img src="{{ asset('assets/img') }}/import_mhs_small.png" alt="image" width="100%" />
+                                <img src="{{ asset('assets/img') }}/import_mhs_small.png" alt="image"
+                                    width="100%" />
                             </a>
                         </div>
                         <div class="progress" style="height: 20px;">
@@ -360,7 +364,8 @@
                     }
                 ],
                 order: [
-                    [1, 'asc']
+                    [2, 'desc'],
+                    [3, 'asc']
                 ],
                 oLanguage: {
                     sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"

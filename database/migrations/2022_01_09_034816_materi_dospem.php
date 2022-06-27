@@ -17,7 +17,6 @@ class MateriDospem extends Migration
             $table->id();
             $table->integer('dosen_id');
             $table->integer('tahun_ajaran_id');
-            $table->string('file_materi')->nullable();
             $table->string('jenis_materi', 100)->nullable();
             $table->string('keterangan')->nullable();
             $table->timestamps();

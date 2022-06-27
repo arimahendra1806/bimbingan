@@ -16,7 +16,7 @@ class MateriTahunanModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "ketentuan_ta";
-    protected $fillable = ["id", "tahun_ajaran_id", "file_materi", "keterangan"];
+    protected $fillable = ["id", "tahun_ajaran_id", "keterangan"];
 
     protected $cascadeDeletes = ['file'];
     protected $dates = ['deleted_at'];

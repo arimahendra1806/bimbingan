@@ -15,7 +15,7 @@ class FileKetentuanTa extends Migration
     {
         Schema::create('file_ketentuan_ta', function (Blueprint $table) {
             $table->id();
-            $table->integer('ketentuan_ta_id')->unique();
+            $table->integer('ketentuan_ta_id');
             $table->string('nama_file', 255);
             $table->timestamps();
             $table->softDeletes();

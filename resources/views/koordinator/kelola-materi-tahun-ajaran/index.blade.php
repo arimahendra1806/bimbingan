@@ -19,9 +19,10 @@
                             <span class="text-danger error-text tahun_ajaran_id_add_error"></span>
                         </div>
                         <div class="mb-1">
-                            <label for="file_materi_add" class="col-form-label">File Materi: <b
-                                    class="error">*Pastikan File PDF | Max 2Mb</b></label>
-                            <input type="file" class="form-control" id="file_materi_add" name="file_materi_add">
+                            <label for="file_materi_add" class="col-form-label">File Materi: <b class="error">*Mendukung
+                                    file multiple melalui cara select | Max 2Mb</b></label>
+                            <input type="file" class="form-control" id="file_materi_add" name="file_materi_add[]"
+                                multiple>
                             <span class="text-danger error-text file_materi_add_error"></span>
                         </div>
                         <div class="mb-1">
@@ -58,12 +59,26 @@
                                 readonly>
                             <span class="text-danger error-text tahun_ajaran_id_edit_error"></span>
                         </div>
-                        <div class="mb-1">
-                            <label for="file_materi_edit" class="col-form-label">File Materi:<b
-                                    class="info">*Kosongkan Jika Tidak Update</b></label>
-                            <input type="text" class="form-control no-outline" id="fileShow" name="fileShow" readonly>
-                            <input type="file" class="form-control" id="file_materi_edit" name="file_materi_edit">
-                            <span class="text-danger error-text file_materi_edit_error"></span>
+                        <div>
+                            <label for="file_materi_edit" class="col-form-label">File Materi:<b class="info">*Kosongkan
+                                    Jika Tidak Update</b></label>
+                            <input type="file" class="form-control" id="file_materi_edit" name="file_materi_edit[]"
+                                multiple>
+                            <span class="text-danger error-text file_materi_edit_error mb-2"></span>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="tabelEdit">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama File</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="mb-1">
                             <label for="keterangan_edit" class="col-form-label">Keterangan:</label><br>
@@ -96,11 +111,22 @@
                         <input type="text" class="form-control no-outline" id="tahun_ajaran_id_show"
                             name="tahun_ajaran_id_show" readonly>
                     </div>
-                    <div class="mb-1">
+                    <div>
                         <label for="file_materi_show" class="col-form-label">File Materi:</label>
-                        <input type="text" class="form-control no-outline" id="file_materi_show" name="file_materi_show"
-                            readonly>
-                        <iframe style="width:100%; height:400px;" frameborder="0"></iframe>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="tabelShow">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama File</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="mb-1">
                         <label for="keterangan_show" class="col-form-label">Keterangan:</label><br>
@@ -156,8 +182,8 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Tahun Ajaran</th>
-                                        <th>File Materi</th>
                                         <th>Keterangan</th>
+                                        <th>Jumlah File Materi</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -178,6 +204,12 @@
     <link href="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.css" rel="stylesheet" />
     <!-- select2 js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.js"></script>
+
+    <style>
+        .tooltip {
+            z-index: 100000000;
+        }
+    </style>
 
     {{-- DataTables --}}
     <script>
@@ -203,12 +235,12 @@
                         name: 'tahun.tahun_ajaran'
                     },
                     {
-                        data: 'file_materi',
-                        name: 'file_materi'
-                    },
-                    {
                         data: 'keterangan',
                         name: 'keterangan'
+                    },
+                    {
+                        data: 'jml_file',
+                        name: 'jml_file'
                     },
                     {
                         data: 'action',
@@ -222,12 +254,92 @@
                     },
                     {
                         width: '1%',
-                        targets: [0, 4]
+                        targets: [0, 3, 4]
                     }
                 ],
                 order: [
                     [1, 'desc']
                 ],
+                oLanguage: {
+                    sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+                }
+            });
+
+            var tEdit = $('#tabelEdit').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "kelola-materi-tahunan-edit/0",
+                autoWidth: false,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'nama_file',
+                        name: 'nama_file'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    }
+                ],
+                columnDefs: [{
+                        searchable: false,
+                        orderable: false,
+                        targets: [0, 2]
+                    },
+                    {
+                        width: '1%',
+                        targets: [0, 2]
+                    }
+                ],
+                order: [
+                    [1, 'desc']
+                ],
+                bPaginate: false,
+                bLengthChange: false,
+                bFilter: false,
+                bInfo: false,
+                oLanguage: {
+                    sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+                }
+            });
+
+            var tShow = $('#tabelShow').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "kelola-materi-tahunan-show/0",
+                autoWidth: false,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'nama_file',
+                        name: 'nama_file'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    }
+                ],
+                columnDefs: [{
+                        searchable: false,
+                        orderable: false,
+                        targets: [0, 2]
+                    },
+                    {
+                        width: '1%',
+                        targets: [0, 2]
+                    }
+                ],
+                order: [
+                    [1, 'desc']
+                ],
+                bPaginate: false,
+                bLengthChange: false,
+                bFilter: false,
+                bInfo: false,
                 oLanguage: {
                     sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
                 }
@@ -253,10 +365,10 @@
                 $.get('kelola-materi-tahunan/' + this_id, function(data) {
                     $('#MateriTahunanModalEdit').modal('show');
                     $('#materi_id_edit').val(data.id);
-                    $('#tahun_ajaran_id_edit').val(data.tahun.tahun_ajaran).trigger('change');
-                    $('#fileShow').val(data.file_materi);
+                    $('#tahun_ajaran_id_edit').val(data.tahun.tahun_ajaran);
                     $('#keterangan_edit').val(data.keterangan);
                 });
+                tEdit.ajax.url("/kelola-materi-tahunan-edit/" + this_id).load();
             });
 
             /* Button Show */
@@ -265,11 +377,9 @@
                 $.get('kelola-materi-tahunan/' + this_id, function(data) {
                     $('#MateriTahunanModalShow').modal('show');
                     $('#tahun_ajaran_id_show').val(data.tahun.tahun_ajaran);
-                    $('#file_materi_show').val(data.file_materi);
                     $('#keterangan_show').val(data.keterangan);
-                    $('iframe').attr("src", "{{ asset('dokumen/materi-tahunan') }}" + "/" + data
-                        .file_materi);
                 });
+                tShow.ajax.url("/kelola-materi-tahunan-show/" + this_id).load();
             });
 
             /* Button Delete */
@@ -290,6 +400,37 @@
                                 "id": this_id,
                             },
                             success: function(data) {
+                                table.ajax.reload();
+                                Swal.fire({
+                                    title: data.msg,
+                                    icon: "success",
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+
+            $('body').on('click', '#tBtnDelete', function() {
+                var this_id = $(this).data("id");
+                Swal.fire({
+                    title: 'Apakah anda ingin menghapus file ini?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya',
+                    cancelButtonText: 'Batal',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "kelola-materi-tahunan-delete/" + this_id,
+                            type: 'post',
+                            data: {
+                                "id": this_id,
+                            },
+                            success: function(data) {
+                                tEdit.ajax.reload();
                                 table.ajax.reload();
                                 Swal.fire({
                                     title: data.msg,
@@ -328,7 +469,8 @@
                             form.addSave.disabled = false;
                             form.addSave.value = "Simpan";
                             $.each(data.error, function(prefix, val) {
-                                $('span.' + prefix + '_error').text(val[0]);
+                                $('span.' + prefix.split('.', 1) + '_error').text(val[
+                                    0]);
                             });
                         } else {
                             form.addSave.disabled = false;
@@ -377,7 +519,8 @@
                             form.editSave.disabled = false;
                             form.editSave.value = "Simpan";
                             $.each(data.error, function(prefix, val) {
-                                $('span.' + prefix + '_error').text(val[0]);
+                                $('span.' + prefix.split('.', 1) + '_error').text(val[
+                                    0]);
                             });
                         } else {
                             form.editSave.disabled = false;

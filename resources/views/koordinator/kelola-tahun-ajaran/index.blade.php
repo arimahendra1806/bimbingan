@@ -2,8 +2,7 @@
 
 @section('content')
     {{-- Modal Add --}}
-    <div class="modal fade" id="TahunAjaranModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="TahunAjaranModalAdd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -41,8 +40,7 @@
     {{-- END Modal Add --}}
 
     {{-- Modal Edit --}}
-    <div class="modal fade" id="TahunAjaranModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="TahunAjaranModalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -81,8 +79,7 @@
     {{-- END Modal Edit --}}
 
     {{-- Modal Show --}}
-    <div class="modal fade" id="TahunAjaranModalShow" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="TahunAjaranModalShow" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -92,13 +89,13 @@
                 <div class="modal-body">
                     <div class="mb-1">
                         <label for="tahun_ajaran_show" class="col-form-label">Tahun Ajaran:</label>
-                        <input type="text" class="form-control no-outline" id="tahun_ajaran_show" name="tahun_ajaran_show"
-                            readonly>
+                        <input type="text" class="form-control no-outline" id="tahun_ajaran_show"
+                            name="tahun_ajaran_show" readonly>
                     </div>
                     <div class="mb-1">
                         <label for="tahun_status_show" class="col-form-label">Status:</label>
-                        <input type="text" class="form-control no-outline" id="tahun_status_show" name="tahun_status_show"
-                            readonly>
+                        <input type="text" class="form-control no-outline" id="tahun_status_show"
+                            name="tahun_status_show" readonly>
                     </div>
                 </div>
                 <div class="modal-footer">
