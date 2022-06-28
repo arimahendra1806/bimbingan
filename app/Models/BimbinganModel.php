@@ -18,7 +18,7 @@ class BimbinganModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "bimbingan";
-    protected $fillable = ["id","kode_bimbingan","pembimbing_kode","kode_peninjauan","tahun_ajaran_id","file_upload","link_video","jenis_bimbingan","status_konsultasi","status_pesan"];
+    protected $fillable = ["id","kode_bimbingan","pembimbing_kode","kode_peninjauan","tahun_ajaran_id","file_upload","link_video","jenis_bimbingan","status_konsultasi","status_pengujian","status_pesan"];
 
     protected $cascadeDeletes = ['komentar','progres','riwayat'];
     protected $dates = ['deleted_at'];

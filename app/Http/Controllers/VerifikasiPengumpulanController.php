@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\VerifikasiPengumpulanModel;
 use App\Models\TahunAjaran;
+use App\Models\RiwayatBimbinganModel;
 use DataTables, Auth, File, Validator;
 
 class VerifikasiPengumpulanController extends Controller
@@ -52,38 +53,52 @@ class VerifikasiPengumpulanController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            /* Ambil data mahasiswa login */
-            $user = User::with('mahasiswa.verifikasi')->find(Auth::user()->id);
             /* Ambil data tahun ajaran */
             $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-            /* Jika request terdapat file */
-            if ($request->hasFile('file_upload')){
-                if($user->mahasiswa->verifikasi){
-                    /* Hapus data file sebelumnya */
-                    $path = public_path() . '/dokumen/pengumpulan/proposal/' . $user->mahasiswa->verifikasi->nama_file;
-                    File::delete($path);
+            /* Ambil data mahasiswa login */
+            $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
+                $q->where('jenis_bimbingan', 'Proposal');
+            }],'mahasiswa.verifikasi')->find(Auth::user()->id);
+
+            $bimbingan = $user->mahasiswa->dospem->bimbingan;
+
+            /* Kondisi jika status selesai */
+            $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $bimbingan->kode_peninjauan)->first();
+
+            /* Kondisi jika status disetujui */
+            if ($get_status && $get_status->status != "Selesai"){
+                $data = "Status konsultasi proposal Anda belum berstatus selesai. Pastikan Anda sudah menyelesaikan konsultasi proposal!";
+                return response()->json(['status' => 1, 'data' => $data]);
+            } else {
+                /* Jika request terdapat file */
+                if ($request->hasFile('file_upload')){
+                    if($user->mahasiswa->verifikasi){
+                        /* Hapus data file sebelumnya */
+                        $path = public_path() . '/dokumen/pengumpulan/proposal/' . $user->mahasiswa->verifikasi->nama_file;
+                        File::delete($path);
+                    }
+
+                    $file = $request->file('file_upload');
+                    $filename = time()."_".$file->getClientOriginalName();
+                    $file->move(public_path('dokumen/pengumpulan/proposal'), $filename);
                 }
 
-                $file = $request->file('file_upload');
-                $filename = time()."_".$file->getClientOriginalName();
-                $file->move(public_path('dokumen/pengumpulan/proposal'), $filename);
+                $data = VerifikasiPengumpulanModel::updateOrCreate(
+                    [
+                        'mahasiswa_id' => $user->mahasiswa->id,
+                        'tahun_ajaran_id' => $tahun_id->id,
+                        'jenis' => 'proposal'],
+                    [
+                        'nama_file' => $filename,
+                        'status' => 'Sedang Diproses',
+                        'keterangan' => 'Admin Prodi sedang memverifikasi lembar pengumpulan Anda.'
+                    ]
+                );
             }
 
-            $data = VerifikasiPengumpulanModel::updateOrCreate(
-                [
-                    'mahasiswa_id' => $user->mahasiswa->id,
-                    'tahun_ajaran_id' => $tahun_id->id,
-                    'jenis' => 'proposal'],
-                [
-                    'nama_file' => $filename,
-                    'status' => 'Sedang Diproses',
-                    'keterangan' => 'Admin Prodi sedang memverifikasi lembar pengumpulan Anda.'
-                ]
-            );
-
             /* Return json berhasil */
-            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!", 'resp' => $data]);
+            return response()->json(['status' => 2, 'msg' => "Berhasil Menambahkan Data!", 'resp' => $data]);
         }
     }
 
@@ -129,38 +144,52 @@ class VerifikasiPengumpulanController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
-            /* Ambil data mahasiswa login */
-            $user = User::with('mahasiswa.verifikasi')->find(Auth::user()->id);
             /* Ambil data tahun ajaran */
             $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-            /* Jika request terdapat file */
-            if ($request->hasFile('file_upload')){
-                if($user->mahasiswa->verifikasi){
-                    /* Hapus data file sebelumnya */
-                    $path = public_path() . '/dokumen/pengumpulan/laporan/' . $user->mahasiswa->verifikasi->nama_file;
-                    File::delete($path);
+            /* Ambil data mahasiswa login */
+            $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
+                $q->where('jenis_bimbingan', 'Laporan');
+            }],'mahasiswa.verifikasi')->find(Auth::user()->id);
+
+            $bimbingan = $user->mahasiswa->dospem->bimbingan;
+
+            /* Kondisi jika status selesai */
+            $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $bimbingan->kode_peninjauan)->first();
+
+            /* Kondisi jika status disetujui */
+            if ($get_status && $get_status->status != "Selesai"){
+                $data = "Status konsultasi laporan Anda belum berstatus selesai. Pastikan Anda sudah menyelesaikan konsultasi laporan!";
+                return response()->json(['status' => 1, 'data' => $data]);
+            } else {
+                /* Jika request terdapat file */
+                if ($request->hasFile('file_upload')){
+                    if($user->mahasiswa->verifikasi){
+                        /* Hapus data file sebelumnya */
+                        $path = public_path() . '/dokumen/pengumpulan/laporan/' . $user->mahasiswa->verifikasi->nama_file;
+                        File::delete($path);
+                    }
+
+                    $file = $request->file('file_upload');
+                    $filename = time()."_".$file->getClientOriginalName();
+                    $file->move(public_path('dokumen/pengumpulan/laporan'), $filename);
                 }
 
-                $file = $request->file('file_upload');
-                $filename = time()."_".$file->getClientOriginalName();
-                $file->move(public_path('dokumen/pengumpulan/laporan'), $filename);
+                $data = VerifikasiPengumpulanModel::updateOrCreate(
+                    [
+                        'mahasiswa_id' => $user->mahasiswa->id,
+                        'tahun_ajaran_id' => $tahun_id->id,
+                        'jenis' => 'laporan'],
+                    [
+                        'nama_file' => $filename,
+                        'status' => 'Sedang Diproses',
+                        'keterangan' => 'Admin Prodi sedang memverifikasi lembar pengumpulan Anda.'
+                    ]
+                );
             }
 
-            $data = VerifikasiPengumpulanModel::updateOrCreate(
-                [
-                    'mahasiswa_id' => $user->mahasiswa->id,
-                    'tahun_ajaran_id' => $tahun_id->id,
-                    'jenis' => 'laporan'],
-                [
-                    'nama_file' => $filename,
-                    'status' => 'Sedang Diproses',
-                    'keterangan' => 'Admin Prodi sedang memverifikasi lembar pengumpulan Anda.'
-                ]
-            );
-
             /* Return json berhasil */
-            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!", 'resp' => $data]);
+            return response()->json(['status' => 2, 'msg' => "Berhasil Menambahkan Data!", 'resp' => $data]);
         }
     }
 

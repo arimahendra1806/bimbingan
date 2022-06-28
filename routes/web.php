@@ -77,6 +77,7 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/partial/chartPie', [PartialController::class, 'chartPie'])->name('partial.chartPie');
     Route::get('/partial/chartColumn', [PartialController::class, 'chartColumn'])->name('partial.chartColumn');
     Route::get('/partial/chartLine', [PartialController::class, 'chartLine'])->name('partial.chartLine');
+    Route::get('/partial/chartColumnWithMark', [PartialController::class, 'chartColumnWithMark'])->name('partial.chartColumnWithMark');
 
     /* Koordinator */
     Route::group(['middleware' => 'CheckRole:koordinator'], function(){

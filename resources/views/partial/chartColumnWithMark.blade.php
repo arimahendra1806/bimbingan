@@ -6,15 +6,15 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="d-flex flex-wrap align-items-center mb-4">
-                            <h6 class="card-title me-2">Trends Jumlah Mahasiswa pada Tahapan Judul & Proposal</h6>
+                            <h6 class="card-title me-2">Trends Jumlah Mahasiswa dalam Ujian TA</h6>
                         </div>
-                        <div id="jmlPro" class="mb-0 mt-0" style="display: block"></div>
+                        <div id="jmlPengujian" class="mb-0 mt-0" style="display: block"></div>
                     </div>
                     <div class="col-md-6">
                         <div class="d-flex flex-wrap align-items-center mb-4">
-                            <h6 class="card-title me-2">Trends Jumlah Mahasiswa pada Tahapan Program & Laporan</h6>
+                            <h6 class="card-title me-2">Trends Jumlah Mahasiswa dalam Pengumpulan TA</h6>
                         </div>
-                        <div id="jmlLap" class="mb-0 mt-0" style="display: block"></div>
+                        <div id="jmlPengumpulan" class="mb-0 mt-0" style="display: block"></div>
                     </div>
                 </div>
             </div>
@@ -22,16 +22,16 @@
     </div>
 </div>
 
-@section('chartColumnJs')
+@section('chartColumnWithMarkJs')
     <script>
-        function jmlPro(selesai, belum) {
+        function jmlPengujian(pengujianSelesai, pengujianBelum) {
             var options = {
                 series: [{
-                    name: 'Jumlah Mahasiswa yang Belum Selesai',
-                    data: belum
+                    name: 'Belum Ujian TA',
+                    data: pengujianBelum
                 }, {
-                    name: 'Jumlah Mahasiswa yang Sudah Selesai',
-                    data: selesai
+                    name: 'Sudah Ujian TA',
+                    data: pengujianSelesai
                 }],
                 chart: {
                     type: 'bar',
@@ -51,11 +51,7 @@
                     colors: ['transparent']
                 },
                 xaxis: {
-                    categories: ['Judul', ['Proposal', 'Bab1'],
-                        ['Proposal', 'Bab2'],
-                        ['Proposal', 'Bab3'],
-                        ['Proposal', 'Bab4']
-                    ],
+                    categories: ['Ujian Proposal', 'Ujian Laporan'],
                 },
                 yaxis: {
                     title: {
@@ -73,27 +69,26 @@
                     }
                 },
                 theme: {
-                    palette: 'palette4' // upto palette10
+                    palette: 'palette8' // upto palette10
                 }
             };
 
-            var chart = new ApexCharts(document.querySelector("#jmlPro"), options);
+            var chart = new ApexCharts(document.querySelector("#jmlPengujian"), options);
             chart.render();
         }
 
-        function jmlLap(selesaiB, belumB) {
+        function jmlPengumpulan(pengumpulanSelesai, pengumpulanBelum) {
             var options = {
                 series: [{
-                    name: 'Jumlah Mahasiswa yang Belum Selesai',
-                    data: belumB
+                    name: 'Belum Mengumpulkan TA',
+                    data: pengumpulanBelum
                 }, {
-                    name: 'Jumlah Mahasiswa yang Sudah Selesai',
-                    data: selesaiB
+                    name: 'Sudah Mengumpulkan TA',
+                    data: pengumpulanSelesai
                 }],
                 chart: {
                     type: 'bar',
                     height: 200,
-                    // width: '85%'
                 },
                 plotOptions: {
                     bar: {
@@ -109,14 +104,7 @@
                     colors: ['transparent']
                 },
                 xaxis: {
-                    categories: ['Program',
-                        ['Laporan', 'Bab1'],
-                        ['Laporan', 'Bab2'],
-                        ['Laporan', 'Bab3'],
-                        ['Laporan', 'Bab4'],
-                        ['Laporan', 'Bab5'],
-                        ['Laporan', 'Bab6']
-                    ],
+                    categories: ['Pengumpulan Proposal', 'Pengumpulan Laporan'],
                 },
                 yaxis: {
                     title: {
@@ -134,21 +122,21 @@
                     }
                 },
                 theme: {
-                    palette: 'palette5' // upto palette10
+                    palette: 'palette9' // upto palette10
                 }
             };
 
-            var chart = new ApexCharts(document.querySelector("#jmlLap"), options);
+            var chart = new ApexCharts(document.querySelector("#jmlPengumpulan"), options);
             chart.render();
         }
 
         $(document).ready(function() {
             $(function() {
                 $.ajax({
-                    url: "{{ route('partial.chartColumn') }}"
+                    url: "{{ route('partial.chartColumnWithMark') }}"
                 }).done(function(data) {
-                    jmlPro(data.selesaiA, data.belumA);
-                    jmlLap(data.selesaiB, data.belumB);
+                    jmlPengujian(data.pengujianSelesai, data.pengujianBelum);
+                    jmlPengumpulan(data.pengumpulanSelesai, data.pengumpulanBelum);
                 });
             })
         });

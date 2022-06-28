@@ -162,6 +162,14 @@
                             $.each(data.error, function(prefix, val) {
                                 $('span.' + prefix + '_error').text(val[0]);
                             });
+                        } else if (data.status == 1) {
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Kirim";
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops, Muncul Kesalahan !!',
+                                text: data.data
+                            });
                         } else {
                             form.addSave.disabled = false;
                             form.addSave.value = "Upload Sekarang";

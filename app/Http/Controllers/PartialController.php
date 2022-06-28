@@ -16,6 +16,8 @@ use App\Models\PengajuanJudulModel;
 use App\Models\ProgresBimbinganModel;
 use App\Models\KomentarModel;
 use App\Models\FileDosPemMateriModel;
+use App\Models\BimbinganModel;
+use App\Models\VerifikasiPengumpulanModel;
 use Carbon\Carbon;
 use DataTables, Auth;
 
@@ -307,5 +309,36 @@ class PartialController extends Controller
         }
 
         return response()->json(['nm_bulan' => $nm_bulan, 'data_konsultasi' => $data_konsultasi, 'data_komentar' => $data_komentar]);
+    }
+
+    public function chartColumnWithMark(Request $request) {
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+        $dataAngk = MahasiswaModel::where('tahun_ajaran_id', $tahun_id->id)->count('id');
+
+        $ujianSelesai = array();
+        $dataPro = BimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('jenis_bimbingan', 'Proposal')->where('status_pengujian', '!=', '0')->count('id');
+        array_push($ujianSelesai, $dataPro);
+        $dataLap = BimbinganModel::where('tahun_ajaran_id', $tahun_id->id)->where('jenis_bimbingan', 'Laporan')->where('status_pengujian', '!=', '0')->count('id');
+        array_push($ujianSelesai, $dataLap);
+
+        $ujianBelum = array();
+        $dataProBlm = ($dataAngk - $dataPro);
+        array_push($ujianBelum, $dataProBlm);
+        $dataLapBlm = ($dataAngk - $dataLap);
+        array_push($ujianBelum, $dataLapBlm);
+
+        $pengumpulanSelesai = array();
+        $dataPengumpulanPro = VerifikasiPengumpulanModel::where('tahun_ajaran_id', $tahun_id->id)->where('jenis', 'proposal')->where('status', 'Sudah Divalidasi')->count('id');
+        array_push($pengumpulanSelesai, $dataPengumpulanPro);
+        $dataPengumpulanLap = VerifikasiPengumpulanModel::where('tahun_ajaran_id', $tahun_id->id)->where('jenis', 'laporan')->where('status', 'Sudah Divalidasi')->count('id');
+        array_push($pengumpulanSelesai, $dataPengumpulanLap);
+
+        $pengumpulanBelum = array();
+        $dataPengumpulanProBlm = ($dataAngk - $dataPengumpulanPro);
+        array_push($pengumpulanBelum, $dataPengumpulanProBlm);
+        $dataPengumpulanLapBlm = ($dataAngk - $dataPengumpulanLap);
+        array_push($pengumpulanBelum, $dataPengumpulanLapBlm);
+
+        return response()->json(['pengujianSelesai' => $ujianSelesai, 'pengujianBelum' => $ujianBelum, 'pengumpulanSelesai' => $pengumpulanSelesai, 'pengumpulanBelum' => $pengumpulanBelum,]);
     }
 }

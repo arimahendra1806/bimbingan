@@ -200,6 +200,7 @@ class DsnKonsulLaporanController extends Controller
                     /* Update data bimbingan */
                     $data->status_konsultasi = "Aktif";
                     $data->status_pesan = "3";
+                    $data->status_pengujian = "0";
                     $data->save();
                 } else {
                     /* Inisiasi array unselect */
@@ -225,6 +226,7 @@ class DsnKonsulLaporanController extends Controller
                     if(count($select) == 6){
                         if ($request->status_cek == "on") {
                             $data->tinjau->status = "Selesai";
+                            $data->status_pengujian = "2";
 
                             /* Update status pengajuan judul*/
                             PengajuanJudulModel::where('mahasiswa_id', $data->pembimbing->mahasiswa->id)->update(['status' => 'Selesai']);
@@ -241,6 +243,7 @@ class DsnKonsulLaporanController extends Controller
 
                         } else {
                             $data->tinjau->status = "Disetujui";
+                            $data->status_pengujian = "1";
 
                             /* Update status pengajuan judul*/
                             PengajuanJudulModel::where('mahasiswa_id', $data->pembimbing->mahasiswa->id)->update(['status' => 'Diterima']);
@@ -258,6 +261,7 @@ class DsnKonsulLaporanController extends Controller
                         }
                     } else {
                         $data->tinjau->status = $status;
+                        $data->status_pengujian = "0";
 
                         /* Update status pengajuan judul*/
                         PengajuanJudulModel::where('mahasiswa_id', $data->pembimbing->mahasiswa->id)->update(['status' => 'Diterima']);

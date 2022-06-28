@@ -39,6 +39,9 @@
 
         <!-- Card Line -->
         @include('partial.chartLine')
+
+        <!-- Card Column -->
+        @include('partial.chartColumnWithMark')
     </div>
 @endsection
 
@@ -47,4 +50,5 @@
     @yield('chartPieJs')
     @yield('chartColumnJs')
     @yield('chartLineJs')
+    @yield('chartColumnWithMarkJs')
 @endsection

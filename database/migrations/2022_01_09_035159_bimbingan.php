@@ -23,6 +23,7 @@ class Bimbingan extends Migration
             $table->string('link_video')->nullable();
             $table->string('jenis_bimbingan', 100)->nullable();
             $table->string('status_konsultasi', 150)->nullable();
+            $table->string('status_pengujian', 150)->default('0');
             $table->string('status_pesan', 150)->nullable();
             $table->timestamps();
             $table->softDeletes();
