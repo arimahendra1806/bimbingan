@@ -20,24 +20,6 @@
                 @if (Auth::check() && Auth::user()->role == 'koordinator')
                     <li>
                         <a href="javascript: void(0);" class="has-arrow">
-                            <i data-feather="calendar"></i>
-                            <span data-key="t-apps">Kelola Tahunan</span>
-                        </a>
-                        <ul class="sub-menu" aria-expanded="false">
-                            <li>
-                                <a href="{{ route('kelola-tahun-ajaran.index') }}">
-                                    <span data-key="t-chat">Tahun Ajaran</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('kelola-materi-tahunan.index') }}">
-                                    <span data-key="t-chat">Materi Tahunan</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript: void(0);" class="has-arrow">
                             <i data-feather="bell"></i>
                             <span data-key="t-apps">Kelola Informasi</span>
                         </a>
@@ -50,6 +32,24 @@
                             <li>
                                 <a href="{{ route('kelola-peringatan.index') }}">
                                     <span data-key="t-chat">Peringatan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="calendar"></i>
+                            <span data-key="t-apps">Kelola Tahunan</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('kelola-tahun-ajaran.index') }}">
+                                    <span data-key="t-chat">Tahun Ajaran</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('kelola-materi-tahunan.index') }}">
+                                    <span data-key="t-chat">Materi Tahunan</span>
                                 </a>
                             </li>
                         </ul>
@@ -197,6 +197,24 @@
                     </li>
                 @elseif(Auth::check() && Auth::user()->role == 'dosen')
                     <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="bell"></i>
+                            <span data-key="t-apps">Informasi</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('kelola-pengumuman.index') }}">
+                                    <span data-key="t-chat">Pengumuman</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('kelola-peringatan.index') }}">
+                                    <span data-key="t-chat">Peringatan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
                         <a href="{{ route('ketentuan-ta.index') }}">
                             <i data-feather="bookmark"></i>
                             <span data-key="t-dashboard">Ketentuan TA</span>
@@ -249,30 +267,30 @@
                         </a>
                     </li>
                     <li>
-                        <a href="javascript: void(0);" class="has-arrow">
-                            <i data-feather="bell"></i>
-                            <span data-key="t-apps">Informasi</span>
-                        </a>
-                        <ul class="sub-menu" aria-expanded="false">
-                            <li>
-                                <a href="{{ route('kelola-pengumuman.index') }}">
-                                    <span data-key="t-chat">Pengumuman</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('kelola-peringatan.index') }}">
-                                    <span data-key="t-chat">Peringatan</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
                         <a href="{{ route('progres-konsultasi.index') }}">
                             <i data-feather="menu"></i>
                             <span data-key="t-dashboard">Progres Konsultasi</span>
                         </a>
                     </li>
                 @elseif(Auth::check() && Auth::user()->role == 'mahasiswa')
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow">
+                            <i data-feather="bell"></i>
+                            <span data-key="t-apps">Informasi</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li>
+                                <a href="{{ route('pengumuman.indexMhs') }}">
+                                    <span data-key="t-chat">Pengumuman</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ route('peringatan.indexMhs') }}">
+                                    <span data-key="t-chat">Peringatan</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li>
                         <a href="{{ route('ketentuan-ta.index') }}">
                             <i data-feather="bookmark"></i>
@@ -343,24 +361,6 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="javascript: void(0);" class="has-arrow">
-                            <i data-feather="bell"></i>
-                            <span data-key="t-apps">Informasi</span>
-                        </a>
-                        <ul class="sub-menu" aria-expanded="false">
-                            <li>
-                                <a href="{{ route('pengumuman.indexMhs') }}">
-                                    <span data-key="t-chat">Pengumuman</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ route('peringatan.indexMhs') }}">
-                                    <span data-key="t-chat">Peringatan</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                 @elseif(Auth::check() && Auth::user()->role == 'admin')
                     <li>
                         <a href="javascript: void(0);" class="has-arrow">
@@ -369,12 +369,12 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li>
-                                <a href="{{ route('pengumuman.indexMhs') }}">
+                                <a href="{{ route('kelola-pengumuman.index') }}">
                                     <span data-key="t-chat">Pengumuman</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ route('peringatan.indexMhs') }}">
+                                <a href="{{ route('kelola-peringatan.index') }}">
                                     <span data-key="t-chat">Peringatan</span>
                                 </a>
                             </li>

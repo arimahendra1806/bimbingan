@@ -9,7 +9,8 @@ use Dyrynda\Database\Support\CascadeSoftDeletes;
 use App\Models\TahunAjaran;
 use App\Models\User;
 use App\Models\NotifikasiModel;
-use App\Models\FileInfomasiModel;
+use App\Models\FileInformasiModel;
+use App\Models\InformasiKepadaModel;
 
 class InformasiModel extends Model
 {
@@ -18,9 +19,9 @@ class InformasiModel extends Model
     use CascadeSoftDeletes;
 
     protected $table = "informasi";
-    protected $fillable = ["id", "users_id", "tahun_ajaran_id", "kepada_role", "kepada", "judul", "subyek", "pesan", "file_upload", "jenis"];
+    protected $fillable = ["id", "users_id", "tahun_ajaran_id", "kepada_role", "judul", "subyek", "pesan", "jenis"];
 
-    protected $cascadeDeletes = ['notifikasi','file'];
+    protected $cascadeDeletes = ['notifikasi','penerima','file'];
     protected $dates = ['deleted_at'];
 
     /* notifikasi */
@@ -32,7 +33,7 @@ class InformasiModel extends Model
     /* file */
     public function file()
     {
-        return $this->belongsTo(FileInfomasiModel::class,'id','informasi_id');
+        return $this->belongsTo(FileInformasiModel::class,'id','informasi_id');
     }
 
     /* inisiasi tahun */
@@ -50,6 +51,6 @@ class InformasiModel extends Model
     /* inisiasi users */
     public function penerima()
     {
-        return $this->belongsTo(User::class,'kepada','id');
+        return $this->belongsTo(InformasiKepadaModel::class,'id','informasi_id');
     }
 }

@@ -328,7 +328,7 @@ Route::group(['middleware' => 'auth'], function(){
     });
 
     /* Koordinator && Dosen && Kaprodi */
-    Route::group(['middleware' => 'CheckRole:koordinator,dosen,kaprodi'], function(){
+    Route::group(['middleware' => 'CheckRole:koordinator,dosen,kaprodi,admin'], function(){
         /* Progres */
         Route::get('/progres-konsultasi-mahasiswa', [ProgresKonsultasiController::class, 'index'])->name('progres-konsultasi.index');
         Route::get('/progres-konsultasi-mahasiswa/{id}/{urutan}', [ProgresKonsultasiController::class, 'show'])->name('progres-konsultasi.show');
@@ -342,6 +342,9 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/kelola-pengumuman/kepada/{pengumuman}', [PengumumanController::class, 'kepada'])->name('kelola-pengumuman.kepada');
         Route::get('/kelola-pengumuman/role/info', [PengumumanController::class, 'roleInfo'])->name('kelola-pengumuman.roleInfo');
         Route::get('/kelola-pengumuman/role/info/{pengumuman}', [PengumumanController::class, 'roleDetail'])->name('kelola-pengumuman.roleDetail');
+        Route::get('/kelola-pengumuman-edit/{id}', [PengumumanController::class, 'tEdit'])->name('kelola-pengumuman.tEdit');
+        Route::get('/kelola-pengumuman-show/{id}', [PengumumanController::class, 'tShow'])->name('kelola-pengumuman.tShow');
+        Route::post('/kelola-pengumuman-delete/{id}', [PengumumanController::class, 'tDelete'])->name('kelola-pengumuman.tDelete');
 
         /* Peringatan */
         Route::resource('kelola-peringatan', PeringatanController::class, ['except' => [
@@ -352,6 +355,9 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/kelola-peringatan/kepada/{peringatan}', [PeringatanController::class, 'kepada'])->name('kelola-peringatan.kepada');
         Route::get('/kelola-peringatan/role/info', [PeringatanController::class, 'roleInfo'])->name('kelola-peringatan.roleInfo');
         Route::get('/kelola-peringatan/role/info/{peringatan}', [PeringatanController::class, 'roleDetail'])->name('kelola-peringatan.roleDetail');
+        Route::get('/kelola-peringatan-edit/{id}', [PeringatanController::class, 'tEdit'])->name('kelola-peringatan.tEdit');
+        Route::get('/kelola-peringatan-show/{id}', [PeringatanController::class, 'tShow'])->name('kelola-peringatan.tShow');
+        Route::post('/kelola-peringatan-delete/{id}', [PeringatanController::class, 'tDelete'])->name('kelola-peringatan.tDelete');
     });
 
     /* Koordinator && Kaprodi */

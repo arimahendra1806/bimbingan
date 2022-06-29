@@ -11,6 +11,8 @@ use App\Models\TahunAjaran;
 use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
 use App\Models\DosPemModel;
+use App\Models\InformasiKepadaModel;
+use App\Models\FileInformasiModel;
 use App\Mail\MailController;
 use DataTables, Validator, Auth, File;
 
@@ -56,6 +58,8 @@ class PeringatanController extends Controller
         $arr_koor = User::where('role', "koordinator")->pluck('id')->toArray();
         $arr_dsn = User::where('role', "dosen")->pluck('id')->toArray();
         $arr_mhs = User::where('role', "mahasiswa")->pluck('id')->toArray();
+        $arr_adm = User::where('role', "admin")->pluck('id')->toArray();
+        $arr_kp = User::where('role', "kaprodi")->pluck('id')->toArray();
 
         /* Kondisi jika role kepada */
         if ($kepada_role == "semua pengguna"){
@@ -64,23 +68,53 @@ class PeringatanController extends Controller
                 /* Jalankan function addNotif sesuai dengan parameter */
                 $this->addNotif($arr_dsn, $data_info_id);
                 $this->addNotif($arr_mhs, $data_info_id);
+                $this->addNotif($arr_adm, $data_info_id);
+                $this->addNotif($arr_kp, $data_info_id);
             } elseif ($user_role == "kaprodi") {
                 /* Jalankan function addNotif sesuai dengan parameter */
                 $this->addNotif($arr_koor, $data_info_id);
                 $this->addNotif($arr_dsn, $data_info_id);
                 $this->addNotif($arr_mhs, $data_info_id);
+                $this->addNotif($arr_adm, $data_info_id);
             }
+        } elseif($kepada_role == "koordinator admin dosen") {
+            /* Jalankan function addNotif sesuai dengan parameter */
+            $this->addNotif($arr_koor, $data_info_id);
+            $this->addNotif($arr_dsn, $data_info_id);
+            $this->addNotif($arr_adm, $data_info_id);
+        } elseif($kepada_role == "koordinator admin") {
+            /* Jalankan function addNotif sesuai dengan parameter */
+            $this->addNotif($arr_koor, $data_info_id);
+            $this->addNotif($arr_adm, $data_info_id);
         } elseif($kepada_role == "koordinator dosen"){
             /* Jalankan function addNotif sesuai dengan parameter */
             $this->addNotif($arr_koor, $data_info_id);
             $this->addNotif($arr_dsn, $data_info_id);
+        } elseif($kepada_role == "dosen admin") {
+            if ($user_role == "koordinator") {
+                /* Jalankan function addNotif sesuai dengan parameter */
+                $this->addNotif($arr_dsn, $data_info_id);
+                $this->addNotif($arr_adm, $data_info_id);
+                $this->addNotif($arr_kp, $data_info_id);
+            } elseif ($user_role == "kaprodi") {
+                /* Jalankan function addNotif sesuai dengan parameter */
+                $this->addNotif($arr_dsn, $data_info_id);
+                $this->addNotif($arr_adm, $data_info_id);
+            }
         } elseif($kepada_role == "dosen mahasiswa"){
-            /* Jalankan function addNotif sesuai dengan parameter */
-            $this->addNotif($arr_dsn, $data_info_id);
-            $this->addNotif($arr_mhs, $data_info_id);
+            if ($user_role == "koordinator") {
+                /* Jalankan function addNotif sesuai dengan parameter */
+                $this->addNotif($arr_dsn, $data_info_id);
+                $this->addNotif($arr_mhs, $data_info_id);
+                $this->addNotif($arr_kp, $data_info_id);
+            } elseif ($user_role == "kaprodi") {
+                /* Jalankan function addNotif sesuai dengan parameter */
+                $this->addNotif($arr_dsn, $data_info_id);
+                $this->addNotif($arr_mhs, $data_info_id);
+            }
         } elseif ($kepada_role == "koordinator"){
             /* Kondisi jika kepada sama dengan 0 */
-            if ($kepada_id == "0") {
+            if (in_array('0', $kepada_id)) {
                 /* Jalankan function addNotif sesuai dengan parameter */
                 $this->addNotif($arr_koor, $data_info_id);
             } else {
@@ -89,16 +123,31 @@ class PeringatanController extends Controller
             }
         } elseif ($kepada_role == "dosen"){
             /* Kondisi jika kepada sama dengan 0 */
-            if ($kepada_id == "0") {
+            if (in_array('0', $kepada_id)) {
+                if ($user_role == "koordinator") {
+                    /* Jalankan function addNotif sesuai dengan parameter */
+                    $this->addNotif($arr_dsn, $data_info_id);
+                    $this->addNotif($arr_kp, $data_info_id);
+                } elseif ($user_role == "kaprodi") {
+                    /* Jalankan function addNotif sesuai dengan parameter */
+                    $this->addNotif($arr_dsn, $data_info_id);
+                }
+            } else {
                 /* Jalankan function addNotif sesuai dengan parameter */
-                $this->addNotif($arr_dsn, $data_info_id);
+                $this->addNotif($data_info_role, $data_info_id);
+            }
+        } elseif($kepada_role == "admin") {
+            /* Kondisi jika kepada sama dengan 0 */
+            if (in_array('0', $kepada_id)) {
+                /* Jalankan function addNotif sesuai dengan parameter */
+                $this->addNotif($arr_adm, $data_info_id);
             } else {
                 /* Jalankan function addNotif sesuai dengan parameter */
                 $this->addNotif($data_info_role, $data_info_id);
             }
         } elseif ($kepada_role == "mahasiswa"){
             /* Kondisi jika kepada sama dengan 0 */
-            if ($kepada_id == "0") {
+            if (in_array('0', $kepada_id)) {
                 /* Kondisi jika user akses role sesuai */
                 if ($user_role == "dosen"){
                     /* Inisiasi variabel untuk mendapatkan array id mhs sesuai id dosen */
@@ -135,16 +184,33 @@ class PeringatanController extends Controller
                 ->where('users_id', $user_id)->get()->load('tahun');
             return DataTables::of($data)
                 ->addIndexColumn()
-                ->addColumn('kepadaDetail', function($model){
-                    $kepada = User::where('id', $model->kepada)->first();
-                    if($kepada){
-                        return $kepada->name;
+                ->addColumn('role_kepada', function($model){
+                    if ($model->kepada_role == 'semua pengguna') {
+                        return $model->kepada_role;
                     } else {
-                        if($model->kepada == "0"){
-                            $msg = "Semua";
-                            return $msg;
+                        return str_replace(' ', ', ', $model->kepada_role);
+                    }
+                })
+                ->addColumn('kepadaDetail', function($model){
+                    $kepada = InformasiKepadaModel::where('informasi_id', $model->id)->get();
+                    $count_in = $kepada->count('id');
+                    if ($count_in == 2) {
+                        $data_id = $kepada->pluck('users_id')->toArray();
+                        $x = array();
+                        foreach ($data_id as $key => $value) {
+                            $data_nama = User::where('id', $value)->first();
+                            array_push($x, $data_nama->name);
+                        }
+                        $y = implode(", ", $x);
+                        return $y;
+                    } elseif ($count_in > 2) {
+                        return $count_in . ' orang lainnya';
+                    } else {
+                        $cek = InformasiKepadaModel::with('nama')->where('informasi_id', $model->id)->first();
+                        if ($cek->users_id == '0'){
+                            return 'Semua';
                         } else {
-                            return $model->kepada;
+                            return $cek->nama->name;
                         }
                     }
                 })
@@ -154,7 +220,7 @@ class PeringatanController extends Controller
                     <a id="btnDelete" data-id="'.$model->id.'" class="btn btn-danger delete-user" data-toggle="tooltip" title="Hapus Data"><i class="fas fa-prescription-bottle"></i></a>';
                     return $btn;
                 })
-                ->rawColumns(['kepadaDetail','action'])
+                ->rawColumns(['role_kepada','kepadaDetail','action'])
                 ->toJson();
         }
 
@@ -188,7 +254,8 @@ class PeringatanController extends Controller
                 'judul_add' => ['required','max:20'],
                 'subyek_add' => ['required','max:30'],
                 'pesan_add' => ['required'],
-                'file_upload_add' => ['required','file','max:2048','mimes:pdf']
+                'file_upload_add' => ['required'],
+                'file_upload_add.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
             ];
         }
 
@@ -204,7 +271,8 @@ class PeringatanController extends Controller
             'judul_add' => 'Judul Peringatan',
             'subyek_add' => 'Subyek Peringatan',
             'pesan_add' => 'Pesan Peringatan',
-            'file_upload_add' => 'Lampiran File'
+            'file_upload_add' => 'Lampiran File',
+            'file_upload_add.*' => 'Lampiran File'
         ];
 
         /* Validasi input */
@@ -220,33 +288,47 @@ class PeringatanController extends Controller
             $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
             /* Insert data informasi */
-            $data = new InformasiModel;
-            $data->users_id = $user_id;
-            $data->tahun_ajaran_id = $tahun_id->id;
-            $data->kepada_role = $request->kepada_role_add;
-            $data->kepada = $request->kepada_add;
-            $data->judul = $request->judul_add;
-            $data->subyek = $request->subyek_add;
-            $data->pesan = $request->pesan_add;
-            $data->jenis = "Peringatan";
+            if (count($request->kepada_add) > 1 && in_array('0', $request->kepada_add)){
+                return response()->json(['status' => 0, 'error' => ['kepada_add' => ['Kepada yang dipilih tidak valid']]]);
+            } else {
+                $data = new InformasiModel;
+                $data->users_id = $user_id;
+                $data->tahun_ajaran_id = $tahun_id->id;
+                $data->kepada_role = $request->kepada_role_add;
+                $data->judul = $request->judul_add;
+                $data->subyek = $request->subyek_add;
+                $data->pesan = $request->pesan_add;
+                $data->jenis = "Peringatan";
+                $data->save();
 
-            /* Jika request terdapat file */
-            if ($request->hasFile('file_upload_add')){
-                $file = $request->file('file_upload_add');
-                $filename = time()."_".$file->getClientOriginalName();
-                $file->move(public_path('dokumen/peringatan'), $filename);
+                foreach ($request->kepada_add as $key => $value) {
+                    $data2 = new InformasiKepadaModel;
+                    $data2->informasi_id = $data->id;
+                    $data2->users_id = $value;
+                    $data2->save();
+                }
 
-                $data->file_upload = $filename;
+                /* Jika request terdapat file */
+                if ($request->hasFile('file_upload_add')){
+                    $file = $request->file('file_upload_add');
+                    foreach ($file as $key => $value) {
+                        $filename = time()."_".$value->getClientOriginalName();
+                        $value->move(public_path('dokumen/peringatan'), $filename);
+
+                        $data3 = new FileInformasiModel;
+                        $data3->informasi_id = $data->id;
+                        $data3->nama_file = $filename;
+                        $data3->save();
+                    }
+                }
+
+                /* Inisiasi variabel setelah insert */
+                $data_info_id = $data->id;
+                $data_info_role = $request->kepada_add;
+
+                /* Jalankan function kondisiNotif sesuai dengan parameter */
+                $this->kondisiNotif($request->kepada_role_add, $request->kepada_add, $data_info_role, $data_info_id);
             }
-
-            $data->save();
-
-            /* Inisiasi variabel setelah insert */
-            $data_info_id = $data->id;
-            $data_info_role = [$data->kepada];
-
-            /* Jalankan function kondisiNotif sesuai dengan parameter */
-            $this->kondisiNotif($request->kepada_role_add, $request->kepada_add, $data_info_role, $data_info_id);
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
@@ -256,12 +338,37 @@ class PeringatanController extends Controller
     public function show($peringatan)
     {
         /* Ambil data informasi sesuai parameter */
-        $data = InformasiModel::with(['penerima' => function($q){
-            $q->select('id', 'name');
-        }])->find($peringatan)->load('tahun');
+        $data = InformasiModel::find($peringatan)->load('tahun');
+
+        $kepada = InformasiKepadaModel::where('informasi_id', $data->id)->get();
+        $count_in = $kepada->count('id');
+        if ($count_in > 1) {
+            $data_id = $kepada->pluck('users_id')->toArray();
+            $x = array();
+            foreach ($data_id as $key => $value) {
+                $data_nama = User::where('id', $value)->first();
+                array_push($x, $data_nama->name);
+            }
+            $nama = implode(", ", $x);
+            $selectNm = $data_id;
+        } else {
+            $cek = InformasiKepadaModel::with('nama')->where('informasi_id', $data->id)->first();
+            if ($cek->users_id == '0'){
+                $nama = "Semua";
+                $selectNm = "0";
+            } else {
+                $nama = $cek->nama->name;
+                $selectNm = $cek->users_id;
+            }
+        }
+        if ($data->kepada_role == 'semua pengguna') {
+            $role = $data->kepada_role;
+        } else {
+            $role = str_replace(' ', ', ', $data->kepada_role);
+        }
 
         /* Return json data informasi */
-        return response()->json($data);
+        return response()->json(['data' => $data, 'nama' => $nama, 'selectNm' => $selectNm, 'role' => $role]);
     }
 
     public function update(Request $request, $peringatan)
@@ -290,7 +397,8 @@ class PeringatanController extends Controller
                 'judul_edit' => ['required','max:20'],
                 'subyek_edit' => ['required','max:30'],
                 'pesan_edit' => ['required'],
-                'file_upload_edit' => ['required','file','max:2048','mimes:pdf']
+                'file_upload_edit' => ['required'],
+                'file_upload_edit.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
             ];
         }
 
@@ -306,7 +414,8 @@ class PeringatanController extends Controller
             'judul_edit' => 'Judul Peringatan',
             'subyek_edit' => 'Subyek Peringatan',
             'pesan_edit' => 'Pesan Peringatan',
-            'file_upload_edit' => 'Lampiran File'
+            'file_upload_edit' => 'Lampiran File',
+            'file_upload_edit.*' => 'Lampiran File'
         ];
 
         /* Validasi input */
@@ -319,44 +428,67 @@ class PeringatanController extends Controller
         } else {
             /* Ambil data user login */
             $user_id = Auth::user()->id;
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
-            /* Ambil data infomasi sesuai parameter */
-            $data = InformasiModel::where('id', $peringatan)->first();
+            /* Insert data informasi */
+            if (count($request->kepada_edit) > 1 && in_array('0', $request->kepada_edit)){
+                return response()->json(['status' => 0, 'error' => ['kepada_edit' => ['Kepada yang dipilih tidak valid']]]);
+            } else {
+                /* Ambil data infomasi sesuai parameter */
+                $data = InformasiModel::where('id', $peringatan)->first();
 
-            /* Hapus data notifikasi sesuai dengan parameter */
-            $notif = NotifikasiModel::where('informasi_id', $data->id)
-                ->where('jenis', 'Peringatan')->forceDelete();
+                /* Hapus data notifikasi sesuai dengan parameter */
+                $get_cek = InformasiKepadaModel::where('informasi_id', $data->id)->get();
+                $cek = $get_cek->pluck('users_id')->toArray();
+                if ($cek != $request->kepada_edit) {
+                    NotifikasiModel::where('informasi_id', $data->id)
+                        ->where('jenis', 'Peringatan')->forceDelete();
+                    InformasiKepadaModel::where('informasi_id', $data->id)
+                        ->forceDelete();
+                }
 
-            /* Update peringatan */
-            $data->users_id = $user_id;
-            $data->kepada_role = $request->kepada_role_edit;
-            $data->kepada = $request->kepada_edit;
-            $data->judul = $request->judul_edit;
-            $data->subyek = $request->subyek_edit;
-            $data->pesan = $request->pesan_edit;
-            $data->jenis = "Peringatan";
+                /* Update peringatan */
+                $data->users_id = $user_id;
+                $data->tahun_ajaran_id = $tahun_id->id;
+                $data->kepada_role = $request->kepada_role_edit;
+                $data->judul = $request->judul_edit;
+                $data->subyek = $request->subyek_edit;
+                $data->pesan = $request->pesan_edit;
+                $data->jenis = "Peringatan";
+                $data->save();
 
-            /* Jika request terdapat file */
-            if ($request->hasFile('file_upload_edit')){
-                $file = $request->file('file_upload_edit');
-                $filename = time()."_".$file->getClientOriginalName();
-                $file->move(public_path('dokumen/peringatan'), $filename);
+                if ($cek != $request->kepada_edit) {
+                    foreach ($request->kepada_edit as $key => $value) {
+                        $data2 = new InformasiKepadaModel;
+                        $data2->informasi_id = $data->id;
+                        $data2->users_id = $value;
+                        $data2->save();
+                    }
+                }
 
-                /* Hapus data file sebelumnya */
-                $path = public_path() . '/dokumen/peringatan/' . $data->file_upload;
-                File::delete($path);
+                /* Jika request terdapat file */
+                if ($request->hasFile('file_upload_edit')){
+                    $file = $request->file('file_upload_edit');
+                    foreach ($file as $key => $value) {
+                        $filename = time()."_".$value->getClientOriginalName();
+                        $value->move(public_path('dokumen/peringatan'), $filename);
 
-                $data->file_upload = $filename;
+                        $data3 = new FileInformasiModel;
+                        $data3->informasi_id = $data->id;
+                        $data3->nama_file = $filename;
+                        $data3->save();
+                    }
+                }
+
+                /* Inisiasi variabel setelah insert */
+                $data_info_id = $data->id;
+                $data_info_role = $request->kepada_edit;
+
+                if ($cek != $request->kepada_edit) {
+                    /* Jalankan function addNotif sesuai dengan parameter */
+                    $this->kondisiNotif($request->kepada_role_edit, $request->kepada_edit, $data_info_role, $data_info_id);
+                }
             }
-
-            $data->save();
-
-            /* Inisiasi variabel setelah insert */
-            $data_info_id = $data->id;
-            $data_info_role = [$data->kepada];
-
-            /* Jalankan function addNotif sesuai dengan parameter */
-            $this->kondisiNotif($request->kepada_role_edit, $request->kepada_edit, $data_info_role, $data_info_id);
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
@@ -366,11 +498,14 @@ class PeringatanController extends Controller
     public function destroy($peringatan)
     {
         /* Hapus data informasi sesuai parameter */
-        $data = InformasiModel::find($peringatan);
+        $data = InformasiModel::with('file')->find($peringatan);
 
         /* Hapus data file public */
-        $path = public_path() . '/dokumen/peringatan/' . $data->file_upload;
-        File::delete($path);
+        $arr_in = $data->file->pluck('nama_file')->toArray();
+        foreach ($arr_in as $key => $value) {
+            $path = public_path() . '/dokumen/peringatan/' . $value;
+            File::delete($path);
+        }
 
         /* Hapus data informasi */
         $data->forceDelete();
@@ -393,7 +528,14 @@ class PeringatanController extends Controller
             $data = User::where('role', "koordinator")->select('id', 'name')->orderBy('name')->get();
         } elseif ($peringatan == "dosen"){
             /* Inisiasi variabel data sesuai parameter kondisi */
-            $data = User::where('role', "dosen")->select('id', 'name')->orderBy('name')->get();
+            if ($user_role == "kaprodi"){
+                $data = User::where('role', "dosen")->select('id', 'name')->orderBy('name')->get();
+            } else {
+                $data = User::where('role', "dosen")->orWhere('role', "kaprodi")->select('id', 'name')->orderBy('name')->get();
+            }
+        } elseif ($peringatan == "admin"){
+            /* Inisiasi variabel data sesuai parameter kondisi */
+            $data = User::where('role', "admin")->select('id', 'name')->orderBy('name')->get();
         } elseif ($peringatan == "mahasiswa") {
             /* Kondisi jika auth role user sesuai dengan role */
             if ($user_role == "dosen"){
@@ -467,5 +609,50 @@ class PeringatanController extends Controller
     {
         /* Return menuju view */
         return view('mahasiswa.peringatan.index');
+    }
+
+    public function tEdit(Request $request, $id) {
+        if ($request->ajax()){
+            $data = FileInformasiModel::where('informasi_id', $id)->latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($model){
+                    $btn = '<a class="btn btn-secondary" id="tBtnDownload" data-toggle="tooltip" title="Download File" data-id="'.$model->id.'" href="/dokumen/peringatan/'.$model->nama_file.'" download><i class="fas fa-download"></i></a>
+                    <a class="btn btn-danger" id="tBtnDelete" data-toggle="tooltip" title="Hapus File" data-id="'.$model->id.'"><i class="fas fa-prescription-bottle"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
+    }
+
+    public function tShow(Request $request, $id) {
+        if ($request->ajax()){
+            $data = FileInformasiModel::where('informasi_id', $id)->latest()->get();
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function($model){
+                    $btn = '<a class="btn btn-secondary" id="tBtnDownload" data-toggle="tooltip" title="Download File" data-id="'.$model->id.'" href="/dokumen/peringatan/'.$model->nama_file.'" download><i class="fas fa-download"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action'])
+                ->toJson();
+        }
+    }
+
+    public function tDelete($id)
+    {
+        /* Ambil data materi tahunan sesuai parameter */
+        $data = FileInformasiModel::find($id);
+
+        /* Hapus data file public */
+        $path = public_path() . '/dokumen/peringatan/' . $data->nama_file;
+        File::delete($path);
+
+        /* Hapus data materi tahunan */
+        $data->forceDelete();
+
+        /* Return json berhasil */
+        return response()->json(['msg' => "Berhasil Menghapus File!"]);
     }
 }

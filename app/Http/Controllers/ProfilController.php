@@ -83,6 +83,9 @@ class ProfilController extends Controller
                 $data->dosen->email = $reemail;
                 $data->dosen->no_telepon = $retelepon;
                 $data->dosen->save();
+
+                $data->name = $renama;
+                $data->save();
             }
 
             if($data->mahasiswa) {
@@ -90,6 +93,9 @@ class ProfilController extends Controller
                 $data->mahasiswa->email = $reemail;
                 $data->mahasiswa->no_telepon = $retelepon;
                 $data->mahasiswa->save();
+
+                $data->name = $renama;
+                $data->save();
             }
 
             if($data->admin) {
@@ -97,6 +103,9 @@ class ProfilController extends Controller
                 $data->admin->email = $reemail;
                 $data->admin->no_telepon = $retelepon;
                 $data->admin->save();
+
+                $data->name = $renama;
+                $data->save();
             }
 
             if ($request->filled('password')) {

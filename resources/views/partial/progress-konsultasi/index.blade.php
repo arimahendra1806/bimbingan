@@ -14,11 +14,13 @@
                         <div class="row mb-1">
                             <div class="col-md-6">
                                 <label for="nim" class="col-form-label">NIM:</label>
-                                <input type="text" class="form-control no-outline" id="nim" name="nim" readonly>
+                                <input type="text" class="form-control no-outline" id="nim" name="nim"
+                                    readonly>
                             </div>
                             <div class="col-md-6">
                                 <label for="nama" class="col-form-label">Nama Mahasiswa:</label>
-                                <input type="text" class="form-control no-outline" id="nama" name="nama" readonly>
+                                <input type="text" class="form-control no-outline" id="nama" name="nama"
+                                    readonly>
                             </div>
                         </div>
                         <div class="row mb-1">
@@ -255,7 +257,6 @@
         .cards .fa {
             font-size: 7.5rem;
         }
-
     </style>
     <!-- select2 css -->
     <link href="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.css" rel="stylesheet" />

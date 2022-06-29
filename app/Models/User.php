@@ -14,6 +14,7 @@ use App\Models\InfomasiModel;
 use App\Models\MahasiswaModel;
 use App\Models\NotifikasiModel;
 use App\Models\AdminModel;
+use App\Models\InformasiKepadaModel;
 use App\Models\TahunAjaran;
 
 class User extends Authenticatable
@@ -57,7 +58,7 @@ class User extends Authenticatable
     /* informasi */
     public function informasiKepada()
     {
-        return $this->belongsTo(InformasiModel::class,'id','kepada');
+        return $this->belongsTo(InformasiKepadaModel::class,'id','users_id');
     }
 
     /* notifikasi */
