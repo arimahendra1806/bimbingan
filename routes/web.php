@@ -280,11 +280,13 @@ Route::group(['middleware' => 'auth'], function(){
         Route::get('/pengumuman', [PengumumanController::class, 'indexMhs'])->name('pengumuman.indexMhs');
         Route::get('/pengumuman/role/info', [PengumumanController::class, 'roleInfo'])->name('pengumuman.roleInfo');
         Route::get('/pengumuman/role/info/{pengumuman}', [PengumumanController::class, 'roleDetail'])->name('pengumuman.roleDetail');
+        Route::get('/pengumuman-show/{id}', [PengumumanController::class, 'tShow'])->name('pengumuman.tShow');
 
         /* Peringatan */
         Route::get('/peringatan', [PeringatanController::class, 'indexMhs'])->name('peringatan.indexMhs');
         Route::get('/peringatan/role/info', [PeringatanController::class, 'roleInfo'])->name('peringatan.roleInfo');
         Route::get('/peringatan/role/info/{peringatan}', [PeringatanController::class, 'roleDetail'])->name('peringatan.roleDetail');
+        Route::get('/peringatan-show/{id}', [PeringatanController::class, 'tShow'])->name('peringatan.tShow');
 
         /* Kelola Pengajuan Zoom */
         Route::resource('pengajuan-zoom', PengajuanZoomController::class, ['except' => [

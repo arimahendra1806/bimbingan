@@ -352,6 +352,7 @@ class KonsulLaporanController extends Controller
         }],'mahasiswa.dospem.dosen','mahasiswa.judul','mahasiswa.tahun')->find(Auth::user()->id);
         $riwayat = RiwayatBimbinganModel::where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
             ->where('bimbingan_jenis', 'Laporan')
+            ->orWhere('bimbingan_jenis', 'Program')
             ->get();
 
         $hari = Carbon::now()->isoFormat('D MMMM Y');

@@ -25,24 +25,35 @@
                     <div class="row mb-1">
                         <div class="col-md-6">
                             <label for="judul_detail" class="col-form-label">Judul Peringatan:</label>
-                            <textarea class="form-control" name="judul_detail" id="judul_detail" style="width: 100%" rows="2" readonly></textarea>
+                            <textarea class="form-control" name="judul_detail" id="judul_detail" style="width: 100%" rows="3" readonly></textarea>
                         </div>
                         <div class="col-md-6">
                             <label for="subyek_detail" class="col-form-label">Subyek Peringatan:</label>
-                            <textarea class="form-control" name="subyek_detail" id="subyek_detail" style="width: 100%" rows="2"
-                                readonly></textarea>
+                            <textarea class="form-control" name="subyek_detail" id="subyek_detail" style="width: 100%" rows="3" readonly></textarea>
                         </div>
                     </div>
                     <div class="row mb-1">
                         <div class="col-md-12">
                             <label for="pesan_detail" class="col-form-label">Isi Peringatan:</label>
-                            <textarea class="form-control" name="pesan_detail" id="pesan_detail" style="width: 100%" rows="3"></textarea>
+                            <textarea class="form-control" name="pesan_detail" id="pesan_detail" style="width: 100%" rows="3" readonly></textarea>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="file_upload" class="col-form-label">Lampiran File:</label>
-                        <input type="text" class="form-control no-outline" id="file_upload" name="file_upload" readonly>
-                        <iframe style="width:100%; height:400px;" id="iprame" frameborder="0"></iframe>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="tabelDetail">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nama File</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -113,6 +124,12 @@
     <link href="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.css" rel="stylesheet" />
     <!-- select2 js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.js"></script>
+
+    <style>
+        .tooltip {
+            z-index: 100000000;
+        }
+    </style>
 
     <script>
         $(document).ready(function() {
@@ -188,6 +205,46 @@
                 }
             });
 
+            var tDetail = $('#tabelDetail').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: "peringatan-show/0",
+                autoWidth: false,
+                columns: [{
+                        data: 'DT_RowIndex',
+                        name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'nama_file',
+                        name: 'nama_file'
+                    },
+                    {
+                        data: 'action',
+                        name: 'action'
+                    }
+                ],
+                columnDefs: [{
+                        searchable: false,
+                        orderable: false,
+                        targets: [0, 2]
+                    },
+                    {
+                        width: '1%',
+                        targets: [0, 2]
+                    }
+                ],
+                order: [
+                    [1, 'desc']
+                ],
+                bPaginate: false,
+                bLengthChange: false,
+                bFilter: false,
+                bInfo: false,
+                oLanguage: {
+                    sUrl: "/vendor/minia/assets/libs/datatables.net/js/indonesian.json"
+                }
+            });
+
             /* Button Tooltip */
             $('table').on('draw.dt', function() {
                 $('[data-toggle="tooltip"]').tooltip();
@@ -203,17 +260,7 @@
                     $('#judul_detail').val(data.informasi.judul);
                     $('#subyek_detail').val(data.informasi.subyek);
                     $('#pesan_detail').val(data.informasi.pesan);
-
-                    if (data.informasi.file_upload) {
-                        $('#file_upload').val(data.informasi.file_upload);
-                        $('iframe').attr("src", "{{ asset('dokumen/peringatan') }}" + "/" +
-                            data.informasi.file_upload);
-                        $('#iprame').show();
-                    } else {
-                        $('#file_upload').val('Belum Upload');
-                        $('#iprame').hide();
-                    }
-
+                    tDetail.ajax.url("/peringatan-show/" + data.informasi.id).load();
                 }).then(function() {
                     loaderNotif();
                     roleTable.ajax.reload();

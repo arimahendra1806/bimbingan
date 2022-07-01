@@ -67,6 +67,17 @@
             border-width: 0;
         }
 
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2);
+            /* IE */
+            -moz-transform: scale(2);
+            /* FF */
+            -webkit-transform: scale(2);
+            /* Safari and Chrome */
+            -o-transform: scale(2);
+            padding-top: 3px;
+        }
     </style>
 
     <header>
@@ -104,59 +115,76 @@
 
     </header>
 
-    <footer>
-        <div style="margin-bottom: 50px; margin-left:70%">
-            <p>
-                Kediri, {{ $hari }} <br>
-                Dosen Pembimbing Pralaporan, <br><br><br><br>
-                {{ $user->mahasiswa->dospem->dosen->nama_dosen }} <br>
-                NIDN. {{ $user->mahasiswa->dospem->dosen->nidn }}
-            </p>
-        </div>
-
-        <div>
-            <p>Catatan: Tanda Tangan harus jelas dan basah</p>
-        </div>
-    </footer>
-
     <main>
         <center>
-            <p style="font-size: 14pt; font-weight: 900">LEMBAR BIMBINGAN LAPORAN AKHIR
-                {{ $user->mahasiswa->tahun->tahun_ajaran }}</p>
+            <p style="font-size: 14pt; font-weight: 900">
+                KARTU BIMBINGAN TUGAS MAHASISWA <br> MANAJEMEN INFORMATIKA <br>
+                TAHUN {{ $user->mahasiswa->tahun->tahun_ajaran }}
+            </p>
         </center>
 
-        <table class="table table-borderless">
-            <tr>
-                <th style="font-size: 12pt; font-weight: 900; width: 10%">JUDUL</th>
-                <th style="font-size: 12pt; font-weight: 900; width: 2%">:</th>
-                <th colspan="4" style="font-size: 11pt; font-weight: 100; text-align: justify;">
-                    {{ $user->mahasiswa->judul->judul }}
+        <table class="table" style="font-size: 10pt; line-height: 50%; padding-top: 5px;">
+            <tr style="background-color:#e8ebe9;">
+                <th style="width: 20%; vertical-align: middle; border: 1px solid black;">
+                    JENIS TUGAS
+                </th>
+                <th colspan="2" style="width: 40%; vertical-align: middle; border: 1px solid black;">
+                    <input type="checkbox"> &nbsp; PKL
+                </th>
+                <th colspan="2"style="width: 40%; vertical-align: middle; border: 1px solid black;">
+                    <input type="checkbox"> &nbsp; LAPORAN AKHIR
                 </th>
             </tr>
             <tr>
-                <th style="font-size: 12pt; font-weight: 900; width: 10%">NAMA</th>
-                <th style="font-size: 12pt; font-weight: 900; width: 2%">:</th>
-                <th style="font-size: 11pt; font-weight: 100; text-align: justify; width: 50%">
+                <th rowspan="2"
+                    style="width: 20%; vertical-align: middle; border: 1px solid black; background-color:#e8ebe9;">
+                    PEMBIMBING
+                </th>
+                <th style="width: 15%; vertical-align: middle; border: 1px solid black; background-color:#e8ebe9;">
+                    DOSEN 1
+                </th>
+                <td colspan="3" style="width: 60%; vertical-align: middle; border: 1px solid black;">
+                    {{ $user->mahasiswa->dospem->dosen->nama_dosen }}
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 15%; vertical-align: middle; border: 1px solid black; background-color:#e8ebe9;">
+                    DOSEN 2
+                </th>
+                <td colspan="3" style="width: 60%; vertical-align: middle; border: 1px solid black;"></td>
+            </tr>
+            <tr>
+                <th rowspan="2"
+                    style="width: 20%; vertical-align: middle; border: 1px solid black; background-color:#e8ebe9;">
+                    MAHASISWA
+                </th>
+                <td colspan="4" style="width: 60%; vertical-align: middle; border: 1px solid black;">
                     {{ $user->mahasiswa->nama_mahasiswa }}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4" style="width: 60%; vertical-align: middle; border: 1px solid black;">
+                    NIM: {{ $user->mahasiswa->nim }}
+                </td>
+            </tr>
+            <tr>
+                <th style="width: 20%; vertical-align: middle; border: 1px solid black; background-color:#e8ebe9;">
+                    JUDUL TUGAS
                 </th>
-                <th style="font-size: 12pt; font-weight: 900; width: 10%">NIM</th>
-                <th style="font-size: 12pt; font-weight: 900; width: 2%">:</th>
-                <th style="font-size: 11pt; font-weight: 100; text-align: justify;">
-                    {{ $user->mahasiswa->nim }}
-                </th>
+                <td colspan="4" style="width: 60%; vertical-align: middle; border: 1px solid black;">
+                    {{ $user->mahasiswa->judul->judul }}
+                </td>
             </tr>
         </table>
-        <table class=" table table-bordered" style="font-size: 9pt;">
-            <thead style=" text-align: center; font-size: 12pt; font-weight: 900; border-color: black">
+        <table class="table table-bordered" style="font-size: 9pt; line-height: 50%; padding-top: 5px;">
+            <thead
+                style="text-align: center; font-size: 9pt; font-weight: 900; border-color: black; background-color:#e8ebe9">
                 <tr>
-                    <th rowspan="2" style="width: 3%; vertical-align: middle">No</th>
-                    <th rowspan="2" style="width: 20%; vertical-align: middle">Tanggal / Waktu</th>
-                    <th rowspan="2" style="width: 30%; vertical-align: middle">Materi Bimbingan</th>
-                    <th colspan="2">Tanda Tangan</th>
-                </tr>
-                <tr>
-                    <th style="width: 20%">Mahasiswa</th>
-                    <th style="width: 20%">Dosen</th>
+                    <th style="width: 3%; vertical-align: middle">NO</th>
+                    <th style="width: 20%; vertical-align: middle">TANGGAL</th>
+                    <th style="width: 40%; vertical-align: middle">MATERI/BAB</th>
+                    <th style="width: 40%; vertical-align: middle">SARAN DOSEN</th>
+                    <th style="width: 25%; vertical-align: middle">TTD DOSEN</th>
                 </tr>
             </thead>
             <tbody>
@@ -165,10 +193,10 @@
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td>
-                            {{ \Carbon\Carbon::parse($item->waktu_bimbingan)->isoFormat('D MMMM Y / hh:mm:ss') }}
+                            {{ \Carbon\Carbon::parse($item->waktu_bimbingan)->isoFormat('D MMMM Y') }}
                         </td>
-                        <td>Konsultasi pengerjaan laporan</td>
-                        <td></td>
+                        <td>{{ $item->keterangan }}</td>
+                        <td>{{ $item->tanggapan }}</td>
                         <td></td>
                     </tr>
                 @endforeach
