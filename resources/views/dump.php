@@ -424,3 +424,13 @@ $guru->restore(); -->
                                     </div>
                                 </form>
                             </div> -->
+
+
+                            <!-- // /* Notifikasi email */
+                // $subjek = 'Komentar Konsultasi Judul Terbaru';
+                // $details = [
+                //     'title' => 'Komentar Untuk Konsultasi Judul dari Mahasiswa Bimbingan Anda',
+                //     'body' => 'Anda menerima komentar untuk konsultasi judul terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
+                // ];
+
+                // Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek)); -->

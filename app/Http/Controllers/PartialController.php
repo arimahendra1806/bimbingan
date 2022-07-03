@@ -40,7 +40,7 @@ class PartialController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($model){
-                    $btn = '<a class="btn btn-info" id="btnShow" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>';
+                    $btn = '<a class="btn btn-info" id="btnDetailMateri" data-toggle="tooltip" title="Detail Data" data-id="'.$model->id.'"><i class="fas fa-clipboard-list"></i></a>';
                     return $btn;
                 })
                 ->addColumn('jml_file', function($model){

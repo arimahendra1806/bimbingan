@@ -205,6 +205,9 @@
                 <form method="POST" id="ImportForm" enctype="multipart/form-data" files="true">
                     @csrf
                     <div class="modal-body">
+                        <a href="/dokumen/template/Template_Link_Zoom.xlsx" class="text-primary" download>
+                            Klik untuk Download Template Impor Excel Data Link Zoom
+                        </a>
                         <div class="mb-3">
                             <label for="file_import" class="col-form-label">File Impor: <b class="error">*Pastikan
                                     Format CSV/XLSX/XLS</b></label>

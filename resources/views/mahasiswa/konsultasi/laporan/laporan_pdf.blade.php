@@ -52,14 +52,20 @@
 
         table.table-bordered {
             border: 1px solid black;
+            padding: 3px;
+            margin: 1px;
         }
 
         table.table-bordered>thead>tr>th {
             border: 1px solid black;
+            padding: 3px;
+            margin: 1px;
         }
 
         table.table-bordered>tbody>tr>td {
             border: 1px solid black;
+            padding: 3px;
+            margin: 1px;
         }
 
         hr {
@@ -123,7 +129,7 @@
             </p>
         </center>
 
-        <table class="table" style="font-size: 10pt; line-height: 50%; padding-top: 5px;">
+        <table class="table" style="font-size: 10pt; padding: 3px; margin: 1px;">
             <tr style="background-color:#e8ebe9;">
                 <th style="width: 20%; vertical-align: middle; border: 1px solid black;">
                     JENIS TUGAS
@@ -176,7 +182,7 @@
                 </td>
             </tr>
         </table>
-        <table class="table table-bordered" style="font-size: 9pt; line-height: 50%; padding-top: 5px;">
+        <table class="table table-bordered" style="font-size: 9pt; padding-top: 5px;">
             <thead
                 style="text-align: center; font-size: 9pt; font-weight: 900; border-color: black; background-color:#e8ebe9">
                 <tr>

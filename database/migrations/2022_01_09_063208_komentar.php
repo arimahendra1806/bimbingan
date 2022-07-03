@@ -17,7 +17,7 @@ class Komentar extends Migration
             $table->id();
             $table->string('bimbingan_kode', 30);
             $table->string('bimbingan_jenis', 30);
-            $table->int('users_id');
+            $table->integer('users_id');
             $table->string('komentar')->nullable();
             $table->datetime('waktu_komentar')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();

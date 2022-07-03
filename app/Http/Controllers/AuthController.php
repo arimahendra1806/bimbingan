@@ -14,14 +14,14 @@ class AuthController extends Controller
     public function postlogin(Request $request){
         $tahun = TahunAjaran::where('status', 'Aktif')->value('id');
 
-    	if (Auth::attempt($request->only('username', 'password'))){
+        if (Auth::attempt($request->only('username', 'password'))){
             $role = Auth::user()->where('username', $request->username)->value('role');
             $tahun_id = Auth::user()->where('username', $request->username)->value('tahun_ajaran_id');
 
-    		if($role == 'koordinator'){
+            if($role == 'koordinator'){
                 return redirect()->route('dashboard.home');
             }
-            elseif ($role == 'kaprodi'){
+            else {
                 if($tahun_id == $tahun){
                     return redirect()->route('dashboard.home');
                 } else {
@@ -29,23 +29,10 @@ class AuthController extends Controller
                     return redirect('/login')->with('msg','Akun Anda Kadaluarsa');
                 }
             }
-            elseif ($role == 'dosen'){
-                return redirect()->route('dashboard.home');
-            }
-            elseif ($role == 'mahasiswa'){
-                if($tahun_id == $tahun){
-                    return redirect()->route('dashboard.home');
-                } else {
-                    Auth::logout();
-                    return redirect('/login')->with('msg','Akun Anda Kadaluarsa');
-                }
-            } elseif ($role == 'admin'){
-                return redirect()->route('dashboard.home');
-            }
-    	}
-    	else{
-    		return back()->with('msg','Wrong credentials please try again');
-    	}
+        }
+        else {
+            return back()->with('msg','Kredensial salah, silakan coba lagi');
+        }
     }
 
     public function logout(){

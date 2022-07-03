@@ -29,6 +29,6 @@ class PengajuanJadwalZoomAnggota extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('pengajuan_jadwal_zoom_anggota');
     }
 }

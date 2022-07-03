@@ -92,7 +92,7 @@
                                     <label for="password" class="col-form-label">Password Baru: <b class="info">*Kosongkan
                                             Jika Tidak Update</b></label>
                                     <div class="input-group auth-pass-inputgroup">
-                                        <input type="password" class="form-control" placeholder="Enter password"
+                                        <input type="password" class="form-control" placeholder="Masukkan Password Baru"
                                             aria-label="Password" aria-describedby="password" name="password">
                                         <button class="btn btn-light shadow-none ms-0" type="button" id="password"><i
                                                 class="mdi mdi-eye-outline"></i></button>
@@ -103,8 +103,9 @@
                                     <label for="confirm" class="col-form-label">Konfirmasi Password Baru: <b
                                             class="info">*Kosongkan Jika Tidak Update</b></label>
                                     <div class="input-group auth-pass-inputgroup">
-                                        <input type="password" class="form-control" placeholder="Enter password"
-                                            aria-label="Password" aria-describedby="confirm" name="confirm">
+                                        <input type="password" class="form-control"
+                                            placeholder="Masukkan Ulang Password Baru" aria-label="Password"
+                                            aria-describedby="confirm" name="confirm">
                                         <button class="btn btn-light shadow-none ms-0" type="button" id="confirm"><i
                                                 class="mdi mdi-eye-outline"></i></button>
                                     </div>

@@ -108,7 +108,7 @@ class MahasiswaController extends Controller
             $data = new MahasiswaModel;
             $data->users_id = $pengguna->id;
             $data->nim = $request->nim_add;
-            $data->tahun_ajaran_id = $tahun_id->tahun_ajaran;
+            $data->tahun_ajaran_id = $tahun_id->id;
             $data->nama_mahasiswa = $request->nama_mhs_add;
             $data->alamat = $request->alamat_add;
             $data->email = $request->email_add;

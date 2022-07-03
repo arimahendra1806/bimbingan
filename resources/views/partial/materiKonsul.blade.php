@@ -182,7 +182,7 @@
         });
 
         /* Button Show */
-        $('body').on('click', '#btnShow', function() {
+        $('body').on('click', '#btnDetailMateri', function() {
             var this_id = $(this).data('id');
             $.get('materi/show/' + this_id, function(data) {
                 $('#MateriDosenModalShow').modal('show');

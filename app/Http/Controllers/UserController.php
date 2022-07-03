@@ -186,7 +186,6 @@ class UserController extends Controller
                 /* Peraturan validasi  */
                 $rules = [
                     'tahun_ajaran_id_edit' => ['required'],
-                    'nama_pengguna_edit' => ['required'],
                     'role_pengguna_edit' => ['required'],
                     'password_pengguna_edit' => ['required','min:8']
                 ];
@@ -194,7 +193,6 @@ class UserController extends Controller
                 /* Peraturan validasi  */
                 $rules = [
                     'tahun_ajaran_id_edit' => ['required'],
-                    'nama_pengguna_edit' => ['required'],
                     'role_pengguna_edit' => ['required'],
                 ];
             }
@@ -204,7 +202,6 @@ class UserController extends Controller
                 $rules = [
                     'username_edit' => ['required','numeric','unique:users,username'],
                     'tahun_ajaran_id_edit' => ['required'],
-                    'nama_pengguna_edit' => ['required'],
                     'role_pengguna_edit' => ['required'],
                     'password_pengguna_edit' => ['required','min:8']
                 ];
@@ -213,7 +210,6 @@ class UserController extends Controller
                 $rules = [
                     'username_edit' => ['required','numeric','unique:users,username'],
                     'tahun_ajaran_id_edit' => ['required'],
-                    'nama_pengguna_edit' => ['required'],
                     'role_pengguna_edit' => ['required'],
                 ];
             }
@@ -242,7 +238,9 @@ class UserController extends Controller
             /* Update tabel user */
             $data->username = $request->username_edit;
             $data->tahun_ajaran_id = $request->tahun_ajaran_id_edit;
-            $data->name = $request->nama_pengguna_edit;
+            if ($request->filled('nama_pengguna_edit')){
+                $data->name = $request->nama_pengguna_edit;
+            }
             $data->role = $request->role_pengguna_edit;
             if ($request->filled('password_pengguna_edit')){
                 $data->password = Hash::make($request->password_pengguna_edit);
