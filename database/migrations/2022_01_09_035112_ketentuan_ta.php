@@ -16,7 +16,7 @@ class KetentuanTa extends Migration
         Schema::create('ketentuan_ta', function (Blueprint $table) {
             $table->id();
             $table->integer('tahun_ajaran_id');
-            $table->string('keterangan')->nullable();
+            $table->text('keterangan')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

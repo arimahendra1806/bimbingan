@@ -14,8 +14,8 @@
                     <div class="modal-body">
                         <div class="row mb-1">
                             <div class="col-md-12">
-                                <label for="file_upload_add" class="col-form-label">File Upload: <b
-                                        class="error">*Pastikan format PDF | Max 2MB</b></label>
+                                <label for="file_upload_add" class="col-form-label">File Upload: <b class="error">*Pastikan
+                                        format PDF | Max 2MB</b></label>
                                 <input type="file" class="form-control" id="file_upload_add" name="file_upload_add">
                                 <span class="text-danger error-text file_upload_add_error"></span>
                             </div>
@@ -56,7 +56,8 @@
                             <div class="col-md-12">
                                 <label for="file_upload_edit" class="col-form-label">File Upload: <b
                                         class="error">*Pastikan format PDF | Max 2MB</b></label>
-                                <input type="text" class="form-control no-outline" id="fileShow" name="fileShow" readonly>
+                                <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
+                                    readonly>
                                 <input type="file" class="form-control" id="file_upload_edit" name="file_upload_edit">
                                 <span class="text-danger error-text file_upload_edit_error"></span>
                             </div>
@@ -97,8 +98,10 @@
                 <div class="modal-body">
                     <div class="row mb-1">
                         <div class="col-md-12">
-                            <label for="status_show" class="col-form-label">Status Peninjauan dari Dosen Pembimbing:</label>
-                            <input type="text" class="form-control no-outline" id="status_show" name="status_show" readonly>
+                            <label for="status_show" class="col-form-label">Status Peninjauan dari Dosen
+                                Pembimbing:</label>
+                            <input type="text" class="form-control no-outline" id="status_show" name="status_show"
+                                readonly>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -215,20 +218,22 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="RiwayatTabels">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Waktu Konsultasi</th>
-                                    <th>Deskripsi Konsultasi</th>
-                                    <th>Status Peninjauan</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr></tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-bordered dt-responsive w-100" id="RiwayatTabels">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Waktu Konsultasi</th>
+                                        <th>Deskripsi Konsultasi</th>
+                                        <th>Status Peninjauan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <hr>
                         <h4 class="card-title text-secondary"><i class="far fa-comments"> Kolom Diskusi</i></h4>
                         <div class="row">
@@ -282,6 +287,12 @@
         /* Inisiasi Partial Bab Proposal U/ Materi */
         var jenis = "Judul"
     </script>
+
+    <style>
+        td.wrapok {
+            white-space: nowrap;
+        }
+    </style>
 
     <script>
         $(document).ready(function() {
@@ -378,6 +389,10 @@
                     {
                         width: '1%',
                         targets: [0, 4]
+                    },
+                    {
+                        targets: [0, 1, 3, 4],
+                        class: "wrapok"
                     }
                 ],
                 order: [

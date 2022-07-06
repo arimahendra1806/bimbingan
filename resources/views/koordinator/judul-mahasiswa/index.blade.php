@@ -48,12 +48,11 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
+                            <table class="table table-bordered table-striped dt-responsive w-100" id="Tabels">
                                 <thead>
                                     <tr>
                                         <th>No</th>
                                         <th>Tahun Ajaran</th>
-                                        <th>Kode Pembimbing</th>
                                         <th>Nama Pembimbing</th>
                                         <th>Nama Mahasiswa</th>
                                         <th>Judul Mahasiswa</th>
@@ -78,6 +77,12 @@
     <!-- select2 js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.js"></script>
 
+    <style>
+        td.wrapok {
+            white-space: nowrap;
+        }
+    </style>
+
     <script>
         $(document).ready(function() {
             /* Ajax Token */
@@ -99,10 +104,6 @@
                     {
                         data: 'tahun.tahun_ajaran',
                         name: 'tahun.tahun_ajaran'
-                    },
-                    {
-                        data: 'kode_pembimbing',
-                        name: 'kode_pembimbing'
                     },
                     {
                         data: 'dosen.nama_dosen',
@@ -130,6 +131,10 @@
                         width: '1%',
                         targets: [0]
                     },
+                    {
+                        targets: [0, 1, 2, 3, 5],
+                        class: "wrapok"
+                    }
                 ],
                 order: [
                     [1, 'desc'],
@@ -157,7 +162,7 @@
                         title: "Ekspor Daftar Judul Berhasil!",
                         icon: "success",
                     })
-                }, 300);
+                }, 1200);
             });
 
             /* Select2 Tahun Ajaran Add */

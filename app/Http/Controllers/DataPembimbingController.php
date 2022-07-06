@@ -42,7 +42,7 @@ class DataPembimbingController extends Controller
 
         /* Ambil data tabel dosen pembimbing */
         if ($request->ajax()){
-            $data = DosPemModel::where('tahun_ajaran_id', $tahun_id->id)->where('dosen_id', $dsn_id)->get()->load('mahasiswa','judul.anggota');
+            $data = DosPemModel::where('tahun_ajaran_id', $tahun_id->id)->where('dosen_id', $dsn_id)->get()->load('mahasiswa','judul.anggota','tahun');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($model){

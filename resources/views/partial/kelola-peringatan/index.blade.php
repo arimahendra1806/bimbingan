@@ -409,8 +409,7 @@
                         <div class="collapse show" id="collapseExample">
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped dt-responsive nowrap w-100"
-                                        id="RoleTables">
+                                    <table class="table table-bordered table-striped dt-responsive w-100" id="RoleTables">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
@@ -465,7 +464,7 @@
                             </a>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
+                            <table class="table table-bordered table-striped dt-responsive w-100" id="Tabels">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -497,6 +496,10 @@
     <style>
         .tooltip {
             z-index: 100000000;
+        }
+
+        td.wrapok {
+            white-space: nowrap;
         }
     </style>
 
@@ -552,6 +555,10 @@
                     {
                         width: '1%',
                         targets: [0, 5]
+                    },
+                    {
+                        targets: [0, 1, 3, 4, 5],
+                        class: "wrapok"
                     },
                     {
                         targets: [3],
@@ -612,6 +619,10 @@
                     {
                         width: '1%',
                         targets: [0, 6]
+                    },
+                    {
+                        targets: [0, 1, 2, 5, 6],
+                        class: "wrapok"
                     },
                     {
                         targets: [2],

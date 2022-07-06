@@ -176,7 +176,7 @@
                             </a>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped dt-responsive nowrap w-100"
+                            <table class="table table-bordered table-striped dt-responsive w-100"
                                 id="MateriTahunanTabels">
                                 <thead>
                                     <tr>
@@ -208,6 +208,10 @@
     <style>
         .tooltip {
             z-index: 100000000;
+        }
+
+        td.wrapok {
+            white-space: nowrap;
         }
     </style>
 
@@ -254,7 +258,11 @@
                     },
                     {
                         width: '1%',
-                        targets: [0, 3, 4]
+                        targets: [0, 4]
+                    },
+                    {
+                        targets: [0, 1, 3, 4],
+                        class: "wrapok"
                     }
                 ],
                 order: [

@@ -91,8 +91,10 @@
                 <div class="modal-body">
                     <div class="row mb-1">
                         <div class="col-md-12">
-                            <label for="status_show" class="col-form-label">Status Peninjauan dari Dosen Pembimbing:</label>
-                            <input type="text" class="form-control no-outline" id="status_show" name="status_show" readonly>
+                            <label for="status_show" class="col-form-label">Status Peninjauan dari Dosen
+                                Pembimbing:</label>
+                            <input type="text" class="form-control no-outline" id="status_show" name="status_show"
+                                readonly>
                         </div>
                     </div>
                     <div class="row mb-1">
@@ -208,7 +210,7 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table table-bordered dt-responsive nowrap w-100" id="RiwayatTabels">
+                        <table class="table table-bordered dt-responsive w-100" id="RiwayatTabels">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -275,6 +277,12 @@
         /* Inisiasi Partial Bab Program U/ Materi */
         var jenis = "Program"
     </script>
+
+    <style>
+        td.wrapok {
+            white-space: nowrap;
+        }
+    </style>
 
     <script>
         $(document).ready(function() {
@@ -371,6 +379,10 @@
                     {
                         width: '1%',
                         targets: [0, 4]
+                    },
+                    {
+                        targets: [0, 1, 3, 4],
+                        class: "wrapok"
                     }
                 ],
                 order: [

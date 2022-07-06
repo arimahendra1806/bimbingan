@@ -95,6 +95,10 @@
         .tooltip {
             z-index: 100000000;
         }
+
+        td.wrapok {
+            white-space: nowrap;
+        }
     </style>
 
     <script>
@@ -130,6 +134,10 @@
                     width: '1%',
                     targets: [0, 2, 3]
                 },
+                {
+                    targets: [0, 2, 3],
+                    class: "wrapok"
+                }
             ],
             order: false,
             bPaginate: false,
@@ -167,6 +175,10 @@
                 {
                     width: '1%',
                     targets: [0, 2]
+                },
+                {
+                    targets: [0, 2],
+                    class: "wrapok"
                 }
             ],
             order: [

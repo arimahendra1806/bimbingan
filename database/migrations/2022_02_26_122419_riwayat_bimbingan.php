@@ -18,8 +18,8 @@ class RiwayatBimbingan extends Migration
             $table->string('bimbingan_kode');
             $table->string('peninjauan_kode', 50)->nullable();
             $table->string('bimbingan_jenis', 100);
-            $table->string('keterangan', 255)->nullable();
-            $table->string('tanggapan', 255)->nullable();
+            $table->text('keterangan')->nullable();
+            $table->text('tanggapan')->nullable();
             $table->string('status', 100)->nullable();
             $table->datetime('waktu_bimbingan')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();

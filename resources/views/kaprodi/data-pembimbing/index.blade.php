@@ -81,7 +81,7 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
+                            <table class="table table-bordered table-striped dt-responsive w-100" id="Tabels">
                                 <thead>
                                     <tr>
                                         <th>No</th>
@@ -105,6 +105,12 @@
 @endsection
 
 @section('js')
+    <style>
+        td.wrapok {
+            white-space: nowrap;
+        }
+    </style>
+
     <script>
         $(document).ready(function() {
             /* Ajax Token */
@@ -153,6 +159,10 @@
                         width: '1%',
                         targets: [0, 5]
                     },
+                    {
+                        targets: [0, 1, 2, 3, 5],
+                        class: "wrapok"
+                    }
                 ],
                 order: [
                     [1, 'desc'],

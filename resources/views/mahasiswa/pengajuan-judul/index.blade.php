@@ -229,12 +229,10 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped dt-responsive nowrap w-100"
-                                    id="Tabels">
+                                <table class="table table-bordered table-striped dt-responsive w-100" id="Tabels">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Tahun Ajaran</th>
                                             <th>Judul Yang Diajukan</th>
                                             <th>Studi Kasus</th>
                                             <th>Pengerjaan</th>
@@ -261,6 +259,12 @@
     <link href="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.css" rel="stylesheet" />
     <!-- select2 js -->
     <script src="{{ asset('vendor/minia') }}/assets/libs/select2/select2.min.js"></script>
+
+    <style>
+        td.wrapok {
+            white-space: nowrap;
+        }
+    </style>
 
     <script>
         $(document).ready(function() {
@@ -297,10 +301,6 @@
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'tahun.tahun_ajaran',
-                        name: 'tahun.tahun_ajaran'
-                    },
-                    {
                         data: 'judul',
                         name: 'judul'
                     },
@@ -328,7 +328,11 @@
                     },
                     {
                         width: '1%',
-                        targets: [0, 6]
+                        targets: [0, 5]
+                    },
+                    {
+                        targets: [0, 4, 5],
+                        class: "wrapok"
                     }
                 ],
                 order: false,

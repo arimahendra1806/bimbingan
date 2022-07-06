@@ -27,7 +27,6 @@ class JudulExport implements FromCollection, WithMapping, WithHeadings
     public function map($model) : array {
         return [
             $model->tahun->tahun_ajaran,
-            $model->kode_pembimbing,
             $model->dosen->nama_dosen,
             $model->mahasiswa->nama_mahasiswa,
             $model->judul->judul,
@@ -38,7 +37,6 @@ class JudulExport implements FromCollection, WithMapping, WithHeadings
     public function headings() : array {
         return [
            'Tahun Ajaran',
-           'Kode Pembimbing',
            'Nama Dosen',
            'Nama Mahasiswa',
            'Judul Tugas Akhir',

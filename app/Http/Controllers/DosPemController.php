@@ -12,6 +12,7 @@ use App\Models\MahasiswaModel;
 use App\Models\BimbinganModel;
 use App\Models\ProgresBimbinganModel;
 use App\Mail\MailController;
+use App\Http\Controllers\WhatsappApiController;
 use DataTables, Validator;
 
 class DosPemController extends Controller
@@ -151,6 +152,14 @@ class DosPemController extends Controller
 
                 // Mail::to($id_dsn->email)->send(new \App\Mail\MailController($details, $subjek));
                 // Mail::to($id_mhs->email)->send(new \App\Mail\MailController($details, $subjek));
+
+                $nomorDsn = '62' . $id_dsn->no_telepon;
+                $nomorMhs = '62' . $id_mhs->no_telepon;
+                $pesan = 'Penetapan Dosen Pembimbing - Susunan dosen pembimbing untuk Anda: Nama Dosen Pembimbing: ' . $id_dsn->nama_dosen . '; Nama Mahasiswa: ' . $id_mhs->nama_mahasiswa;
+
+                $Notif = new WhatsappApiController;
+                $Notif->whatsappNotif($nomorDsn, $pesan);
+                $Notif->whatsappNotif($nomorMhs, $pesan);
 
             }
 

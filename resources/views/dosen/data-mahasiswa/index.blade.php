@@ -100,11 +100,11 @@
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped dt-responsive nowrap w-100" id="Tabels">
+                            <table class="table table-bordered table-striped dt-responsive w-100" id="Tabels">
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Kode Pembimbing</th>
+                                        <th>Tahun Ajaran</th>
                                         <th>Nama Mahasiswa</th>
                                         <th>Pengerjaan</th>
                                         <th>Judul</th>
@@ -124,6 +124,12 @@
 @endsection
 
 @section('js')
+    <style>
+        td.wrapok {
+            white-space: nowrap;
+        }
+    </style>
+
     <script>
         $(document).ready(function() {
             /* Ajax Token */
@@ -143,8 +149,8 @@
                         name: 'DT_RowIndex'
                     },
                     {
-                        data: 'kode_pembimbing',
-                        name: 'kode_pembimbing'
+                        data: 'tahun.tahun_ajaran',
+                        name: 'tahun.tahun_ajaran'
                     },
                     {
                         data: 'mahasiswa.nama_mahasiswa',
@@ -184,6 +190,10 @@
                         width: '1%',
                         targets: [0, 5]
                     },
+                    {
+                        targets: [0, 1, 2, 5],
+                        class: "wrapok"
+                    }
                 ],
                 order: [
                     [2, 'asc']
