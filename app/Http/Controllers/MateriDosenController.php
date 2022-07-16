@@ -22,9 +22,12 @@ class MateriDosenController extends Controller
         $tahun_id = TahunAjaran::all()->sortByDesc('tahun_ajaran');
         $th_aktif = TahunAjaran::where('status', 'Aktif')->first();
 
+        $user = User::with('dosen')->find(Auth::user()->id);
+
         /* Ambil data tabel materi dosen */
         if ($request->ajax()){
-            $data = DosPemMateriModel::latest()->get()->load('tahun');
+            $data = DosPemMateriModel::where('dosen_id', $user->dosen->id)
+                ->latest()->get()->load('tahun');
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action', function($model){

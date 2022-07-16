@@ -317,11 +317,11 @@ class KonsulJudulController extends Controller
                 $data->komentar = $request->komentar;
                 $data->save();
 
-                $nomor = '62' . $user->mahasiswa->dospem->dosen->no_telepon;
-                $pesan = 'Anda menerima komentar untuk konsultasi judul terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa;
+                // $nomor = '62' . $user->mahasiswa->dospem->dosen->no_telepon;
+                // $pesan = 'Anda menerima komentar untuk konsultasi judul terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa;
 
-                $Notif = new WhatsappApiController;
-                $Notif->whatsappNotif($nomor, $pesan);
+                // $Notif = new WhatsappApiController;
+                // $Notif->whatsappNotif($nomor, $pesan);
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);

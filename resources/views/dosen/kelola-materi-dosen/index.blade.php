@@ -403,6 +403,7 @@
                 $('#MateriDosenFormAdd').trigger('reset');
                 $(document).find('span.error-text').text('');
                 $('#MateriDosenModalAdd').modal('show');
+                $('#jenis_materi_add').val('').trigger('change');
             });
 
             /* Button Edit */

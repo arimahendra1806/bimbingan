@@ -157,9 +157,9 @@ class DosPemController extends Controller
                 $nomorMhs = '62' . $id_mhs->no_telepon;
                 $pesan = 'Penetapan Dosen Pembimbing - Susunan dosen pembimbing untuk Anda: Nama Dosen Pembimbing: ' . $id_dsn->nama_dosen . '; Nama Mahasiswa: ' . $id_mhs->nama_mahasiswa;
 
-                $Notif = new WhatsappApiController;
-                $Notif->whatsappNotif($nomorDsn, $pesan);
-                $Notif->whatsappNotif($nomorMhs, $pesan);
+                // $Notif = new WhatsappApiController;
+                // $Notif->whatsappNotif($nomorDsn, $pesan);
+                // $Notif->whatsappNotif($nomorMhs, $pesan);
 
             }
 

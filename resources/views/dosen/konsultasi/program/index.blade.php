@@ -62,19 +62,18 @@
                     <div class="row mb-1">
                         <div class="col-md-12">
                             <label for="status_show" class="col-form-label">Status Peninjauan dari Anda:</label>
-                            <input type="text" class="form-control no-outline" id="status_show" name="status_show" readonly>
+                            <input type="text" class="form-control no-outline" id="status_show" name="status_show"
+                                readonly>
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="keterangan_show" class="col-form-label">Deskripsi Konsultasi dari Mahasiswa:</label>
-                            <textarea class="form-control" name="keterangan_show" id="keterangan_show" style="width: 100%" rows="3"
-                                readonly></textarea>
+                            <textarea class="form-control" name="keterangan_show" id="keterangan_show" style="width: 100%" rows="3" readonly></textarea>
                         </div>
                         <div class="col-md-6">
                             <label for="tanggapan_show" class="col-form-label">Tanggapan Anda:</label>
-                            <textarea class="form-control" name="tanggapan_show" id="tanggapan_show" style="width: 100%" rows="3"
-                                readonly></textarea>
+                            <textarea class="form-control" name="tanggapan_show" id="tanggapan_show" style="width: 100%" rows="3" readonly></textarea>
                         </div>
                     </div>
                 </div>
@@ -146,7 +145,8 @@
                                     <label for="komen" class="col-form-label text-secondary">Ketikan Komentar :</label>
                                     <form class="row gx-3 gy-2 align-items-center" id="KomenStore">
                                         @csrf
-                                        <input class="form-control me-auto" type="hidden" id="kb" name="kb">
+                                        <input class="form-control me-auto" type="hidden" id="kb"
+                                            name="kb">
                                         <div class="hstack gap-3">
                                             <input class="form-control me-auto" type="text"
                                                 placeholder="Ketik pesan anda disini.." id="komentar" name="komentar">
@@ -156,7 +156,8 @@
                                             <div class="vr"></div>
                                             <button type="reset" class="btn btn-outline-danger">Reset</button>
                                             <a type="button" class="btn btn-outline-success" data-toggle="tooltip"
-                                                title="Refresh Komentar" id="btnRefresh"><i class="fas fa-sync-alt"></i></a>
+                                                title="Refresh Komentar" id="btnRefresh"><i
+                                                    class="fas fa-sync-alt"></i></a>
                                         </div>
                                     </form>
                                 </div>
@@ -183,7 +184,7 @@
                             <i class="fas fa-comment-dots text-danger"></i> : Belum Dilihat |
                             <i class="fas fa-comment-dots text-warning"></i> : Sudah Dilihat |
                             <i class="fas fa-comment-dots text-success"></i> : Sudah Dibalas |
-                            <i class="fas fa-comment-dots text-primary"></i> : Telah Selesai Pengujian
+                            <i class="fas fa-comment-dots text-primary"></i> : Telah Selesai Revisi Pengujian
                         </p>
                         <div class="table-responsive mt-2">
                             <table class="table nowrap w-100 borderless" style="cursor:pointer" id="Tabels">

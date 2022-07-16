@@ -8,6 +8,7 @@ use App\Models\PengajuanZoomModel;
 use App\Models\PengajuanZoomAnggotaModel;
 use App\Models\TahunAjaran;
 use App\Models\User;
+use App\Models\DosPemModel;
 use DataTables, Auth, Validator;
 
 class PengajuanZoomController extends Controller
@@ -165,15 +166,13 @@ class PengajuanZoomController extends Controller
         $tahun_id = TahunAjaran::where('status', 'Aktif')->value('id');
 
         /* Ambil data dosen login */
-        $user = User::with(['dosen.dospem' => function($q) use ($tahun_id){
-            $q->where('tahun_ajaran_id', $tahun_id);
-        }])->find(Auth::user()->id);
+        $user = User::with('dosen')->find(Auth::user()->id);
 
-        $status_dospem = $user->dosen->dospem;
+        $get_status = DosPemModel::where('dosen_id', $user->dosen->id)->where('tahun_ajaran_id', $tahun_id)->get();
 
         /* Ambil data array kode pembimbing */
-        if ($status_dospem){
-            $arr_in = $user->dosen->dospem->pluck('kode_pembimbing')->toArray();
+        if ($get_status){
+            $arr_in = $get_status->pluck('kode_pembimbing')->toArray();
 
             /* Ambil data tabel pengajuan */
             if ($request->ajax()){
@@ -191,7 +190,7 @@ class PengajuanZoomController extends Controller
             }
         }
 
-        if ($status_dospem){
+        if ($get_status){
             /* Return menuju view */
             return view('dosen.peninjauan-jadwal-zoom.index');
         } else {
