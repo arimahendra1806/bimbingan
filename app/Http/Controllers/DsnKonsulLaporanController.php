@@ -233,14 +233,19 @@ class DsnKonsulLaporanController extends Controller
 
                             /* Update status konsul judul*/
                             $get_update_konsju = BimbinganModel::with('tinjau')->where('kode_bimbingan', $request->kd)->where('jenis_bimbingan', 'Judul')->first();
-                            $get_update_konsju->tinjau->status = "Selesai";
-                            $get_update_konsju->tinjau->save();
+                            if($get_update_konsju->tinjau){
+                                $get_update_konsju->tinjau->status = "Disetujui";
+                                $get_update_konsju->tinjau->save();
+                            }
 
                             /* Update status konsul program*/
                             $get_update_konspro = BimbinganModel::with('tinjau')->where('kode_bimbingan', $request->kd)->where('jenis_bimbingan', 'Program')->first();
-                            $get_update_konspro->tinjau->status = "Selesai";
-                            $get_update_konspro->tinjau->save();
+                            if($get_update_konspro->tinjau){
+                                $get_update_konspro->tinjau->status = "Lanjutkan";
+                                $get_update_konspro->tinjau->save();
+                            }
 
+                            ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update(['program' => '5']);
                         } else {
                             $data->tinjau->status = "Disetujui";
                             $data->status_pengujian = "1";
@@ -250,31 +255,39 @@ class DsnKonsulLaporanController extends Controller
 
                             /* Update status konsul judul*/
                             $get_update_konsju = BimbinganModel::with('tinjau')->where('kode_bimbingan', $request->kd)->where('jenis_bimbingan', 'Judul')->first();
-                            $get_update_konsju->tinjau->status = "Disetujui";
-                            $get_update_konsju->tinjau->save();
+                            if($get_update_konsju->tinjau){
+                                $get_update_konsju->tinjau->status = "Disetujui";
+                                $get_update_konsju->tinjau->save();
+                            }
 
                             /* Update status konsul program*/
                             $get_update_konspro = BimbinganModel::with('tinjau')->where('kode_bimbingan', $request->kd)->where('jenis_bimbingan', 'Program')->first();
-                            $get_update_konspro->tinjau->status = "Disetujui";
-                            $get_update_konspro->tinjau->save();
+                            if($get_update_konspro->tinjau){
+                                $get_update_konspro->tinjau->status = "Lanjutkan";
+                                $get_update_konspro->tinjau->save();
+                            }
+
                             ProgresBimbinganModel::where('bimbingan_kode', $request->kd)->update(['program' => '5']);
                         }
                     } else {
                         $data->tinjau->status = $status;
-                        $data->status_pengujian = "0";
 
                         /* Update status pengajuan judul*/
                         PengajuanJudulModel::where('mahasiswa_id', $data->pembimbing->mahasiswa->id)->update(['status' => 'Diterima']);
 
                         /* Update status konsul judul*/
                         $get_update_konsju = BimbinganModel::with('tinjau')->where('kode_bimbingan', $request->kd)->where('jenis_bimbingan', 'Judul')->first();
-                        $get_update_konsju->tinjau->status = "Disetujui";
-                        $get_update_konsju->tinjau->save();
+                        if($get_update_konsju->tinjau){
+                            $get_update_konsju->tinjau->status = "Disetujui";
+                            $get_update_konsju->tinjau->save();
+                        }
 
                         /* Update status konsul program*/
                         $get_update_konspro = BimbinganModel::with('tinjau')->where('kode_bimbingan', $request->kd)->where('jenis_bimbingan', 'Program')->first();
-                        $get_update_konspro->tinjau->status = "Lanjutkan";
-                        $get_update_konspro->tinjau->save();
+                        if($get_update_konspro->tinjau){
+                            $get_update_konspro->tinjau->status = "Lanjutkan";
+                            $get_update_konspro->tinjau->save();
+                        }
                     }
 
                     $data->tinjau->tanggapan = $request->keterangan;

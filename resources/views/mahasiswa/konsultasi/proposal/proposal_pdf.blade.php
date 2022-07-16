@@ -66,7 +66,6 @@
             margin: 0 0 15px 0;
             border-width: 0;
         }
-
     </style>
 
     <header>
@@ -156,7 +155,7 @@
                 </tr>
                 <tr>
                     <th style="width: 20%">Mahasiswa</th>
-                    <th style="width: 20%">Dosen</th>
+                    <th style="width: 22%">Dosen</th>
                 </tr>
             </thead>
             <tbody>
@@ -167,7 +166,7 @@
                         <td>
                             {{ \Carbon\Carbon::parse($item->waktu_bimbingan)->isoFormat('D MMMM Y / hh:mm:ss') }}
                         </td>
-                        <td>Konsultasi pengerjaan proposal</td>
+                        <td>Konsultasi pengerjaan {{ strtolower($item->bimbingan_jenis) }}</td>
                         <td></td>
                         <td></td>
                     </tr>

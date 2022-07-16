@@ -22,7 +22,7 @@
             margin-top: 8.2cm;
             margin-left: 1.5cm;
             margin-right: 1.5cm;
-            margin-bottom: 7.5cm;
+            margin-bottom: 1.5cm;
             font-family: 'Times New Roman', Times, serif;
             color: black;
             font-size: 10pt;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Models\TahunAjaran;
+use App\Models\BimbinganModel;
 use App\Models\RiwayatBimbinganModel;
 use App\Models\KomentarModel;
 use App\Models\User;
@@ -346,13 +347,16 @@ class KonsulProposalController extends Controller
 
     public function cetakPdf()
     {
-    	/* Ambil data mahasiswa login */
-        $user = User::with(['mahasiswa.dospem.bimbingan' => function($q){
-            $q->where('jenis_bimbingan', 'Proposal');
-        }],'mahasiswa.dospem.dosen','mahasiswa.judul','mahasiswa.tahun')->find(Auth::user()->id);
-        $riwayat = RiwayatBimbinganModel::where('bimbingan_kode', $user->mahasiswa->dospem->bimbingan->kode_bimbingan)
-            ->where('bimbingan_jenis', 'Proposal')
-            ->get();
+        /* Ambil data dosen login */
+        $user = User::with('mahasiswa.dospem','mahasiswa.dospem.dosen','mahasiswa.judul','mahasiswa.tahun')->find(Auth::user()->id);
+
+        $get_bimbingan = BimbinganModel::where('pembimbing_kode', $user->mahasiswa->dospem->kode_pembimbing)
+            ->where('jenis_bimbingan', 'Laporan')->first();
+
+        $riwayat = RiwayatBimbinganModel::where('bimbingan_kode', $get_bimbingan->kode_bimbingan)
+            ->where(function ($q){
+                $q->where('bimbingan_jenis', 'Judul')->orWhere('bimbingan_jenis', 'Proposal');
+            })->get();
 
         $hari = Carbon::now()->isoFormat('D MMMM Y');
 
