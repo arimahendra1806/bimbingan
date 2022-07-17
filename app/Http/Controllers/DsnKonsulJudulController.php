@@ -192,14 +192,11 @@ class DsnKonsulJudulController extends Controller
             $data->status_pesan = "3";
             $data->save();
 
-            // /* Notifikasi email */
-            // $subjek = 'Tanggapan Konsultasi Judul Terbaru';
-            // $details = [
-            //     'title' => 'Tanggapan Untuk Konsultasi Judul Anda',
-            //     'body' => 'Anda menerima tanggapan untuk konsultasi judul dari Dosen Pembimbing'
-            // ];
+            $nomor = '62' . $data->pembimbing->mahasiswa->no_telepon;
+            $pesan = 'Anda menerima tanggapan untuk konsultasi judul dari Dosen Pembimbing';
 
-            // Mail::to($data->pembimbing->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
+            $Notif = new WhatsappApiController;
+            $Notif->whatsappNotif($nomor, $pesan);
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Perbarui Peninjauan", 'data' => $data]);
@@ -239,8 +236,8 @@ class DsnKonsulJudulController extends Controller
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
             /* Ambil data mahasiswa login */
-            $user = User::with('dosen.dospem.mahasiswa')->find(Auth::user()->id);
-            $bimbingan = BimbinganModel::where('kode_bimbingan', $request->kb)->first();
+            // $user = User::with('dosen.dospem.mahasiswa')->find(Auth::user()->id);
+            $bimbingan = BimbinganModel::with('pembimbing.mahasiswa')->where('kode_bimbingan', $request->kb)->where('jenis_bimbingan', 'Judul')->first();
 
             /* Kondisi jika status selesai */
             $get_status = RiwayatBimbinganModel::where('peninjauan_kode', $bimbingan->kode_peninjauan)->first();
@@ -258,14 +255,11 @@ class DsnKonsulJudulController extends Controller
                 $data->komentar = $request->komentar;
                 $data->save();
 
-                // /* Notifikasi email */
-                // $subjek = 'Tanggapan Komentar Konsultasi Judul Terbaru';
-                // $details = [
-                //     'title' => 'Tanggapan Komentar Untuk Konsultasi Judul Anda',
-                //     'body' => 'Anda menerima tanggapan komentar untuk konsultasi judul dari Dosen Pembimbing'
-                // ];
+                $nomor = '62' . $bimbingan->pembimbing->mahasiswa->no_telepon;
+                $pesan = 'Anda menerima tanggapan komentar untuk konsultasi judul dari Dosen Pembimbing';
 
-                // Mail::to($user->dosen->dospem->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
+                $Notif = new WhatsappApiController;
+                $Notif->whatsappNotif($nomor, $pesan);
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);

@@ -141,25 +141,13 @@ class DosPemController extends Controller
                 $data3->tahun_ajaran_id = $tahun_id->id;
                 $data3->save();
 
-                // /* Notifikasi email */
-                // $subjek = 'Pemilihan Dosen Pembimbing Bagi Anda';
-                // $details = [
-                //     'title' => 'Penetapan Dosen Pembimbing',
-                //     'body' => 'Susunan dosen pembimbing untuk Anda: ',
-                //     'dospem' => 'Nama Dosen Pembimbing: '.$id_dsn->nama_dosen,
-                //     'mhs' => 'Nama Mahasiswa: '.$id_mhs->nama_mahasiswa
-                // ];
-
-                // Mail::to($id_dsn->email)->send(new \App\Mail\MailController($details, $subjek));
-                // Mail::to($id_mhs->email)->send(new \App\Mail\MailController($details, $subjek));
-
                 $nomorDsn = '62' . $id_dsn->no_telepon;
                 $nomorMhs = '62' . $id_mhs->no_telepon;
                 $pesan = 'Penetapan Dosen Pembimbing - Susunan dosen pembimbing untuk Anda: Nama Dosen Pembimbing: ' . $id_dsn->nama_dosen . '; Nama Mahasiswa: ' . $id_mhs->nama_mahasiswa;
 
-                // $Notif = new WhatsappApiController;
-                // $Notif->whatsappNotif($nomorDsn, $pesan);
-                // $Notif->whatsappNotif($nomorMhs, $pesan);
+                $Notif = new WhatsappApiController;
+                $Notif->whatsappNotif($nomorDsn, $pesan);
+                $Notif->whatsappNotif($nomorMhs, $pesan);
 
             }
 
@@ -242,20 +230,16 @@ class DosPemController extends Controller
             $data->mahasiswa_id = $request->mhs_edit;
             $data->save();
 
-            // /* Notifikasi email */
-            // $id_dsn = DosenModel::find($request->dosen_edit);
-            // $id_mhs = MahasiswaModel::find($request->mhs_edit);
+            $id_dsn = DosenModel::find($request->dosen_edit);
+            $id_mhs = MahasiswaModel::find($request->mhs_edit);
 
-            // $subjek = 'Pembaruhan Dosen Pembimbing Bagi Anda';
-            // $details = [
-            //     'title' => 'Pembaruhan Dosen Pembimbing',
-            //     'body' => 'Susunan dosen pembimbing untuk Anda: ',
-            //     'dospem' => 'Nama Dosen Pembimbing: '.$id_dsn->nama_dosen,
-            //     'mhs' => 'Nama Mahasiswa: '.$id_mhs->nama_mahasiswa
-            // ];
+            $nomorDsn = '62' . $id_dsn->no_telepon;
+            $nomorMhs = '62' . $id_mhs->no_telepon;
+            $pesan = 'Pembaruhan Dosen Pembimbing - Susunan dosen pembimbing untuk Anda: Nama Dosen Pembimbing: ' . $id_dsn->nama_dosen . '; Nama Mahasiswa: ' . $id_mhs->nama_mahasiswa;
 
-            // Mail::to($id_dsn->email)->send(new \App\Mail\MailController($details, $subjek));
-            // Mail::to($id_mhs->email)->send(new \App\Mail\MailController($details, $subjek));
+            $Notif = new WhatsappApiController;
+            $Notif->whatsappNotif($nomorDsn, $pesan);
+            $Notif->whatsappNotif($nomorMhs, $pesan);
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);

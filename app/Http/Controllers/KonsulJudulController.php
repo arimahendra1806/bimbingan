@@ -180,14 +180,11 @@ class KonsulJudulController extends Controller
                     $data2->keterangan = $request->keterangan_add;
                     $data2->save();
 
-                    // /* Notifikasi email */
-                    // $subjek = 'Konsultasi Judul Terbaru';
-                    // $details = [
-                    //     'title' => 'Konsultasi Judul dari Mahasiswa Bimbingan Anda',
-                    //     'body' => 'Anda menerima konsultasi judul terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa
-                    // ];
+                    $nomor = '62' . $user->mahasiswa->dospem->dosen->no_telepon;
+                    $pesan = 'Anda menerima konsultasi judul terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa;
 
-                    // Mail::to($user->mahasiswa->dospem->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
+                    $Notif = new WhatsappApiController;
+                    $Notif->whatsappNotif($nomor, $pesan);
 
                     /* Return json berhasil */
                     return response()->json(['status' => 2, 'msg' => "Berhasil Menambahkan Data!"]);
@@ -317,11 +314,11 @@ class KonsulJudulController extends Controller
                 $data->komentar = $request->komentar;
                 $data->save();
 
-                // $nomor = '62' . $user->mahasiswa->dospem->dosen->no_telepon;
-                // $pesan = 'Anda menerima komentar untuk konsultasi judul terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa;
+                $nomor = '62' . $user->mahasiswa->dospem->dosen->no_telepon;
+                $pesan = 'Anda menerima komentar untuk konsultasi judul terbaru dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa;
 
-                // $Notif = new WhatsappApiController;
-                // $Notif->whatsappNotif($nomor, $pesan);
+                $Notif = new WhatsappApiController;
+                $Notif->whatsappNotif($nomor, $pesan);
 
                 /* Return json berhasil */
                 return response()->json(['status' => 2, 'msg' => "Success!! Komentar berhasil ditambahkan ..", 'data' => $data]);

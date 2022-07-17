@@ -75,7 +75,7 @@ class PengajuanZoomController extends Controller
             $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
             /* Ambil data pembimbing mahasiswa login */
-            $user = User::with('mahasiswa.dospem')->find(Auth::user()->id);
+            $user = User::with('mahasiswa.dospem.dosen')->find(Auth::user()->id);
 
             $get_dospem = DosPemModel::where('dosen_id', $user->mahasiswa->dospem->dosen_id)->where('tahun_ajaran_id', $tahun_id->id)->get();
             $get_kode = $get_dospem->pluck('kode_pembimbing')->toArray();
@@ -94,6 +94,12 @@ class PengajuanZoomController extends Controller
             $data->tanggal = $request->tanggal_add;
             $data->status = "Diajukan";
             $data->save();
+
+            $nomorDsn = '62' . $user->mahasiswa->dospem->dosen->no_telepon;
+            $pesan = 'Anda menerima pengajuan jadwal zoom dari mahasiswa yang bernama ' . $user->mahasiswa->nama_mahasiswa;
+
+            $Notif = new WhatsappApiController;
+            $Notif->whatsappNotif($nomorDsn, $pesan);
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
@@ -259,9 +265,15 @@ class PengajuanZoomController extends Controller
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
             /* Update pengajuan zoom */
-            $data = PengajuanZoomModel::where('id', $peninjauan_zoom)->first();
+            $data = PengajuanZoomModel::with('pembimbing.mahasiswa')->where('id', $peninjauan_zoom)->first();
             $data->status = $request->status_edit;
             $data->save();
+
+            $nomorMhs = '62' . $data->pembimbing->mahasiswa->no_telepon;
+            $pesan = 'Anda menerima pengajuan jadwal zoom dari mahasiswa yang bernama ' . $data->pembimbing->mahasiswa->nama_mahasiswa;
+
+            $Notif = new WhatsappApiController;
+            $Notif->whatsappNotif($nomorMhs, $pesan);
 
             /* Return json berhasil */
             return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);

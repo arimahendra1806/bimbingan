@@ -19,23 +19,26 @@ use DataTables, Validator, Auth, File;
 class PeringatanController extends Controller
 {
     private function addNotif($array, $data_id){
-        // $email = InformasiModel::find($data_id);
+        $data_pesan = InformasiModel::find($data_id);
 
         /* Perulangan insert data notifikasi sesuai parameter && notifikasi email */
         foreach ($array as $key => $value) {
-            // $penerima = User::with('dosen','mahasiswa')->find($value);
+            $penerima = User::with('dosen','mahasiswa')->find($value);
 
-            // $subjek = $email->subyek;
-            // $details = [
-            //     'title' => $email->jenis . " - " . $email->judul,
-            //     'body' => $email->pesan
-            // ];
+            if ($penerima->dosen){
+                $nomor = '62' . $penerima->dosen->no_telepon;
+                $pesan = 'Peringatan : ' . $data_pesan->judul . '. ' . $data_pesan->pesan;
 
-            // if ($penerima->dosen){
-            //     Mail::to($penerima->dosen->email)->send(new \App\Mail\MailController($details, $subjek));
-            // } elseif ($penerima->mahasiswa){
-            //     Mail::to($penerima->mahasiswa->email)->send(new \App\Mail\MailController($details, $subjek));
-            // }
+                $Notif = new WhatsappApiController;
+                $Notif->whatsappNotif($nomor, $pesan);
+
+            } elseif ($penerima->mahasiswa){
+                $nomor = '62' . $penerima->mahasiswa->no_telepon;
+                $pesan = 'Peringatan : ' . $data_pesan->judul . '. ' . $data_pesan->pesan;
+
+                $Notif = new WhatsappApiController;
+                $Notif->whatsappNotif($nomor, $pesan);
+            }
 
             $data2 = new NotifikasiModel;
             $data2->informasi_id = $data_id;
