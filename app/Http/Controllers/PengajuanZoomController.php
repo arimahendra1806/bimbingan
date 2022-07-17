@@ -51,7 +51,7 @@ class PengajuanZoomController extends Controller
         /* Peraturan validasi  */
         $rules = [
             'jam_add' => ['required'],
-            'tanggal_add' => ['required','unique:pengajuan_jadwal_zoom,tanggal']
+            // 'tanggal_add' => ['required','unique:pengajuan_jadwal_zoom,tanggal']
         ];
 
         /* Pesan validasi */
@@ -76,6 +76,14 @@ class PengajuanZoomController extends Controller
 
             /* Ambil data pembimbing mahasiswa login */
             $user = User::with('mahasiswa.dospem')->find(Auth::user()->id);
+
+            $get_dospem = DosPemModel::where('dosen_id', $user->mahasiswa->dospem->dosen_id)->where('tahun_ajaran_id', $tahun_id->id)->get();
+            $get_kode = $get_dospem->pluck('kode_pembimbing')->toArray();
+            $get_tanggal = PengajuanZoomModel::whereIn('pembimbing_kode', $get_kode)->get()->pluck('tanggal')->toArray();
+
+            if(in_array($request->tanggal_add, $get_tanggal)) {
+                return response()->json(['status' => 0, 'error' => ['tanggal_add' => ['Tanggal Pengajuan sudah ada']]]);
+            }
 
             /* Insert pengajuan zoom */
             $data = new PengajuanZoomModel;
@@ -103,22 +111,11 @@ class PengajuanZoomController extends Controller
 
     public function update(Request $request, $pengajuan_zoom)
     {
-        /* Ambil data pengajuan sesuai parameter */
-        $data = PengajuanZoomModel::where('id', $pengajuan_zoom)->first();
-
-        /* Kondisi data tanggal tidak sama, maka validasi berikut */
-        if($data->tanggal == $request->tanggal_edit) {
-            /* Peraturan validasi  */
-            $rules = [
-                'jam_edit' => ['required'],
-            ];
-        } else {
-            /* Peraturan validasi  */
-            $rules = [
-                'jam_edit' => ['required'],
-                'tanggal_edit' => ['required','unique:pengajuan_jadwal_zoom,tanggal']
-            ];
-        }
+        /* Peraturan validasi  */
+        $rules = [
+            'jam_edit' => ['required'],
+            // 'tanggal_edit' => ['required','unique:pengajuan_jadwal_zoom,tanggal']
+        ];
 
         /* Pesan validasi */
         $messages = [];
@@ -137,6 +134,9 @@ class PengajuanZoomController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
+            /* Ambil data pengajuan sesuai parameter */
+            $data = PengajuanZoomModel::where('id', $pengajuan_zoom)->first();
+
             /* Kondisi jika status bukan diajukan */
             if($data->status != "Diajukan"){
                 /* Kondisi jika status diterima */
@@ -148,6 +148,22 @@ class PengajuanZoomController extends Controller
                 /* Return json message */
                 return response()->json(['status' => 1, 'msg' => $pesan]);
             } else {
+                /* Ambil data tahun_ajaran */
+                $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
+                /* Ambil data pembimbing mahasiswa login */
+                $user = User::with('mahasiswa.dospem')->find(Auth::user()->id);
+
+                $get_dospem = DosPemModel::where('dosen_id', $user->mahasiswa->dospem->dosen_id)->where('tahun_ajaran_id', $tahun_id->id)->get();
+                $get_kode = $get_dospem->pluck('kode_pembimbing')->toArray();
+                $get_tanggal = PengajuanZoomModel::whereIn('pembimbing_kode', $get_dospem)->pluck('tanggal')->toArray();
+
+                if($data->tanggal != $request->tanggal_edit) {
+                    if(in_array($request->tanggal_edit, $get_tanggal)) {
+                        return response()->json(['status' => 0, 'error' => ['tanggal_edit' => ['Tanggal Pengajuan sudah ada']]]);
+                    }
+                }
+
                 /* Update pengajuan zoom */
                 $data->jam = $request->jam_edit;
                 $data->tanggal = $request->tanggal_edit;

@@ -85,7 +85,8 @@
                     </div>
                     <div class="mb-1">
                         <label for="status_show" class="col-form-label">Status Pengajuan:</label>
-                        <input type="text" class="form-control no-outline" id="status_show" name="status_show" readonly>
+                        <input type="text" class="form-control no-outline" id="status_show" name="status_show"
+                            readonly>
                     </div>
                     <div class="mb-3">
                         <label for="zoom_show" class="col-form-label" id="zoom_label_show">Detail link Zoom:</label>
@@ -349,6 +350,8 @@
                                 icon: 'error',
                                 title: data.msg
                             });
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
                         } else {
                             form.editSave.disabled = false;
                             form.editSave.value = "Simpan";
