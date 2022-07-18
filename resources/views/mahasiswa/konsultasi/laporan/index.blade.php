@@ -15,7 +15,7 @@
                         <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="file_upload_add" class="col-form-label">File Upload: <b class="error">*Pastikan
-                                        format PDF | Max 2MB</b></label>
+                                        format PDF | Max 50MB</b></label>
                                 <input type="file" class="form-control" id="file_upload_add" name="file_upload_add">
                                 <span class="text-danger error-text file_upload_add_error"></span>
                             </div>
@@ -55,7 +55,7 @@
                         <div class="row mb-1">
                             <div class="col-md-12">
                                 <label for="file_upload_edit" class="col-form-label">File Upload: <b
-                                        class="error">*Pastikan format PDF | Max 2MB</b></label>
+                                        class="error">*Pastikan format PDF | Max 50MB</b></label>
                                 <input type="text" class="form-control no-outline" id="fileShow" name="fileShow"
                                     readonly>
                                 <input type="file" class="form-control" id="file_upload_edit" name="file_upload_edit">

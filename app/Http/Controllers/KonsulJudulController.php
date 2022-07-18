@@ -114,7 +114,7 @@ class KonsulJudulController extends Controller
     {
         /* Peraturan validasi  */
         $rules = [
-            'file_upload_add' => ['required','file','max:2048','mimes:pdf'],
+            'file_upload_add' => ['required','file','max:51200','mimes:pdf'],
             'keterangan_add' => ['required']
         ];
 
@@ -215,7 +215,7 @@ class KonsulJudulController extends Controller
         } else {
             /* Peraturan validasi  */
             $rules = [
-                'file_upload_edit' => ['required','file','max:2048','mimes:pdf'],
+                'file_upload_edit' => ['required','file','max:51200','mimes:pdf'],
                 'keterangan_edit' => ['required']
             ];
         }

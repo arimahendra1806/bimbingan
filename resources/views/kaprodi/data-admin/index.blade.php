@@ -172,7 +172,7 @@
             /* Button Show */
             $('body').on('click', '#btnShow', function() {
                 var this_id = $(this).data('id');
-                $.get('daftar-data-admin/' + this_id, function(data) {
+                $.get('daftar-data-admin-prodi/' + this_id, function(data) {
                     $('#ModalShow').modal('show');
                     $('#nip_show').val(data.nip);
                     $('#nama_admin_show').val(data.nama_admin);

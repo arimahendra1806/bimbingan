@@ -73,7 +73,7 @@
                     }
                 },
                 theme: {
-                    palette: 'palette4' // upto palette10
+                    palette: 'palette10' // upto palette10
                 }
             };
 

@@ -258,7 +258,7 @@ class PeringatanController extends Controller
                 'subyek_add' => ['required','max:30'],
                 'pesan_add' => ['required'],
                 'file_upload_add' => ['required'],
-                'file_upload_add.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
+                'file_upload_add.*' => ['file','max:20480','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
             ];
         }
 
@@ -401,7 +401,7 @@ class PeringatanController extends Controller
                 'subyek_edit' => ['required','max:30'],
                 'pesan_edit' => ['required'],
                 'file_upload_edit' => ['required'],
-                'file_upload_edit.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
+                'file_upload_edit.*' => ['file','max:20480','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
             ];
         }
 

@@ -70,7 +70,7 @@ class MateriDosenController extends Controller
         $rules = [
             'tahun_ajaran_id_add' => ['required'],
             'file_materi_add' => ['required'],
-            'file_materi_add.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
+            'file_materi_add.*' => ['file','max:20480','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
             'jenis_materi_add' => ['required'],
             'keterangan_add' => ['required']
         ];
@@ -177,7 +177,7 @@ class MateriDosenController extends Controller
             $rules = [
                 'tahun_ajaran_id_edit' => ['required'],
                 'file_materi_edit' => ['required'],
-                'file_materi_edit.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
+                'file_materi_edit.*' => ['file','max:20480','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
                 'jenis_materi_edit' => ['required'],
                 'keterangan_edit' => ['required']
             ];

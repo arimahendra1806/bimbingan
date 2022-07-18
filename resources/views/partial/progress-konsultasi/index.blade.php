@@ -172,7 +172,7 @@
                                     <option value=""></option>
                                     <option value="Semua">Tampilkan Semua</option>
                                     @foreach ($dosen_id as $item)
-                                        <option value="{{ $item->id }}">{{ $item->nama_dosen }}</option>
+                                        <option value="{{ $item->dosen->id }}">{{ $item->dosen->nama_dosen }}</option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger error-text dospem_error"></span>

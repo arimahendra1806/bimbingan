@@ -8,13 +8,14 @@ use App\Models\DosenModel;
 use App\Models\DosPemModel;
 use App\Models\BimbinganModel;
 use App\Models\TahunAjaran;
+use App\Models\User;
 use DataTables, Validator;
 
 class ProgresKonsultasiController extends Controller
 {
     public function index(Request $request){
         /* Ambil data dosen */
-        $dosen_id = DosenModel::all()->sortBy('nama_dosen');
+        $dosen_id = User::with('dosen')->where('role', 'dosen')->get();
 
         /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();

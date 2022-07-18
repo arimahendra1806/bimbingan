@@ -92,7 +92,7 @@
                             <div class="col-md-12">
                                 <label for="file_upload_add" class="col-form-label">Lampiran File: <b
                                         class="info">*Kosongkan jika tidak upload</b> &nbsp;
-                                    <b class="error">*Mendukung file multiple melalui cara select | Max 2Mb</b></label>
+                                    <b class="error">*Mendukung file multiple melalui cara select | Max 20Mb</b></label>
                                 <input type="file" class="form-control" id="file_upload_add" name="file_upload_add[]"
                                     multiple>
                                 <span class="text-danger error-text file_upload_add_error"></span>

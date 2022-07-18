@@ -65,7 +65,7 @@ class MateriTahunanController extends Controller
         $rules = [
             'tahun_ajaran_id_add' => ['required'],
             'file_materi_add' => ['required'],
-            'file_materi_add.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
+            'file_materi_add.*' => ['file','max:20480','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
             'keterangan_add' => ['required']
         ];
 
@@ -165,7 +165,7 @@ class MateriTahunanController extends Controller
             $rules = [
                 'tahun_ajaran_id_edit' => ['required'],
                 'file_materi_edit' => ['required'],
-                'file_materi_edit.*' => ['file','max:2048','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
+                'file_materi_edit.*' => ['file','max:20480','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
                 'keterangan_edit' => ['required']
             ];
         }

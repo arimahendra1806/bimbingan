@@ -20,7 +20,7 @@
                         </div>
                         <div class="mb-1">
                             <label for="file_materi_add" class="col-form-label">File Materi: <b class="error">*Mendukung
-                                    file multiple melalui cara select | Max 2Mb</b></label>
+                                    file multiple melalui cara select | Max 20Mb</b></label>
                             <input type="file" class="form-control" id="file_materi_add" name="file_materi_add[]"
                                 multiple>
                             <span class="text-danger error-text file_materi_add_error"></span>
