@@ -376,7 +376,7 @@ class DsnKonsulLaporanController extends Controller
                 $data = new KomentarModel;
                 $data->bimbingan_kode = $request->kb;
                 $data->bimbingan_jenis = "Laporan";
-                $data->users_id = $user->id;
+                $data->users_id = Auth::user()->id;
                 $data->komentar = $request->komentar;
                 $data->save();
 

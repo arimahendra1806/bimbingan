@@ -270,7 +270,7 @@ class PengajuanZoomController extends Controller
             $data->save();
 
             $nomorMhs = '62' . $data->pembimbing->mahasiswa->no_telepon;
-            $pesan = 'Anda menerima pengajuan jadwal zoom dari mahasiswa yang bernama ' . $data->pembimbing->mahasiswa->nama_mahasiswa;
+            $pesan = 'Anda menerima tanggapan untuk pengajuan jadwal zoom dari Dosen Pembimbing';
 
             $Notif = new WhatsappApiController;
             $Notif->whatsappNotif($nomorMhs, $pesan);
