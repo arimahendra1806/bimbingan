@@ -243,8 +243,8 @@ class PeringatanController extends Controller
                 'jenis_add' => ['required'],
                 'kepada_role_add' => ['required'],
                 'kepada_add' => ['required'],
-                'judul_add' => ['required','max:20'],
-                'subyek_add' => ['required','max:30'],
+                'judul_add' => ['required','max:100'],
+                'subyek_add' => ['required','max:150'],
                 'pesan_add' => ['required']
             ];
         } else {
@@ -254,8 +254,8 @@ class PeringatanController extends Controller
                 'jenis_add' => ['required'],
                 'kepada_role_add' => ['required'],
                 'kepada_add' => ['required'],
-                'judul_add' => ['required','max:20'],
-                'subyek_add' => ['required','max:30'],
+                'judul_add' => ['required','max:100'],
+                'subyek_add' => ['required','max:150'],
                 'pesan_add' => ['required'],
                 'file_upload_add' => ['required'],
                 'file_upload_add.*' => ['file','max:20480','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
@@ -386,8 +386,8 @@ class PeringatanController extends Controller
                 'jenis_edit' => ['required'],
                 'kepada_role_edit' => ['required'],
                 'kepada_edit' => ['required'],
-                'judul_edit' => ['required','max:20'],
-                'subyek_edit' => ['required','max:30'],
+                'judul_edit' => ['required','max:100'],
+                'subyek_edit' => ['required','max:150'],
                 'pesan_edit' => ['required']
             ];
         } else {
@@ -397,8 +397,8 @@ class PeringatanController extends Controller
                 'jenis_edit' => ['required'],
                 'kepada_role_edit' => ['required'],
                 'kepada_edit' => ['required'],
-                'judul_edit' => ['required','max:20'],
-                'subyek_edit' => ['required','max:30'],
+                'judul_edit' => ['required','max:100'],
+                'subyek_edit' => ['required','max:150'],
                 'pesan_edit' => ['required'],
                 'file_upload_edit' => ['required'],
                 'file_upload_edit.*' => ['file','max:20480','mimes:pdf,docx,jpg,jpeg,png,xlxs,ppt,txt'],
