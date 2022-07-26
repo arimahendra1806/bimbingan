@@ -107,7 +107,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-1">
-                        <label for="tahun_ajaran_id_show" class="col-form-label">ID Tahun Ajaran:</label>
+                        <label for="tahun_ajaran_id_show" class="col-form-label">Tahun Ajaran:</label>
                         <input type="text" class="form-control no-outline" id="tahun_ajaran_id_show"
                             name="tahun_ajaran_id_show" readonly>
                     </div>

@@ -37,7 +37,7 @@
                                 <label for="username_add" class="col-form-label">Username: <b class="info">*Otomatis
                                         Terisi Jika Nama Pengguna Dipilih</b></label>
                                 <input type="text" class="form-control" id="username_add" name="username_add"
-                                    placeholder="*e.g: NIDN/NIM">
+                                    placeholder="*e.g: NIDN/NIM" readonly>
                                 <span class="text-danger error-text username_add_error"></span>
                             </div>
                         </div>
@@ -119,7 +119,7 @@
                                 <label for="username_edit" class="col-form-label">Username: <b class="info">*Otomatis
                                         Terisi Jika Nama Pengguna Dipilih</b></label>
                                 <input type="text" class="form-control" id="username_edit" name="username_edit"
-                                    placeholder="e.g: NIDN/NIM">
+                                    placeholder="e.g: NIDN/NIM" readonly>
                                 <span class="text-danger error-text username_edit_error"></span>
                             </div>
                         </div>

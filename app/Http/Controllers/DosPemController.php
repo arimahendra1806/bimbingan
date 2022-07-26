@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Models\TahunAjaran;
 use App\Models\DosPemModel;
+use App\Models\User;
 use App\Models\PengajuanJudulModel;
 use App\Models\DosenModel;
 use App\Models\MahasiswaModel;
@@ -22,13 +23,73 @@ class DosPemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private function addDospem($x, $y)
+    {
+        $dsn = $x;
+        $mhs = $y;
+
+        /* Ambil data tahun_ajaran yang aktif */
+        $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
+        /* Array jenis bimbingan */
+        $jenis = ["Judul","Proposal","Laporan","Program"];
+
+        /* Ambil nidn untuk kode */
+        $id_dsn = DosenModel::where('id', $dsn)->first();
+        $nidn = substr($id_dsn->nidn, -4);
+
+        /* Ambil nim untuk kode */
+        $id_mhs = MahasiswaModel::where('id', $mhs)->first();
+        $nim = substr($id_mhs->nim, -4);
+
+        /* Insert ke tabel dos_pem */
+        $data = new DosPemModel;
+        $data->kode_pembimbing = "KP".$nidn.$nim.rand(1000,9999);
+        $data->dosen_id = $dsn;
+        $data->mahasiswa_id = $mhs;
+        $data->tahun_ajaran_id = $tahun_id->id;
+        $data->save();
+
+        /* Update tabel pengajuan_judul sesuai request mhs */
+        PengajuanJudulModel::where('mahasiswa_id', $mhs)->update(['status' => "Mendapat Pembimbing"]);
+
+        /* Perulangan sebanyak jenis */
+        for($i = 0; $i < count($jenis); $i++)
+        {
+            /* Insert ke tabel bimbingan sebanyak jenis */
+            $data2 = new BimbinganModel;
+            $data2->kode_bimbingan = "KB".substr($data->kode_pembimbing, 2);
+            $data2->pembimbing_kode = $data->kode_pembimbing;
+            $data2->tahun_ajaran_id = $tahun_id->id;
+            $data2->jenis_bimbingan = $jenis[$i];
+            $data2->status_konsultasi = "Belum Aktif";
+            $data2->status_pesan = "0";
+            $data2->save();
+        }
+
+        /* Insert ke tabel progres sesiai kode bimbingan */
+        $data3 = new ProgresBimbinganModel;
+        $data3->bimbingan_kode = $data2->kode_bimbingan;
+        $data3->tahun_ajaran_id = $tahun_id->id;
+        $data3->save();
+
+        $nomorDsn = '62' . $id_dsn->no_telepon;
+        $nomorMhs = '62' . $id_mhs->no_telepon;
+        $pesan = 'Penetapan Dosen Pembimbing - Susunan dosen pembimbing untuk Anda: Nama Dosen Pembimbing: ' . $id_dsn->nama_dosen . '; Nama Mahasiswa: ' . $id_mhs->nama_mahasiswa;
+
+        // $Notif = new WhatsappApiController;
+        // $Notif->whatsappNotif($nomorDsn, $pesan);
+        // $Notif->whatsappNotif($nomorMhs, $pesan);
+    }
+
+
     public function index(Request $request)
     {
         /* Ambil data tahun_ajaran */
         $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
 
         /* Ambil data dosen */
-        $dosen_id = DosenModel::all()->sortBy('nama_dosen');
+        $dosen_id = User::with('dosen')->where('role', 'dosen')->get();
 
         /* Ambil data mahasiswa */
         $mhs_id = MahasiswaModel::all()->sortBy('nama_mahasiswa');
@@ -83,15 +144,15 @@ class DosPemController extends Controller
         elseif(!$mhs) {
             return response()->json(['status' => 0, 'error' => ['mhs_add' => ['Checklist Mahasiswa wajib diisi']]]);
         } else {
-            /* kondisi jika request mhs sama  */
-            for($y = 0; $y < count($mhs); $y++)
-            {
-                $x = DosPemModel::where('mahasiswa_id', $mhs[$y])->first();
-                if($x){
-                    return response()->json(['status' => 0, 'error' => ['mhs_add' => ['Checklist Mahasiswa sudah ada sebelumnya']]]);
-                    break;
-                }
-            }
+            // /* kondisi jika request mhs sama  */
+            // for($y = 0; $y < count($mhs); $y++)
+            // {
+            //     $x = DosPemModel::where('mahasiswa_id', $mhs[$y])->first();
+            //     if($x){
+            //         return response()->json(['status' => 0, 'error' => ['mhs_add' => ['Checklist Mahasiswa sudah ada sebelumnya']]]);
+            //         break;
+            //     }
+            // }
 
             /* Ambil data tahun_ajaran yang aktif */
             $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
@@ -103,56 +164,36 @@ class DosPemController extends Controller
             $id_dsn = DosenModel::where('id', $dsn)->first();
             $nidn = substr($id_dsn->nidn, -4);
 
+            // dd($mhs);
+
             /* Perulangan sebanyak checkbox requerst mhs */
             for($count = 0; $count < count($mhs); $count++)
             {
-                /* Ambil nim untuk kode */
-                $id_mhs = MahasiswaModel::where('id', $mhs[$count])->first();
-                $nim = substr($id_mhs->nim, -4);
-
-                /* Insert ke tabel dos_pem */
-                $data = new DosPemModel;
-                $data->kode_pembimbing = "KP".$nidn.$nim.rand(1000,9999);
-                $data->dosen_id = $dsn;
-                $data->mahasiswa_id = $mhs[$count];
-                $data->tahun_ajaran_id = $tahun_id->id;
-                $data->save();
-
-                /* Update tabel pengajuan_judul sesuai request mhs */
-                PengajuanJudulModel::where('mahasiswa_id', $mhs[$count])->update(['status' => "Mendapat Pembimbing"]);
-
-                /* Perulangan sebanyak jenis */
-                for($i = 0; $i < count($jenis); $i++)
-                {
-                    /* Insert ke tabel bimbingan sebanyak jenis */
-                    $data2 = new BimbinganModel;
-                    $data2->kode_bimbingan = "KB".substr($data->kode_pembimbing, 2);
-                    $data2->pembimbing_kode = $data->kode_pembimbing;
-                    $data2->tahun_ajaran_id = $tahun_id->id;
-                    $data2->jenis_bimbingan = $jenis[$i];
-                    $data2->status_konsultasi = "Belum Aktif";
-                    $data2->status_pesan = "0";
-                    $data2->save();
+                $count_dospem = DosPemModel::where('dosen_id', $dsn)->where('tahun_ajaran_id', $tahun_id->id)->get()->count('id');
+                if ($count_dospem >= 17) {
+                    $data = 'Jumlah mahasiswa yang dibimbing oleh ' . $id_dsn->nama_dosen . ' sudah mencapai maksimal yaitu 17 mahasiswa.';
+                    return response()->json(['status' => 1, 'data' => $data]);
+                    break;
                 }
 
-                /* Insert ke tabel progres sesiai kode bimbingan */
-                $data3 = new ProgresBimbinganModel;
-                $data3->bimbingan_kode = $data2->kode_bimbingan;
-                $data3->tahun_ajaran_id = $tahun_id->id;
-                $data3->save();
+                /* Ambil nim untuk kode */
+                $id_mhs = MahasiswaModel::with('judul')->where('id', $mhs[$count])->first();
+                $nim = substr($id_mhs->nim, -4);
 
-                $nomorDsn = '62' . $id_dsn->no_telepon;
-                $nomorMhs = '62' . $id_mhs->no_telepon;
-                $pesan = 'Penetapan Dosen Pembimbing - Susunan dosen pembimbing untuk Anda: Nama Dosen Pembimbing: ' . $id_dsn->nama_dosen . '; Nama Mahasiswa: ' . $id_mhs->nama_mahasiswa;
+                if ($id_mhs->judul->id_anggota != 0) {
+                    $validasi_kel = DosPemModel::with('dosen','mahasiswa')->where('mahasiswa_id', $id_mhs->judul->id_anggota)->first();
+                    if ($validasi_kel && $validasi_kel->dosen_id != $dsn) {
+                        $data = 'Mahasiswa yang bernama ' . $id_mhs->nama_mahasiswa . ' seharusnya mendapat pembimbing yaitu ' . $validasi_kel->dosen->nama_dosen . ', dikarenakan berkelompok dengan ' . $validasi_kel->mahasiswa->nama_mahasiswa . '.';
+                        return response()->json(['status' => 1, 'data' => $data]);
+                        break;
+                    }
+                }
 
-                $Notif = new WhatsappApiController;
-                $Notif->whatsappNotif($nomorDsn, $pesan);
-                $Notif->whatsappNotif($nomorMhs, $pesan);
-
+                $this->addDospem($dsn, $mhs[$count]);
             }
 
             /* Return json berhasil */
-            return response()->json(['status' => 1, 'msg' => "Berhasil Menambahkan Data!"]);
+            return response()->json(['status' => 2, 'msg' => "Berhasil Menambahkan Data!"]);
         }
     }
 
@@ -225,24 +266,33 @@ class DosPemController extends Controller
             /* Return json gagal */
             return response()->json(['status' => 0, 'error' => $validator->errors()->toArray()]);
         } else {
+            /* Ambil data tahun_ajaran yang aktif */
+            $tahun_id = TahunAjaran::where('status', 'Aktif')->first();
+
+            $id_dsn = DosenModel::find($request->dosen_edit);
+            $id_mhs = MahasiswaModel::find($request->mhs_edit);
+
+            $count_dospem = DosPemModel::where('dosen_id', $request->dosen_edit)->where('tahun_ajaran_id', $tahun_id->id)->get()->count('id');
+            if ($count_dospem >= 17) {
+                $data = 'Jumlah mahasiswa yang dibimbing oleh ' . $id_dsn->nama_dosen . ' sudah mencapai maksimal yaitu 17 mahasiswa.';
+                return response()->json(['status' => 1, 'data' => $data]);
+            }
+
             /* Update tabel dos_pem */
             $data->dosen_id = $request->dosen_edit;
             $data->mahasiswa_id = $request->mhs_edit;
             $data->save();
 
-            $id_dsn = DosenModel::find($request->dosen_edit);
-            $id_mhs = MahasiswaModel::find($request->mhs_edit);
-
             $nomorDsn = '62' . $id_dsn->no_telepon;
             $nomorMhs = '62' . $id_mhs->no_telepon;
             $pesan = 'Pembaruhan Dosen Pembimbing - Susunan dosen pembimbing untuk Anda: Nama Dosen Pembimbing: ' . $id_dsn->nama_dosen . '; Nama Mahasiswa: ' . $id_mhs->nama_mahasiswa;
 
-            $Notif = new WhatsappApiController;
-            $Notif->whatsappNotif($nomorDsn, $pesan);
-            $Notif->whatsappNotif($nomorMhs, $pesan);
+            // $Notif = new WhatsappApiController;
+            // $Notif->whatsappNotif($nomorDsn, $pesan);
+            // $Notif->whatsappNotif($nomorMhs, $pesan);
 
             /* Return json berhasil */
-            return response()->json(['status' => 1, 'msg' => "Berhasil Memperbarui Data!"]);
+            return response()->json(['status' => 2, 'msg' => "Berhasil Memperbarui Data!"]);
         }
     }
 

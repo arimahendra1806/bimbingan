@@ -30,29 +30,46 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="pengerjaan_edit" class="col-form-label">Pengerjaan:</label>
-                                <select class="js-example-responsive form-control" style="width: 100%" id="pengerjaan_edit"
+                                <input type="text" class="form-control" id="pengerjaan_edit" name="pengerjaan_edit"
+                                    value="" readonly>
+                                {{-- <select class="js-example-responsive form-control" style="width: 100%" id="pengerjaan_edit"
                                     name="pengerjaan_edit">
                                     <option value=""></option>
                                     <option value="Sendiri">Sendiri</option>
                                     <option value="Kelompok">Kelompok</option>
                                 </select>
-                                <span class="text-danger error-text pengerjaan_edit_error"></span>
+                                <span class="text-danger error-text pengerjaan_edit_error"></span> --}}
                             </div>
                             <div class="col-md-6">
-                                <label for="id_anggota_edit" class="col-form-label">Anggota Kelompok: <b
-                                        class="info">*Pilih "Tidak Ada", jika pengerjaan sendiri</b></label>
-                                <select class="js-example-responsive form-control" style="width: 100%" id="id_anggota_edit"
-                                    name="id_anggota_edit" readonly>
+                                <label for="id_anggota_edit" class="col-form-label">Anggota Kelompok:</label>
+                                <input type="text" class="form-control" id="id_anggota_edit" name="id_anggota_edit"
+                                    value="" readonly>
+                                {{-- <select class="js-example-responsive form-control" style="width: 100%" id="id_anggota_edit"
+                                    name="id_anggota_edit">
                                     <option value="Tidak Ada">Tidak Ada</option>
                                     @foreach ($mahasiswa as $mhs)
                                         <option value="{{ $mhs->id }}">
-                                            {{ $mhs->nama_mahasiswa }}
+                                            {{ $mhs->nim }} - {{ $mhs->nama_mahasiswa }}
                                         </option>
                                     @endforeach
-                                </select>
-                                <span class="text-danger error-text id_anggota_edit_error"></span>
+                                </select> --}}
+                                {{-- <span class="text-danger error-text id_anggota_edit_error"></span> --}}
                             </div>
                         </div>
+                        {{-- <div class="row mb-1">
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="status_cek" name="status_cek">
+                                    <label class="form-check-label" for="status_cek">
+                                        Centang jika ingin memisahkan diri dari kelompok Anda
+                                    </label>
+                                </div>
+                            </div>
+                        </div><br>
+                        <p style="font-size: 9pt">
+                            note : <br>
+                            jika memisahkan diri dari kelompok, maka kelompok Anda saat ini akan otomatis dibubarkan!
+                        </p> --}}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -98,7 +115,8 @@
                         </div>
                         <div class="card-body">
                             <div class="container">
-                                <h4 class="card-title text-danger"><i class="fas fa-exclamation-triangle"></i> | Peringatan
+                                <h4 class="card-title text-danger"><i class="fas fa-exclamation-triangle"></i> |
+                                    Peringatan
                                 </h4>
                                 <p>
                                     Sebelum mengajukan <b>Judul Tugas Akhir</b>, pastikan <b>Sudah Membaca Ketentuan Tugas
@@ -120,8 +138,7 @@
                                             <label for="tahun_ajaran_id_add" class="col-form-label">Tahun Ajaran: <b
                                                     class="info">*Otomatis Terisi</b></label>
                                             <input type="text" class="form-control" id="tahun_ajaran_id_add"
-                                                name="tahun_ajaran_id_add" value="{{ $tahun_id->tahun_ajaran }}"
-                                                readonly>
+                                                name="tahun_ajaran_id_add" value="{{ $tahun_id->tahun_ajaran }}" readonly>
                                         </div>
                                     </div>
                                     <div class="row mb-1">
@@ -160,7 +177,7 @@
                                                 <option value="Tidak Ada">Tidak Ada</option>
                                                 @foreach ($mahasiswa as $mhs)
                                                     <option value="{{ $mhs->id }}">
-                                                        {{ $mhs->nama_mahasiswa }}
+                                                        {{ $mhs->nim }} - {{ $mhs->nama_mahasiswa }}
                                                     </option>
                                                 @endforeach
                                             </select>
@@ -355,11 +372,11 @@
                     $('#id_edit').val(data.id);
                     $('#judul_edit').val(data.judul);
                     $('#studi_kasus_edit').val(data.studi_kasus);
-                    $('#pengerjaan_edit').val(data.pengerjaan).trigger('change');
+                    $('#pengerjaan_edit').val(data.pengerjaan);
                     if (data.id_anggota == 0) {
-                        $('#id_anggota_edit').val("Tidak Ada").trigger('change');
+                        $('#id_anggota_edit').val("Tidak Ada");
                     } else {
-                        $('#id_anggota_edit').val(data.id_anggota).trigger('change');
+                        $('#id_anggota_edit').val(data.anggota.nama_mahasiswa);
                     }
                 });
             });
@@ -495,18 +512,6 @@
             /* Select2 Anggota Add */
             $("#id_anggota_add").select2({});
 
-            /* Select2 Pengerjaan Edit */
-            $("#pengerjaan_edit").select2({
-                dropdownParent: $('#ModalEdit'),
-                placeholder: "Pilih berdasarkan status pengerjaan ..",
-                minimumResultsForSearch: -1
-            });
-
-            /* Select2 Anggota Edit */
-            $("#id_anggota_edit").select2({
-                dropdownParent: $('#ModalEdit')
-            });
-
             /* Select2 Event Pengerjaan Add */
             $('#pengerjaan_add').on('select2:select', function(e) {
                 var x = document.getElementById('pengerjaan_add').value;
@@ -515,13 +520,25 @@
                 }
             });
 
+            /* Select2 Pengerjaan Edit */
+            // $("#pengerjaan_edit").select2({
+            //     dropdownParent: $('#ModalEdit'),
+            //     placeholder: "Pilih berdasarkan status pengerjaan ..",
+            //     minimumResultsForSearch: -1
+            // });
+
+            /* Select2 Anggota Edit */
+            // $("#id_anggota_edit").select2({
+            //     dropdownParent: $('#ModalEdit')
+            // });
+
             /* Select2 Event Pengerjaan Edit */
-            $('#pengerjaan_edit').on('select2:select', function(e) {
-                const y = document.getElementById('pengerjaan_edit').value;
-                if (y == "Sendiri") {
-                    $('#id_anggota_edit').val('Tidak Ada').trigger('change');
-                }
-            });
+            // $('#pengerjaan_edit').on('select2:select', function(e) {
+            //     const y = document.getElementById('pengerjaan_edit').value;
+            //     if (y == "Sendiri") {
+            //         $('#id_anggota_edit').val('Tidak Ada').trigger('change');
+            //     }
+            // });
         });
     </script>
 @endsection

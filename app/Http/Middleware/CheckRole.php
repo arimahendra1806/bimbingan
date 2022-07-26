@@ -20,7 +20,7 @@ class CheckRole
             //request boleh dilanjutkan
             return $next($request);
         }
-        // else {  
+        // else {
         //     //jika role tidk sesuai, redirect ke route rejectrole
         //     return redirect('/reject');
         // }

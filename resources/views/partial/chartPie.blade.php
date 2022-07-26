@@ -4,7 +4,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="d-flex flex-wrap align-items-center mb-4">
-                    <h6 class="card-title me-2">Jumlah Dosen Pembimbing dan Mahasiswa</h6>
+                    <h6 class="card-title me-2">Jumlah Dosen dan Mahasiswa</h6>
                 </div>
                 <div id="jmlDsnMhs" class="mb-0 mt-0"></div>
             </div>
@@ -46,7 +46,7 @@
                     offsetY: 0,
                 },
                 series: value,
-                labels: ['Dosen Pembimbing', 'Mahasiswa'],
+                labels: ['Dosen', 'Mahasiswa'],
                 plotOptions: {
                     pie: {
                         customScale: 1,

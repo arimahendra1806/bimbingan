@@ -9,8 +9,8 @@
                         <img src="{{ asset('vendor/minia') }}/assets/images/logo-sm.svg" alt="" height="24">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{ asset('vendor/minia') }}/assets/images/logo-sm.svg" alt="" height="24"> <span
-                            class="logo-txt" style="font-size: 10pt">SITAMI POLINEMA</span>
+                        <img src="{{ asset('vendor/minia') }}/assets/images/logo-sm.svg" alt="" height="24">
+                        <span class="logo-txt" style="font-size: 10pt">SITAMI POLINEMA</span>
                     </span>
                 </a>
             </div>

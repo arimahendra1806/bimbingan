@@ -19,8 +19,10 @@
                                 <select class="js-example-responsive form-control" style="width: 100%" id="dosen_edit"
                                     name="dosen_edit">
                                     <option value=""></option>
-                                    @foreach ($dosen_id as $dosen)
-                                        <option value="{{ $dosen->id }}">{{ $dosen->nama_dosen }}</option>
+                                    @foreach ($dosen_id as $dsn)
+                                        <option value="{{ $dsn->dosen->id }}">{{ $dsn->dosen->nidn }} -
+                                            {{ $dsn->dosen->nama_dosen }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger error-text dosen_edit_error"></span>
@@ -33,7 +35,8 @@
                                     name="mhs_edit">
                                     <option value=""></option>
                                     @foreach ($mhs_id as $mhs)
-                                        <option value="{{ $mhs->id }}">{{ $mhs->nama_mahasiswa }}</option>
+                                        <option value="{{ $mhs->id }}">{{ $mhs->nim }} - {{ $mhs->nama_mahasiswa }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <span class="text-danger error-text mhs_edit_error"></span>
@@ -100,10 +103,10 @@
                                             <select class="js-example-responsive form-control" style="width: 100%"
                                                 id="dosen_add" name="dosen_add">
                                                 <option value=""></option>
-                                                @foreach ($dosen_id as $dosen)
-                                                    <option value="{{ $dosen->id }}"
-                                                        data-id="{{ $dosen->nama_dosen }}">
-                                                        {{ $dosen->nama_dosen }}</option>
+                                                @foreach ($dosen_id as $dsn)
+                                                    <option value="{{ $dsn->dosen->id }}"
+                                                        data-id="{{ $dsn->dosen->nama_dosen }}">
+                                                        {{ $dsn->dosen->nidn }} - {{ $dsn->dosen->nama_dosen }}</option>
                                                 @endforeach
                                             </select>
                                             <span class="text-danger error-text dosen_add_error"></span>
@@ -112,17 +115,17 @@
                                             <label for="tahun_ajaran_id_add" class="col-form-label">Tahun Ajaran: <b
                                                     class="info">*Otomatis Terisi</b></label>
                                             <input type="text" class="form-control" id="tahun_ajaran_id_add"
-                                                name="tahun_ajaran_id_add" value="{{ $tahun_id->tahun_ajaran }}"
-                                                readonly>
+                                                name="tahun_ajaran_id_add" value="{{ $tahun_id->tahun_ajaran }}" readonly>
                                         </div>
                                     </div>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped dt-responsive nowrap w-100"
+                                        <table class="table table-bordered table-striped dt-responsive w-100"
                                             id="JudulTabels">
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>Nama Mahasiswa</th>
+                                                    <th>NIM</th>
+                                                    <th>Mahasiswa</th>
                                                     <th>Pengajuan Judul Tugas Akhir</th>
                                                     <th>Status Judul</th>
                                                 </tr>
@@ -196,6 +199,12 @@
     <script type="text/javascript" src="{{ asset('vendor/minia') }}/assets/libs/gyrocode/dataTables.checkboxes.min.js">
     </script>
 
+    <style>
+        td.wrapok {
+            white-space: nowrap;
+        }
+    </style>
+
     <script>
         $(document).ready(function() {
             /* Ajax Token */
@@ -210,9 +219,14 @@
                 processing: true,
                 serverSide: false,
                 ajax: "{{ route('kelola-dosen-pembimbing.judul') }}",
+                autoWidth: false,
                 columns: [{
                         data: 'mahasiswa_id',
                         name: 'DT_RowIndex'
+                    },
+                    {
+                        data: 'mahasiswa.nim',
+                        name: 'mahasiswa.nim'
                     },
                     {
                         data: 'mahasiswa.nama_mahasiswa',
@@ -233,7 +247,7 @@
                     },
                     {
                         width: '1%',
-                        targets: [0, 3]
+                        targets: [0, 1, 4]
                     },
                     {
                         targets: 0,
@@ -242,7 +256,11 @@
                         }
                     },
                     {
-                        targets: [2],
+                        targets: [0, 1, 2, 4],
+                        class: "wrapok"
+                    },
+                    {
+                        targets: [3],
                         data: function(data, type, dataToSet) {
                             if (data.pengerjaan == "Sendiri") {
                                 return "<b>Judul : </b>" + data.judul + "<br>" +
@@ -411,6 +429,23 @@
                             $("[id*='mhs_add']").each(function() {
                                 $(this).remove();
                             });
+                        } else if (data.status == 1) {
+                            $("[id*='mhs_add']").each(function() {
+                                $(this).remove();
+                            });
+                            $('#dosen_add').val('').trigger('change');
+                            $('#FormAdd').trigger('reset');
+                            $('#infoJumlah').html("");
+                            $('#infoTerpilih').html("0 baris terpilih.");
+                            form.addSave.disabled = false;
+                            form.addSave.value = "Tambahkan Data";
+                            tableJudul.ajax.reload();
+                            tableDosPem.ajax.reload();
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops, Muncul Kesalahan !!',
+                                text: data.data
+                            });
                         } else {
                             $("[id*='mhs_add']").each(function() {
                                 $(this).remove();
@@ -469,6 +504,14 @@
                             form.editSave.value = "Simpan";
                             $.each(data.error, function(prefix, val) {
                                 $('span.' + prefix + '_error').text(val[0]);
+                            });
+                        } else if (data.status == 1) {
+                            form.editSave.disabled = false;
+                            form.editSave.value = "Simpan";
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops, Muncul Kesalahan !!',
+                                text: data.data
                             });
                         } else {
                             form.editSave.disabled = false;
