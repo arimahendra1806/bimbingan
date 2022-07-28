@@ -21,6 +21,16 @@ class JudulMahasiswaController extends Controller
             $data = DosPemModel::latest()->get()->load('tahun', 'dosen', 'mahasiswa', 'judul');
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('stats', function($model){
+                    if ($model->judul->status == "Diterima"){
+                        return "Diterima oleh Pembimbing";
+                    } elseif ($model->judul->status == "Selesai") {
+                        return "Selesai Tugas Akhir";
+                    } else {
+                        return $model->judul->status;
+                    }
+                })
+                ->rawColumns(['stats'])
                 ->toJson();
         }
 
@@ -28,11 +38,10 @@ class JudulMahasiswaController extends Controller
         return view('koordinator.judul-mahasiswa.index', compact('tahun_id','th_aktif'));
     }
 
-    public function exportKoor($params){
-        $tahun = $params;
+    public function exportKoor($status, $tahun){
         $filename = time()."_Daftar_Judul.xlsx";
 
-        return Excel::download(new JudulExport($tahun), $filename);
+        return Excel::download(new JudulExport($status, $tahun), $filename);
     }
 
     public function indexKaprodi(Request $request){
@@ -63,5 +72,51 @@ class JudulMahasiswaController extends Controller
 
         /* Return json data Mahasiswa */
         return response()->json($data);
+    }
+
+    public function filter(Request $request, $status, $tahun)
+    {
+        /* Jika paramter sama dengan semua */
+        if($status == "0"){
+            /* Ambil data tabel progres bimbingan */
+            if($request->ajax()){
+                $data = DosPemModel::where('tahun_ajaran_id', $tahun)->latest()->get()->load('tahun', 'dosen', 'mahasiswa', 'judul');
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('stats', function($model){
+                        if ($model->judul->status == "Diterima"){
+                            return "Diterima oleh Pembimbing";
+                        } elseif ($model->judul->status == "Selesai") {
+                            return "Selesai Tugas Akhir";
+                        } else {
+                            return $model->judul->status;
+                        }
+                    })
+                    ->rawColumns(['stats'])
+                    ->toJson();
+            }
+        } else {
+            /* Ambil data tabel progres bimbingan dengan parameter array kb*/
+            if($request->ajax()){
+                $data = DosPemModel::with('judul','tahun', 'dosen', 'mahasiswa')
+                    ->whereHas('judul',  function($q) use($status)  {
+                        $q->where('status', $status);
+                    })
+                    ->where('tahun_ajaran_id', $tahun)->latest()->get();
+                return DataTables::of($data)
+                    ->addIndexColumn()
+                    ->addColumn('stats', function($model){
+                        if ($model->judul->status == "Diterima"){
+                            return "Diterima oleh Pembimbing";
+                        } elseif ($model->judul->status == "Selesai") {
+                            return "Selesai Tugas Akhir";
+                        } else {
+                            return $model->judul->status;
+                        }
+                    })
+                    ->rawColumns(['stats'])
+                    ->toJson();
+            }
+        }
     }
 }

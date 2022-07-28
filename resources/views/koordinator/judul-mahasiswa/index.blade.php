@@ -29,22 +29,34 @@
                     </div>
                     <div class="card-body">
                         <input type="hidden" name="th_aktif" id="th_aktif" value="{{ $th_aktif->id }}">
-                        <div class="d-flex justify-content-end">
-                            <div class="row mb-3">
-                                <label for="" class="mt-0">Pilih Tahun Expor Daftar Judul : </label>
-                                <div class="hstack gap-2">
-                                    <select class="js-example-responsive form-control" style="width: 100%" id="tahun_ajaran"
-                                        name="tahun_ajaran">
-                                        <option value=""></option>
-                                        @foreach ($tahun_id as $tahun)
-                                            <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
-                                        @endforeach
-                                    </select>
-                                    <a href="javascript:void(0)" class="btn btn-primary btn-md waves-effect waves-light"
-                                        data-toggle="tooltip" title="Ekspor Data" id="btnExpor">
-                                        <i class="fas fa-file-export"></i>
-                                    </a>
-                                </div>
+                        <div class="row border mb-2">
+                            <div class="col-md-5">
+                                <label for="status_judul" class="col-form-label">Filter sesuai status judul:</label>
+                                <select class="js-example-responsive form-control" style="width: 100%" id="status_judul"
+                                    name="status_judul">
+                                    <option value="0">Semua Ditampilkan</option>
+                                    <option value="Mendapat Pembimbing">Mendapat Pembimbing</option>
+                                    <option value="Diterima">Diterima oleh Pembimbing</option>
+                                    <option value="Selesai">Selesai Tugas Akhir</option>
+                                </select>
+                                <span class="text-danger error-text status_judul_error"></span>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="tahun_ajaran" class="col-form-label">Filter sesuai tahun ajaran:</label>
+                                <select class="js-example-responsive form-control" style="width: 100%" id="tahun_ajaran"
+                                    name="tahun_ajaran">
+                                    @foreach ($tahun_id as $tahun)
+                                        <option value="{{ $tahun->id }}">{{ $tahun->tahun_ajaran }}</option>
+                                    @endforeach
+                                </select>
+                                <span class="text-danger error-text tahun_ajaran_error"></span>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <br>
+                                <a href="javascript:void(0)" class="btn btn-primary btn-md waves-effect waves-light mt-3"
+                                    id="btnExpor">
+                                    Ekspor Daftar Judul
+                                </a>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -118,8 +130,8 @@
                         name: 'judul.judul'
                     },
                     {
-                        data: 'judul.status',
-                        name: 'judul.status'
+                        data: 'stats',
+                        name: 'stats'
                     },
                 ],
                 columnDefs: [{
@@ -150,12 +162,10 @@
                 $('[data-toggle="tooltip"]').tooltip();
             });
 
-            /* select tahun_ajaran aktif */
-            $("#tahun_ajaran").val(document.getElementById("th_aktif").value).trigger('change');
-
             $("#btnExpor").click(function() {
-                var params = document.getElementById("tahun_ajaran").value;
-                location.href = "export/judul/" + params;
+                var st = $('#status_judul').val();
+                var th = $('#tahun_ajaran').val();
+                location.href = "export/judul/" + st + "/" + th;
 
                 setTimeout(function() {
                     Swal.fire({
@@ -165,9 +175,35 @@
                 }, 1200);
             });
 
-            /* Select2 Tahun Ajaran Add */
+            /* select tahun_ajaran aktif */
+            $("#tahun_ajaran").val(document.getElementById("th_aktif").value).trigger('change');
+            $("#status_judul").val('0').trigger('change');
+
+            /* Select2 Tahun Ajaran */
             $("#tahun_ajaran").select2({
                 placeholder: "Cari berdasarkan tahun ...",
+            });
+
+            /* Select2 Status */
+            $("#status_judul").select2({
+                placeholder: "Cari berdasarkan status ...",
+                minimumResultsForSearch: -1
+            });
+
+            $('#tahun_ajaran').on('select2:select', function(e) {
+                var th = $('#tahun_ajaran option:selected').val();
+                var st = $('#status_judul').val();
+                table.ajax.url("/filter-judul-mahasiswa/" + st + "/" + th).load(function() {
+                    table.order([1, 'desc'],[3, 'asc']).draw();
+                });
+            });
+
+            $('#status_judul').on('select2:select', function(e) {
+                var st = $('#status_judul option:selected').val();
+                var th = $('#tahun_ajaran').val();
+                table.ajax.url("/filter-judul-mahasiswa/" + st + "/" + th).load(function() {
+                    table.order([1, 'desc'],[3, 'asc']).draw();
+                });
             });
         });
     </script>

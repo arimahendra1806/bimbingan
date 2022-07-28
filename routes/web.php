@@ -148,7 +148,8 @@ Route::group(['middleware' => 'auth'], function(){
 
         /* Data Judul Mahasiswa */
         Route::get('/judul-mahasiswa', [JudulMahasiswaController::class, 'indexKoor'])->name('judul-mahasiswa.indexKoor');
-        Route::get('/export/judul/{params}', [JudulMahasiswaController::class, 'exportKoor'])->name('judul-mahasiswa.exportKoor');
+        Route::get('/export/judul/{st}/{th}', [JudulMahasiswaController::class, 'exportKoor'])->name('judul-mahasiswa.exportKoor');
+        Route::get('/filter-judul-mahasiswa/{st}/{th}', [JudulMahasiswaController::class, 'filter'])->name('judul-mahasiswa.filter');
     });
 
     /* Kaprodi */

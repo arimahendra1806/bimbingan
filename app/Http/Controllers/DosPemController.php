@@ -278,6 +278,14 @@ class DosPemController extends Controller
                 return response()->json(['status' => 1, 'data' => $data]);
             }
 
+            if ($id_mhs->judul->id_anggota != 0) {
+                $validasi_kel = DosPemModel::with('dosen','mahasiswa')->where('mahasiswa_id', $id_mhs->judul->id_anggota)->first();
+                if ($validasi_kel && $validasi_kel->dosen_id != $request->dosen_edit) {
+                    $data = 'Mahasiswa yang bernama ' . $id_mhs->nama_mahasiswa . ' seharusnya mendapat pembimbing yaitu ' . $validasi_kel->dosen->nama_dosen . ', dikarenakan berkelompok dengan ' . $validasi_kel->mahasiswa->nama_mahasiswa . '.';
+                    return response()->json(['status' => 1, 'data' => $data]);
+                }
+            }
+
             /* Update tabel dos_pem */
             $data->dosen_id = $request->dosen_edit;
             $data->mahasiswa_id = $request->mhs_edit;
